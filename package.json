@@ -1,0 +1,17 @@
+{
+  "name": "clearing",
+  "private": true,
+  "type": "module",
+  "description": "Guided yoga sessions PWA with pre-generated ElevenLabs audio.",
+  "scripts": {
+    "serve": "node scripts/serve.mjs",
+    "audio": "node scripts/build-audio.mjs",
+    "audio:dry": "node scripts/build-audio.mjs --dry-run",
+    "icons": "node scripts/build-icons.mjs",
+    "test": "node --test test/*.test.mjs"
+  },
+  "engines": { "node": ">=20" },
+  "devDependencies": {
+    "@material-design-icons/svg": "0.14.15"
+  }
+}
