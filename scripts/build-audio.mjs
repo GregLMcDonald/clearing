@@ -29,7 +29,8 @@
 //
 // Environment (or a .env file at the repo root; see .env.example)
 //   ELEVENLABS_API_KEY      required when anything needs generating
-//   ELEVENLABS_VOICE_ID     voice for guidance (default below)
+//   ELEVENLABS_VOICE_ID_EN  voice for English guidance (falls back to ELEVENLABS_VOICE_ID, then a default)
+//   ELEVENLABS_VOICE_ID_FR  voice for Québec French guidance (French clips are skipped without it)
 //   ELEVENLABS_TTS_MODEL    default eleven_multilingual_v2
 //   ELEVENLABS_SFX_MODEL    default eleven_text_to_sound_v2
 //   ELEVENLABS_MUSIC_MODEL  default music_v1
@@ -84,12 +85,18 @@ const CONCURRENCY = Math.max(1, parseInt(args.concurrency || "2", 10));
 
 // How each kind is rendered. Part of every cache key: change a setting here
 // (or the voice) and the affected clips regenerate on the next run.
+// One voice per language. Keep each object's shape stable: it's hashed into
+// the cache key, so reordering fields would regenerate every voice clip.
+const voiceFor = (voiceId) => voiceId ? {
+  voiceId,
+  modelId: process.env.ELEVENLABS_TTS_MODEL || "eleven_multilingual_v2",
+  voiceSettings: { stability: 0.6, similarity_boost: 0.75, style: 0, use_speaker_boost: true, speed: 0.9 },
+} : null;
+const VOICES = {
+  en: voiceFor(process.env.ELEVENLABS_VOICE_ID_EN || process.env.ELEVENLABS_VOICE_ID || "EXAVITQu4vr4xnSDxMaL"), // default: "Sarah", a premade voice
+  fr: voiceFor(process.env.ELEVENLABS_VOICE_ID_FR),
+};
 const RENDER = {
-  voice: {
-    voiceId: process.env.ELEVENLABS_VOICE_ID || "EXAVITQu4vr4xnSDxMaL", // "Sarah", an ElevenLabs premade voice
-    modelId: process.env.ELEVENLABS_TTS_MODEL || "eleven_multilingual_v2",
-    voiceSettings: { stability: 0.6, similarity_boost: 0.75, style: 0, use_speaker_boost: true, speed: 0.9 },
-  },
   sfx: {
     modelId: process.env.ELEVENLABS_SFX_MODEL || "eleven_text_to_sound_v2",
     promptInfluence: 0.6,
@@ -100,7 +107,8 @@ const RENDER = {
 };
 
 const sha256 = (s) => createHash("sha256").update(s).digest("hex");
-const keyFor = (clip) => sha256(`${clipSpec(clip)}|${OUTPUT_FORMAT}|${JSON.stringify(RENDER[clip.kind])}`).slice(0, 32);
+const renderFor = (clip) => clip.kind === "voice" ? VOICES[clip.lang] : RENDER[clip.kind];
+const keyFor = (clip) => sha256(`${clipSpec(clip)}|${OUTPUT_FORMAT}|${JSON.stringify(renderFor(clip))}`).slice(0, 32);
 const cachePath = (key) => path.join(CACHE_DIR, `${key}.mp3`);
 const fmtMB = (b) => `${(b / 1048576).toFixed(2)} MB`;
 
@@ -108,7 +116,7 @@ const fmtMB = (b) => `${(b / 1048576).toFixed(2)} MB`;
 function requestFor(clip) {
   const q = `?output_format=${OUTPUT_FORMAT}`;
   if (clip.kind === "voice") {
-    const r = RENDER.voice;
+    const r = VOICES[clip.lang];
     return {
       url: `${API}/text-to-speech/${encodeURIComponent(r.voiceId)}${q}`,
       body: { text: clip.text, model_id: r.modelId, voice_settings: r.voiceSettings },
@@ -229,20 +237,22 @@ if (restored) console.log(`Restored ${restored} clips into .audio-cache from the
 const clips = catalog();
 const keys = new Map(clips.map((c) => [c.id, keyFor(c)]));
 const missing = clips.filter((c) => !existsSync(cachePath(keys.get(c.id))));
-const todo = missing.filter((c) => !ONLY || ONLY.has(c.kind));
+const noVoice = missing.filter((c) => c.kind === "voice" && !VOICES[c.lang]);
+const todo = missing.filter((c) => (!ONLY || ONLY.has(c.kind)) && !noVoice.includes(c));
 
 const chars = todo.filter((c) => c.kind === "voice").reduce((n, c) => n + c.text.length, 0);
 const byKind = (k) => todo.filter((c) => c.kind === k).length;
 console.log(`Catalog: ${clips.length} clips. Cached: ${clips.length - missing.length}. To generate: ${todo.length}` +
   ` (voice ${byKind("voice")} = ${chars} characters, sfx ${byKind("sfx")}, music ${byKind("music")}).`);
-console.log(`Voice: ${RENDER.voice.voiceId} · ${RENDER.voice.modelId}`);
+for (const [lang, v] of Object.entries(VOICES)) console.log(`Voice ${lang}: ${v ? `${v.voiceId} · ${v.modelId}` : "not set"}`);
+if (noVoice.length) console.warn(`Skipping ${noVoice.length} voice clips: no voice set for ${[...new Set(noVoice.map((c) => c.lang))].join(", ")} (ELEVENLABS_VOICE_ID_<LANG> in .env).`);
 
 if (DRY) {
   for (const c of todo) console.log(`  ${c.kind.padEnd(5)} ${c.id.padEnd(34)} ${c.kind === "voice" ? JSON.stringify(c.text) : `${c.seconds}s`}`);
   process.exit(0);
 }
 
-const failures = [];
+const failures = noVoice.map((c) => ({ id: c.id, error: `no voice for ${c.lang}` }));
 if (todo.length) {
   const apiKey = process.env.ELEVENLABS_API_KEY;
   if (!apiKey) {
@@ -313,7 +323,7 @@ if (previous && previous.pack && previous.pack.file === packFile && existsSync(p
     version: 1,
     generatedAt: new Date().toISOString(),
     pack: { file: packFile, bytes: pack.length },
-    render: { format: OUTPUT_FORMAT, loudness: HAS_FFMPEG ? LOUDNESS : null, cleanup: HAS_FFMPEG ? CLEANUP : null, ...RENDER },
+    render: { format: OUTPUT_FORMAT, loudness: HAS_FFMPEG ? LOUDNESS : null, cleanup: HAS_FFMPEG ? CLEANUP : null, voice: VOICES, ...RENDER },
     clips: entries,
   };
   await writeFile(MANIFEST, JSON.stringify(manifest, null, 1) + "\n");

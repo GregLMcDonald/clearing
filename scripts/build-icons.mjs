@@ -9,8 +9,8 @@ import path from "node:path";
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const STYLE = "round";
 const NAMES = [
-  "air", "arrow_back", "auto_awesome", "check_circle", "close", "cloud_download",
-  "cloud_off", "error_outline", "expand_more", "graphic_eq", "history", "info",
+  "air", "arrow_back", "auto_awesome", "check", "check_circle", "close", "cloud_download",
+  "cloud_off", "error_outline", "expand_more", "graphic_eq", "history", "info", "language",
   "menu_book", "music_note", "pause", "play_arrow", "record_voice_over", "refresh",
   "search", "self_improvement", "skip_next", "skip_previous", "spa", "timer", "tune",
 ];

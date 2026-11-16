@@ -46,8 +46,8 @@ export class Player {
   get stage() { return this.action ? this.action.stage : "intro"; }
   get item() { return this.session.items[this.step]; }
   get side() { const a = this.actions[this.i]; return a && a.side ? a.side : this.stage === "switch" ? 2 : 1; }
-  // Flows: the shape being moved into or held right now.
-  get show() { const a = this.actions[this.i]; return a && a.show ? a.show : ""; }
+  // Flows: index of the move being made right now ("setup" for the starting shape).
+  get move() { const a = this.actions[this.i]; return a && a.mv !== undefined ? a.mv : null; }
 
   elapsed() {
     const into = Math.max(0, this.engine.now() - this.actionT0);
@@ -71,7 +71,7 @@ export class Player {
       this.actionT0 = this.engine.now();
       const a = this.actions[k];
       if (a.t !== "breath" && a.t !== "half") this.breathState = null;
-      if (a.t === "voice") this.caption = getClip(a.clip).caption;
+      if (a.t === "voice") this.caption = getClip(a.clip, this.engine.lang).caption;
       this.onChange();
       await this.perform(a, tok);
     }
@@ -124,7 +124,7 @@ export class Player {
   // A short voice line layered over a breath (not awaited).
   overlay(cid) {
     this.engine.voice(cid);
-    this.caption = getClip(cid).caption;
+    this.caption = getClip(cid, this.engine.lang).caption;
   }
 
   async pause() {

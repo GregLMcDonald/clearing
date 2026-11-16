@@ -26,6 +26,13 @@ Chrome on Android as an installed PWA (primary). Desktop Chrome for occasional s
 - Flow cues must stay 1–2 seconds (they are spoken inside one inhale or exhale) and name the movement only.
 - Breath cues are two chimes (inhale higher, exhale lower) plus the circle. Never breath or whoosh sounds, and the voice never says "breathe in" / "breathe out".
 
+## Languages
+- English and Québec French. The English content lives in `library.js` / `phrases.js`; French overlays it by id in [js/lang/fr.js](js/lang/fr.js), merged by `locPose()` in [js/content.js](js/content.js). UI strings for both languages are in [js/i18n.js](js/i18n.js) (`t()`, plus `data-i18n` / `data-i18n-aria` / `data-i18n-ph` attributes in `index.html`).
+- **Every content or UI change needs its French counterpart.** `test/i18n.test.mjs` fails if anything is missing.
+- French register: professional Québec French, "vous", Québec vocabulary (trousse, assoyez-vous, courriel…), no gendered agreement with the listener ("lorsque vous le souhaitez", not "quand vous êtes prêt"). Non-breaking space before ":" and "%". "Clearing" is not translated.
+- Voice clips exist per language (`en:v.…`, `fr:v.…`); the timeline uses language-neutral ids and `AudioEngine.lang` picks the clip. Flow cue clips are keyed by the ENGLISH cue text, so one English cue must always map to one French cue.
+- One ElevenLabs voice per language (`ELEVENLABS_VOICE_ID_EN`, `ELEVENLABS_VOICE_ID_FR`). The English voice settings object is hashed into cache keys; keep its shape stable.
+
 ## Editing content
 - Changing a posture's `guide`, names or `say`, a line in `LINES`, or a prompt makes those clips stale. The app falls back to the device voice for them until `npm run audio` is re-run, which only regenerates what changed.
 - Keep guidance short (2–4 sentences), written from the posture's `base` position, with right and left explicit for the first side of sided postures. Favour cues that protect knees, lower back and neck.

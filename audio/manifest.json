@@ -1,9 +1,9 @@
 {
  "version": 1,
- "generatedAt": "2026-11-16T00:00:53.049Z",
+ "generatedAt": "2026-11-16T00:32:04.217Z",
  "pack": {
-  "file": "pack-a2b4c0f203cc.bin",
-  "bytes": 22089744
+  "file": "pack-43e728608369.bin",
+  "bytes": 40674170
  },
  "render": {
   "format": "mp3_44100_128",
@@ -18,14 +18,27 @@
    "music": ""
   },
   "voice": {
-   "voiceId": "enzbGixeo55iqn1QxbbC",
-   "modelId": "eleven_multilingual_v2",
-   "voiceSettings": {
-    "stability": 0.6,
-    "similarity_boost": 0.75,
-    "style": 0,
-    "use_speaker_boost": true,
-    "speed": 0.9
+   "en": {
+    "voiceId": "enzbGixeo55iqn1QxbbC",
+    "modelId": "eleven_multilingual_v2",
+    "voiceSettings": {
+     "stability": 0.6,
+     "similarity_boost": 0.75,
+     "style": 0,
+     "use_speaker_boost": true,
+     "speed": 0.9
+    }
+   },
+   "fr": {
+    "voiceId": "XTyroWkQl32ZSd3rRVZ1",
+    "modelId": "eleven_multilingual_v2",
+    "voiceSettings": {
+     "stability": 0.6,
+     "similarity_boost": 0.75,
+     "style": 0,
+     "use_speaker_boost": true,
+     "speed": 0.9
+    }
    }
   },
   "sfx": {
@@ -37,7 +50,7 @@
   }
  },
  "clips": {
-  "v.welcome": {
+  "en:v.welcome": {
    "kind": "voice",
    "spec": "voice|Welcome. Let's begin our practice together.",
    "key": "d103233250767e0c808b6552a4251d0a",
@@ -46,7 +59,7 @@
    "length": 43510,
    "duration": 2.72
   },
-  "v.release": {
+  "en:v.release": {
    "kind": "voice",
    "spec": "voice|And release.",
    "key": "8b4623fd1a4451b443dd29c9a962facf",
@@ -55,7 +68,7 @@
    "length": 19687,
    "duration": 1.23
   },
-  "v.switch": {
+  "en:v.switch": {
    "kind": "voice",
    "spec": "voice|Now the other side.",
    "key": "b6cf3616c2bedd4b3db377b4780b2c66",
@@ -64,7 +77,7 @@
    "length": 24284,
    "duration": 1.52
   },
-  "v.lastBreath": {
+  "en:v.lastBreath": {
    "kind": "voice",
    "spec": "voice|One more breath.",
    "key": "e729831591a7af0bc05f39ff3ff6a7be",
@@ -73,7 +86,7 @@
    "length": 19687,
    "duration": 1.23
   },
-  "v.wake": {
+  "en:v.wake": {
    "kind": "voice",
    "spec": "voice|Begin to deepen your breath. Wiggle your fingers and toes. When you're ready, roll onto your right side, and slowly come up to sit.",
    "key": "1c21be41a3f235df73a86dffb6849865",
@@ -82,7 +95,7 @@
    "length": 142149,
    "duration": 8.88
   },
-  "v.close": {
+  "en:v.close": {
    "kind": "voice",
    "spec": "voice|Thank you for practicing. Namaste.",
    "key": "7bab786663b15256adddca71d0dad637",
@@ -91,7 +104,7 @@
    "length": 39749,
    "duration": 2.48
   },
-  "v.flowOn": {
+  "en:v.flowOn": {
    "kind": "voice",
    "spec": "voice|Now let's flow. One movement for each chime.",
    "key": "ac6d8d34a19023f08f21bfa8db87c8d7",
@@ -100,7 +113,7 @@
    "length": 51034,
    "duration": 3.19
   },
-  "v.hold.2": {
+  "en:v.hold.2": {
    "kind": "voice",
    "spec": "voice|Stay here for two breaths.",
    "key": "b5143cda8704451198ecdf2d47855f38",
@@ -109,7 +122,7 @@
    "length": 27628,
    "duration": 1.73
   },
-  "v.hold.3": {
+  "en:v.hold.3": {
    "kind": "voice",
    "spec": "voice|Stay here for three breaths.",
    "key": "dcbe4421702a12db3f57451cdbb3fda5",
@@ -118,7 +131,7 @@
    "length": 30136,
    "duration": 1.88
   },
-  "v.hold.4": {
+  "en:v.hold.4": {
    "kind": "voice",
    "spec": "voice|Stay here for four breaths.",
    "key": "a3f39f770f14a7974adc357e6b909b06",
@@ -127,7 +140,7 @@
    "length": 29300,
    "duration": 1.83
   },
-  "v.hold.5": {
+  "en:v.hold.5": {
    "kind": "voice",
    "spec": "voice|Stay here for five breaths.",
    "key": "50d8fb48079c5c08638ca83f8dd329d9",
@@ -136,7 +149,7 @@
    "length": 30136,
    "duration": 1.88
   },
-  "v.hold.6": {
+  "en:v.hold.6": {
    "kind": "voice",
    "spec": "voice|Stay here for six breaths.",
    "key": "4ad374f66ea6992bd78d6dbe6be74c98",
@@ -145,7 +158,7 @@
    "length": 28464,
    "duration": 1.78
   },
-  "v.hold.7": {
+  "en:v.hold.7": {
    "kind": "voice",
    "spec": "voice|Stay here for seven breaths.",
    "key": "42d8d5cd401df5d963cae43251c3af52",
@@ -154,7 +167,7 @@
    "length": 30972,
    "duration": 1.94
   },
-  "v.hold.8": {
+  "en:v.hold.8": {
    "kind": "voice",
    "spec": "voice|Stay here for eight breaths.",
    "key": "5267ea29a7909c6bdd74ebcd75830641",
@@ -163,7 +176,7 @@
    "length": 27210,
    "duration": 1.7
   },
-  "v.hold.9": {
+  "en:v.hold.9": {
    "kind": "voice",
    "spec": "voice|Stay here for nine breaths.",
    "key": "8a4fe07d3a394ee96161a72adfaa2271",
@@ -172,7 +185,7 @@
    "length": 29300,
    "duration": 1.83
   },
-  "v.hold.10": {
+  "en:v.hold.10": {
    "kind": "voice",
    "spec": "voice|Stay here for ten breaths.",
    "key": "58ea09117e0ae1cbc147ed914bac6894",
@@ -181,7 +194,7 @@
    "length": 28464,
    "duration": 1.78
   },
-  "v.hold.11": {
+  "en:v.hold.11": {
    "kind": "voice",
    "spec": "voice|Stay here for eleven breaths.",
    "key": "dd04cfed8500d62ab8c8c811c15d2d35",
@@ -190,7 +203,7 @@
    "length": 32225,
    "duration": 2.01
   },
-  "v.hold.12": {
+  "en:v.hold.12": {
    "kind": "voice",
    "spec": "voice|Stay here for twelve breaths.",
    "key": "ee3b88c000d42bc3760ca27e3c24f715",
@@ -199,7 +212,7 @@
    "length": 30972,
    "duration": 1.94
   },
-  "v.pos.seat": {
+  "en:v.pos.seat": {
    "kind": "voice",
    "spec": "voice|Come to a comfortable seat on your mat.",
    "key": "1a6de1f1bf36004bf88292ed8835dcc5",
@@ -208,7 +221,7 @@
    "length": 35987,
    "duration": 2.25
   },
-  "v.pos.table": {
+  "en:v.pos.table": {
    "kind": "voice",
    "spec": "voice|Come onto your hands and knees.",
    "key": "566b5a6453c35a86898c277709e62a0f",
@@ -217,7 +230,7 @@
    "length": 28464,
    "duration": 1.78
   },
-  "v.pos.stand": {
+  "en:v.pos.stand": {
    "kind": "voice",
    "spec": "voice|Make your way up to standing at the top of your mat.",
    "key": "f9cdd8a71c33dcc47c22576a7b707185",
@@ -226,7 +239,7 @@
    "length": 49362,
    "duration": 3.09
   },
-  "v.pos.prone": {
+  "en:v.pos.prone": {
    "kind": "voice",
    "spec": "voice|Lower down to lie on your belly.",
    "key": "ea140e78f5c28c9fbf3bd82e6667ff89",
@@ -235,7 +248,7 @@
    "length": 35987,
    "duration": 2.25
   },
-  "v.pos.supine": {
+  "en:v.pos.supine": {
    "kind": "voice",
    "spec": "voice|Lie down on your back.",
    "key": "7f60ccca9d997797cb3a52a0749beeb6",
@@ -244,7 +257,7 @@
    "length": 25538,
    "duration": 1.6
   },
-  "v.pose.easy-seat.name": {
+  "en:v.pose.easy-seat.name": {
    "kind": "voice",
    "spec": "voice|Easy pose. Sukhasana.",
    "key": "97e62bfc499ab6edeac2432fd625a160",
@@ -253,7 +266,7 @@
    "length": 30136,
    "duration": 1.88
   },
-  "v.pose.easy-seat.guide": {
+  "en:v.pose.easy-seat.guide": {
    "kind": "voice",
    "spec": "voice|Sit with your legs crossed comfortably and rest your hands on your knees. Lengthen up through the crown of your head, and let your shoulders soften. Let your breath slow down and deepen.",
    "key": "e25d640165063be199c7676d41b9159c",
@@ -262,7 +275,7 @@
    "length": 200245,
    "duration": 12.52
   },
-  "v.pose.neck-release.name": {
+  "en:v.pose.neck-release.name": {
    "kind": "voice",
    "spec": "voice|Seated neck release.",
    "key": "49b37d9e5f9ad02e22abc07d7017c4b8",
@@ -271,7 +284,7 @@
    "length": 24702,
    "duration": 1.54
   },
-  "v.pose.neck-release.guide": {
+  "en:v.pose.neck-release.guide": {
    "kind": "voice",
    "spec": "voice|Stay seated. Let your right ear fall gently toward your right shoulder. Keep the opposite shoulder soft and heavy. Don't pull; let the weight of your head do the work.",
    "key": "1ac4cf7b6aec7d4eb3a638bd5060fb9d",
@@ -280,7 +293,7 @@
    "length": 175585,
    "duration": 10.97
   },
-  "v.pose.seated-side-bend.name": {
+  "en:v.pose.seated-side-bend.name": {
    "kind": "voice",
    "spec": "voice|Seated side bend. Parsva Sukhasana.",
    "key": "dd7687b2b65256daf832e85b1e941746",
@@ -289,7 +302,7 @@
    "length": 49362,
    "duration": 3.09
   },
-  "v.pose.seated-side-bend.guide": {
+  "en:v.pose.seated-side-bend.guide": {
    "kind": "voice",
    "spec": "voice|Sitting tall, place your left hand on the floor beside you, and reach your right arm up and over toward the left. Keep both sit bones heavy, and breathe into the right side of your ribs.",
    "key": "69f5a45cac63ca6bfd4fdb1131e89ef0",
@@ -298,7 +311,7 @@
    "length": 194812,
    "duration": 12.18
   },
-  "v.pose.seated-twist-easy.name": {
+  "en:v.pose.seated-twist-easy.name": {
    "kind": "voice",
    "spec": "voice|Easy seated twist. Parivrtta Sukhasana.",
    "key": "4df688dba3d43068b0464fffd74a4e5f",
@@ -307,7 +320,7 @@
    "length": 51452,
    "duration": 3.22
   },
-  "v.pose.seated-twist-easy.guide": {
+  "en:v.pose.seated-twist-easy.guide": {
    "kind": "voice",
    "spec": "voice|Sitting tall, bring your left hand to your right knee and your right fingertips to the floor behind you. Inhale to lengthen your spine, and exhale to turn gently to the right. Let the twist start from your belly, not your neck.",
    "key": "69291b174eeeb6f46ec6962ed6f3c873",
@@ -316,7 +329,7 @@
    "length": 243295,
    "duration": 15.21
   },
-  "v.pose.cat-cow.name": {
+  "en:v.pose.cat-cow.name": {
    "kind": "voice",
    "spec": "voice|Cat and cow. Marjaryasana Bitilasana.",
    "key": "5f299d42bbbc29ccb458a550cc285c39",
@@ -325,7 +338,7 @@
    "length": 49362,
    "duration": 3.09
   },
-  "v.pose.cat-cow.guide": {
+  "en:v.pose.cat-cow.guide": {
    "kind": "voice",
    "spec": "voice|Bring your wrists under your shoulders and your knees under your hips. As you inhale, drop your belly and lift your gaze for cow. As you exhale, round your spine and tuck your chin for cat. Let the breath lead the movement.",
    "key": "cf2b112a8e847f8cf173324e6e142d4a",
@@ -334,7 +347,7 @@
    "length": 261685,
    "duration": 16.36
   },
-  "v.pose.thread-needle.name": {
+  "en:v.pose.thread-needle.name": {
    "kind": "voice",
    "spec": "voice|Thread the needle. Parsva Balasana.",
    "key": "31949dcc5459ffa0b89d253871a57c96",
@@ -343,7 +356,7 @@
    "length": 41003,
    "duration": 2.56
   },
-  "v.pose.thread-needle.guide": {
+  "en:v.pose.thread-needle.guide": {
    "kind": "voice",
    "spec": "voice|Reach your right arm up toward the ceiling, then thread it under your left arm, resting your right shoulder and the side of your head on the mat. Keep your hips over your knees, and let your upper back soften.",
    "key": "d619055713f6978672734e5312a36db4",
@@ -352,7 +365,7 @@
    "length": 189796,
    "duration": 11.86
   },
-  "v.pose.balancing-table.name": {
+  "en:v.pose.balancing-table.name": {
    "kind": "voice",
    "spec": "voice|Balancing table. Dandayamana Bharmanasana.",
    "key": "b5662205b212bcb53ceab418e1977605",
@@ -361,7 +374,7 @@
    "length": 52287,
    "duration": 3.27
   },
-  "v.pose.balancing-table.guide": {
+  "en:v.pose.balancing-table.guide": {
    "kind": "voice",
    "spec": "voice|Reach your right arm forward and your left leg back, both at the height of your hips. Draw your belly gently in, and keep your hips level. Reach long through your fingertips and your heel.",
    "key": "d44c50a0d9679ac1594faafe62fd6383",
@@ -370,7 +383,7 @@
    "length": 202335,
    "duration": 12.65
   },
-  "v.pose.childs-pose.name": {
+  "en:v.pose.childs-pose.name": {
    "kind": "voice",
    "spec": "voice|Child's pose. Balasana.",
    "key": "37821f83be9b00de883c856496784749",
@@ -379,7 +392,7 @@
    "length": 33061,
    "duration": 2.07
   },
-  "v.pose.childs-pose.guide": {
+  "en:v.pose.childs-pose.guide": {
    "kind": "voice",
    "spec": "voice|Bring your big toes together and widen your knees. Sink your hips back toward your heels and rest your forehead on the mat, with your arms reaching forward. Let your back broaden with each breath.",
    "key": "4be92197a4a7e52de92d0b65f3cc642b",
@@ -388,7 +401,7 @@
    "length": 213620,
    "duration": 13.35
   },
-  "v.pose.puppy.name": {
+  "en:v.pose.puppy.name": {
    "kind": "voice",
    "spec": "voice|Puppy pose. Uttana Shishosana.",
    "key": "9809c244c18f67214bd32ef9b9935326",
@@ -397,7 +410,7 @@
    "length": 42674,
    "duration": 2.67
   },
-  "v.pose.puppy.guide": {
+  "en:v.pose.puppy.guide": {
    "kind": "voice",
    "spec": "voice|Keep your hips over your knees and walk your hands forward. Lower your chest toward the mat, and rest your forehead or chin down. Feel the stretch through your shoulders and upper back.",
    "key": "82f08eb06f02f0efb927f545f87fc82e",
@@ -406,7 +419,7 @@
    "length": 185198,
    "duration": 11.57
   },
-  "v.pose.downward-dog.name": {
+  "en:v.pose.downward-dog.name": {
    "kind": "voice",
    "spec": "voice|Downward-facing dog. Adho Mukha Svanasana.",
    "key": "08c8aa2002923e923a0be6bf6d676b1d",
@@ -415,7 +428,7 @@
    "length": 58139,
    "duration": 3.63
   },
-  "v.pose.downward-dog.guide": {
+  "en:v.pose.downward-dog.guide": {
    "kind": "voice",
    "spec": "voice|Tuck your toes and lift your hips up and back. Press firmly through your hands, and bend your knees as much as you need to keep your spine long. Let your head hang between your arms.",
    "key": "0ba127b49cd6871ac30fe363df3af2ee",
@@ -424,7 +437,7 @@
    "length": 191886,
    "duration": 11.99
   },
-  "v.pose.low-lunge.name": {
+  "en:v.pose.low-lunge.name": {
    "kind": "voice",
    "spec": "voice|Low lunge. Anjaneyasana.",
    "key": "79488ccc7ac0072236df0251685ab1be",
@@ -433,7 +446,7 @@
    "length": 33061,
    "duration": 2.07
   },
-  "v.pose.low-lunge.guide": {
+  "en:v.pose.low-lunge.guide": {
    "kind": "voice",
    "spec": "voice|Step your right foot forward between your hands, and lower your back knee to the mat. Lift your chest, and rest your hands on your front thigh or reach your arms up. Sink your hips gently forward, with your front knee over your ankle.",
    "key": "027b598c0b72d154f1ebf9a17efa1c86",
@@ -442,7 +455,7 @@
    "length": 258341,
    "duration": 16.15
   },
-  "v.pose.ragdoll.name": {
+  "en:v.pose.ragdoll.name": {
    "kind": "voice",
    "spec": "voice|Standing forward fold. Uttanasana.",
    "key": "51713d5f3a8cd46cab309ac23977c765",
@@ -451,7 +464,7 @@
    "length": 47690,
    "duration": 2.98
   },
-  "v.pose.ragdoll.guide": {
+  "en:v.pose.ragdoll.guide": {
    "kind": "voice",
    "spec": "voice|With your feet hip-width apart, fold forward with a generous bend in your knees. Hold opposite elbows and let your head and neck hang. Sway gently side to side if that feels good.",
    "key": "d7774c92570f1b8f0357210a8a90588e",
@@ -460,7 +473,7 @@
    "length": 211948,
    "duration": 13.25
   },
-  "v.pose.mountain.name": {
+  "en:v.pose.mountain.name": {
    "kind": "voice",
    "spec": "voice|Mountain pose. Tadasana.",
    "key": "b258c271368082a7407c7e74e4210379",
@@ -469,7 +482,7 @@
    "length": 30972,
    "duration": 1.94
   },
-  "v.pose.mountain.guide": {
+  "en:v.pose.mountain.guide": {
    "kind": "voice",
    "spec": "voice|Stand with your feet hip-width apart and your arms by your sides. Spread your toes and feel your weight evenly across both feet. Lengthen up through the crown of your head, and relax your shoulders down.",
    "key": "e0d92cd397239c6d5c1d402b28ebc091",
@@ -478,7 +491,7 @@
    "length": 204843,
    "duration": 12.8
   },
-  "v.pose.upward-salute.name": {
+  "en:v.pose.upward-salute.name": {
    "kind": "voice",
    "spec": "voice|Upward salute. Urdhva Hastasana.",
    "key": "4ee676c47ac4ce3716fef8f372b1ccdc",
@@ -487,7 +500,7 @@
    "length": 41838,
    "duration": 2.61
   },
-  "v.pose.upward-salute.guide": {
+  "en:v.pose.upward-salute.guide": {
    "kind": "voice",
    "spec": "voice|From standing, sweep your arms out to the sides and up overhead. Keep your shoulders relaxed away from your ears and your ribs soft. Reach up through your fingertips.",
    "key": "e8d736943363d5896110097e4e88b3f7",
@@ -496,7 +509,7 @@
    "length": 177257,
    "duration": 11.08
   },
-  "v.pose.chair.name": {
+  "en:v.pose.chair.name": {
    "kind": "voice",
    "spec": "voice|Chair pose. Utkatasana.",
    "key": "63af2a2db0823c3c36d493622f895164",
@@ -505,7 +518,7 @@
    "length": 35151,
    "duration": 2.2
   },
-  "v.pose.chair.guide": {
+  "en:v.pose.chair.guide": {
    "kind": "voice",
    "spec": "voice|With your feet hip-width apart, bend your knees and sit your hips back as if into a chair. Reach your arms up alongside your ears. Keep your weight in your heels, and your knees behind your toes.",
    "key": "fcb4768e3de517c767a6bccfac18e1a9",
@@ -514,7 +527,7 @@
    "length": 198573,
    "duration": 12.41
   },
-  "v.pose.warrior-1.name": {
+  "en:v.pose.warrior-1.name": {
    "kind": "voice",
    "spec": "voice|Warrior one. Virabhadrasana One.",
    "key": "50d9c868e56f1c884cefb5e7f06b56a5",
@@ -523,7 +536,7 @@
    "length": 50198,
    "duration": 3.14
   },
-  "v.pose.warrior-1.guide": {
+  "en:v.pose.warrior-1.guide": {
    "kind": "voice",
    "spec": "voice|Step your left foot back about a leg's length, and turn your back toes out slightly. Bend your right knee over your ankle, turn your hips toward the front of the mat, and reach your arms overhead. Press firmly through the outer edge of your back foot.",
    "key": "8d3a0a7e2d722ab4c314c364b517d8f3",
@@ -532,7 +545,7 @@
    "length": 254998,
    "duration": 15.94
   },
-  "v.pose.crescent-lunge.name": {
+  "en:v.pose.crescent-lunge.name": {
    "kind": "voice",
    "spec": "voice|High crescent lunge. Ashta Chandrasana.",
    "key": "8c4991d5837fa2d1d48ba2dde7d18775",
@@ -541,7 +554,7 @@
    "length": 51034,
    "duration": 3.19
   },
-  "v.pose.crescent-lunge.guide": {
+  "en:v.pose.crescent-lunge.guide": {
    "kind": "voice",
    "spec": "voice|Step your left foot far back and stay up on the ball of the back foot. Bend your right knee over your ankle and reach your arms overhead. Lift through your back thigh, and draw your lower belly gently in.",
    "key": "ea545aa4f29f14f9e02b15df03fe0a0c",
@@ -550,7 +563,7 @@
    "length": 204007,
    "duration": 12.75
   },
-  "v.pose.warrior-2.name": {
+  "en:v.pose.warrior-2.name": {
    "kind": "voice",
    "spec": "voice|Warrior two. Virabhadrasana Two.",
    "key": "a0dc8b9dada55c21f0762ffb5e28da00",
@@ -559,7 +572,7 @@
    "length": 55213,
    "duration": 3.45
   },
-  "v.pose.warrior-2.guide": {
+  "en:v.pose.warrior-2.guide": {
    "kind": "voice",
    "spec": "voice|Step your feet wide apart. Turn your right foot out to face the short end of the mat, and bend your right knee over your ankle. Reach your arms out at shoulder height, and gaze softly past your right fingertips.",
    "key": "d84732b4653846a22f00657f6b4eec91",
@@ -568,7 +581,7 @@
    "length": 218217,
    "duration": 13.64
   },
-  "v.pose.reverse-warrior.name": {
+  "en:v.pose.reverse-warrior.name": {
    "kind": "voice",
    "spec": "voice|Reverse warrior. Viparita Virabhadrasana.",
    "key": "93b52eb816f9366fc3557ae046ad0892",
@@ -577,7 +590,7 @@
    "length": 48526,
    "duration": 3.03
   },
-  "v.pose.reverse-warrior.guide": {
+  "en:v.pose.reverse-warrior.guide": {
    "kind": "voice",
    "spec": "voice|Step your feet wide, turn your right foot out, and bend your right knee. Slide your left hand down your back leg, and reach your right arm up and back. Keep the front knee bent as you lengthen through your side body.",
    "key": "de1f8b1cefacef67c4e61a4a5b3894c5",
@@ -586,7 +599,7 @@
    "length": 213620,
    "duration": 13.35
   },
-  "v.pose.side-angle.name": {
+  "en:v.pose.side-angle.name": {
    "kind": "voice",
    "spec": "voice|Extended side angle. Utthita Parsvakonasana.",
    "key": "2ace689a9eac24112738067cfdf972dc",
@@ -595,7 +608,7 @@
    "length": 53959,
    "duration": 3.37
   },
-  "v.pose.side-angle.guide": {
+  "en:v.pose.side-angle.guide": {
    "kind": "voice",
    "spec": "voice|Step your feet wide, turn your right foot out, and bend your right knee over the ankle. Rest your right forearm on your right thigh, and reach your left arm up and over your ear. Make one long line from your back heel to your fingertips.",
    "key": "384b4fa273a28e1538a0ed64f4fe5521",
@@ -604,7 +617,7 @@
    "length": 249982,
    "duration": 15.62
   },
-  "v.pose.triangle.name": {
+  "en:v.pose.triangle.name": {
    "kind": "voice",
    "spec": "voice|Triangle pose. Utthita Trikonasana.",
    "key": "38d3e86fc616489c582c84667a788893",
@@ -613,7 +626,7 @@
    "length": 48526,
    "duration": 3.03
   },
-  "v.pose.triangle.guide": {
+  "en:v.pose.triangle.guide": {
    "kind": "voice",
    "spec": "voice|Step your feet wide, turn your right foot out, and keep both legs straight without locking your knees. Reach forward over your right leg, then lower your right hand to your shin or a block, and lift your left arm to the ceiling. Open your chest to the side.",
    "key": "7fde3cadf4d954e96e6e8965fa14f70a",
@@ -622,7 +635,7 @@
    "length": 260431,
    "duration": 16.28
   },
-  "v.pose.pyramid.name": {
+  "en:v.pose.pyramid.name": {
    "kind": "voice",
    "spec": "voice|Pyramid pose. Parsvottanasana.",
    "key": "4475770f6dec6f11c6478307fc1169bb",
@@ -631,7 +644,7 @@
    "length": 39749,
    "duration": 2.48
   },
-  "v.pose.pyramid.guide": {
+  "en:v.pose.pyramid.guide": {
    "kind": "voice",
    "spec": "voice|Step your left foot back about three feet, with your back toes turned out slightly and your hips facing forward. Lengthen your spine, then fold over your right leg with your hands on your shin or on blocks. Keep a soft bend in your front knee.",
    "key": "d9585d7730fabaebec6a7d462d0029c9",
@@ -640,7 +653,7 @@
    "length": 262521,
    "duration": 16.41
   },
-  "v.pose.wide-fold.name": {
+  "en:v.pose.wide-fold.name": {
    "kind": "voice",
    "spec": "voice|Wide-legged forward fold. Prasarita Padottanasana.",
    "key": "346621cd58b8e6c1a59553dfb28f1750",
@@ -649,7 +662,7 @@
    "length": 62736,
    "duration": 3.92
   },
-  "v.pose.wide-fold.guide": {
+  "en:v.pose.wide-fold.guide": {
    "kind": "voice",
    "spec": "voice|Step your feet wide apart, toes pointing forward. With your hands on your hips, lengthen your spine and fold forward from your hips. Bring your hands to the floor under your shoulders, and let your head hang.",
    "key": "9be4b95e30e2b3717709546ae7cef252",
@@ -658,7 +671,7 @@
    "length": 218217,
    "duration": 13.64
   },
-  "v.pose.goddess.name": {
+  "en:v.pose.goddess.name": {
    "kind": "voice",
    "spec": "voice|Goddess pose. Utkata Konasana.",
    "key": "54234076d467cbb87154b44798bd8b90",
@@ -667,7 +680,7 @@
    "length": 43510,
    "duration": 2.72
   },
-  "v.pose.goddess.guide": {
+  "en:v.pose.goddess.guide": {
    "kind": "voice",
    "spec": "voice|Step your feet wide and turn your toes out. Bend your knees deeply, tracking them over your toes, and lower your hips toward knee height. Bend your elbows into a cactus shape, palms forward, and keep your spine tall.",
    "key": "518c1b288e7a1c7629edb65a4134e4e9",
@@ -676,7 +689,7 @@
    "length": 231592,
    "duration": 14.47
   },
-  "v.pose.garland.name": {
+  "en:v.pose.garland.name": {
    "kind": "voice",
    "spec": "voice|Garland pose. Malasana.",
    "key": "b772fe9e249ba0b014e52221c3f36041",
@@ -685,7 +698,7 @@
    "length": 37659,
    "duration": 2.35
   },
-  "v.pose.garland.guide": {
+  "en:v.pose.garland.guide": {
    "kind": "voice",
    "spec": "voice|Step your feet a little wider than your hips, toes turned out, and lower your hips into a deep squat. Bring your palms together and press your elbows gently against your inner knees. Lift your chest.",
    "key": "11a93468a50141c5219ff0325e74542f",
@@ -694,7 +707,7 @@
    "length": 229084,
    "duration": 14.32
   },
-  "v.pose.tree.name": {
+  "en:v.pose.tree.name": {
    "kind": "voice",
    "spec": "voice|Tree pose. Vrksasana.",
    "key": "ac34edf866f06d18087c07544c315008",
@@ -703,7 +716,7 @@
    "length": 34315,
    "duration": 2.14
   },
-  "v.pose.tree.guide": {
+  "en:v.pose.tree.guide": {
    "kind": "voice",
    "spec": "voice|Shift your weight onto your left foot. Place the sole of your right foot on your left ankle, calf, or inner thigh, but never on the knee. Bring your palms together at your chest, or reach them overhead. Rest your gaze on one still point.",
    "key": "4504a0cd6f4bf0669d98a1037463b72d",
@@ -712,7 +725,7 @@
    "length": 272134,
    "duration": 17.01
   },
-  "v.pose.warrior-3.name": {
+  "en:v.pose.warrior-3.name": {
    "kind": "voice",
    "spec": "voice|Warrior three. Virabhadrasana Three.",
    "key": "65db30994f22d1c8f7ccee371b6689f3",
@@ -721,7 +734,7 @@
    "length": 48526,
    "duration": 3.03
   },
-  "v.pose.warrior-3.guide": {
+  "en:v.pose.warrior-3.guide": {
    "kind": "voice",
    "spec": "voice|Shift your weight onto your left foot. Hinge forward from your hips as your right leg lifts behind you, until your body forms a T. Keep your hips level and your standing knee soft. Your hands can rest on your hips or on blocks.",
    "key": "91f33e45758e605b51c5f594b429d529",
@@ -730,7 +743,7 @@
    "length": 237443,
    "duration": 14.84
   },
-  "v.pose.half-moon.name": {
+  "en:v.pose.half-moon.name": {
    "kind": "voice",
    "spec": "voice|Half moon. Ardha Chandrasana.",
    "key": "a01283140ecad3abcf8dbd29361851f6",
@@ -739,7 +752,7 @@
    "length": 40585,
    "duration": 2.54
   },
-  "v.pose.half-moon.guide": {
+  "en:v.pose.half-moon.guide": {
    "kind": "voice",
    "spec": "voice|From a wide stance, turn your right foot out and bend your right knee. Bring your right hand to the floor or a block, about a foot in front of your right foot. Straighten your right leg as your left leg lifts to hip height, and open your chest and left arm toward the ceiling.",
    "key": "6d00746b46eadacf88bba83cb5ffece6",
@@ -748,7 +761,7 @@
    "length": 267118,
    "duration": 16.69
   },
-  "v.pose.eagle.name": {
+  "en:v.pose.eagle.name": {
    "kind": "voice",
    "spec": "voice|Eagle pose. Garudasana.",
    "key": "fd1c0c522d96a9eb01794427771e9042",
@@ -757,7 +770,7 @@
    "length": 33061,
    "duration": 2.07
   },
-  "v.pose.eagle.guide": {
+  "en:v.pose.eagle.guide": {
    "kind": "voice",
    "spec": "voice|Bend your knees slightly and cross your right thigh over your left. Wrap your right foot behind your left calf, or rest your toes on the floor. Cross your left arm under your right, bend your elbows, and bring your palms toward each other. Sit a little lower and lift your elbows.",
    "key": "be86960d155f836f27d3c9827d4dd208",
@@ -766,7 +779,7 @@
    "length": 293032,
    "duration": 18.31
   },
-  "v.pose.plank.name": {
+  "en:v.pose.plank.name": {
    "kind": "voice",
    "spec": "voice|Plank pose. Phalakasana.",
    "key": "989ee7cf6a1f4cc77d425e140608a970",
@@ -775,7 +788,7 @@
    "length": 33897,
    "duration": 2.12
   },
-  "v.pose.plank.guide": {
+  "en:v.pose.plank.guide": {
    "kind": "voice",
    "spec": "voice|Step your feet back one at a time into a long line from head to heels. Keep your shoulders over your wrists and your belly gently drawn in. Lower your knees to the mat at any time.",
    "key": "5dd00b0c84879e1c2bc2452896b8f8c8",
@@ -784,7 +797,7 @@
    "length": 220307,
    "duration": 13.77
   },
-  "v.pose.side-plank.name": {
+  "en:v.pose.side-plank.name": {
    "kind": "voice",
    "spec": "voice|Side plank. Vasisthasana.",
    "key": "c0324ab26fb2db5b21295c69cea2dd59",
@@ -793,7 +806,7 @@
    "length": 37659,
    "duration": 2.35
   },
-  "v.pose.side-plank.guide": {
+  "en:v.pose.side-plank.guide": {
    "kind": "voice",
    "spec": "voice|Step back to plank. Roll onto the outer edge of your right foot and your right hand, and stack your left foot on top, or lower your bottom knee for support. Lift your hips, and reach your left arm toward the ceiling.",
    "key": "2c99909bf9a0c5333e7488e05a34e3b9",
@@ -802,7 +815,7 @@
    "length": 232846,
    "duration": 14.55
   },
-  "v.pose.boat.name": {
+  "en:v.pose.boat.name": {
    "kind": "voice",
    "spec": "voice|Boat pose. Navasana.",
    "key": "544f6452fe1c0d327538ff5e107024cf",
@@ -811,7 +824,7 @@
    "length": 32225,
    "duration": 2.01
   },
-  "v.pose.boat.guide": {
+  "en:v.pose.boat.guide": {
    "kind": "voice",
    "spec": "voice|Sit with your knees bent and your feet on the floor. Hold the backs of your thighs, lean back slightly with a long spine, and lift your feet until your shins are parallel to the floor. Keep your chest lifted, and reach your arms forward when you're ready.",
    "key": "3dd929eec4110e4c75f66db9bea509fb",
@@ -820,7 +833,7 @@
    "length": 249982,
    "duration": 15.62
   },
-  "v.pose.sphinx.name": {
+  "en:v.pose.sphinx.name": {
    "kind": "voice",
    "spec": "voice|Sphinx pose. Salamba Bhujangasana.",
    "key": "d329de472de7f2429b12561dce31280e",
@@ -829,7 +842,7 @@
    "length": 47690,
    "duration": 2.98
   },
-  "v.pose.sphinx.guide": {
+  "en:v.pose.sphinx.guide": {
    "kind": "voice",
    "spec": "voice|Bring your elbows under your shoulders, with your forearms parallel. Press gently into your forearms to lift your chest. Let your legs relax, and keep your neck long.",
    "key": "19c5bc5f193b2141d2d7f0f2a65157d8",
@@ -838,7 +851,7 @@
    "length": 167644,
    "duration": 10.48
   },
-  "v.pose.cobra.name": {
+  "en:v.pose.cobra.name": {
    "kind": "voice",
    "spec": "voice|Cobra pose. Bhujangasana.",
    "key": "01b8e605a6c64e52d1843b8e9d4d48cd",
@@ -847,7 +860,7 @@
    "length": 40585,
    "duration": 2.54
   },
-  "v.pose.cobra.guide": {
+  "en:v.pose.cobra.guide": {
    "kind": "voice",
    "spec": "voice|Place your hands under your shoulders, with your elbows close to your sides. Press the tops of your feet into the floor, and lift your chest using your back muscles, with only a little weight in your hands. Keep your elbows bent and your shoulders soft.",
    "key": "477c277fb7f936304ea9f269b68a2f63",
@@ -856,7 +869,7 @@
    "length": 256670,
    "duration": 16.04
   },
-  "v.pose.locust.name": {
+  "en:v.pose.locust.name": {
    "kind": "voice",
    "spec": "voice|Locust pose. Salabhasana.",
    "key": "ed71b706b511a84afb4901dbbde0f1cd",
@@ -865,7 +878,7 @@
    "length": 36823,
    "duration": 2.3
   },
-  "v.pose.locust.guide": {
+  "en:v.pose.locust.guide": {
    "kind": "voice",
    "spec": "voice|Rest your arms alongside you, palms down. Lift your chest, arms, and legs a few inches from the floor. Reach back through your fingertips and toes, and keep your gaze down to protect your neck.",
    "key": "983b4b604d1cae5e53a5dfaab79adbae",
@@ -874,7 +887,7 @@
    "length": 205261,
    "duration": 12.83
   },
-  "v.pose.pigeon.name": {
+  "en:v.pose.pigeon.name": {
    "kind": "voice",
    "spec": "voice|Pigeon pose. Eka Pada Raja Kapotasana.",
    "key": "2b29ed2e4b325b40b4684b4ad7fa9448",
@@ -883,7 +896,7 @@
    "length": 50198,
    "duration": 3.14
   },
-  "v.pose.pigeon.guide": {
+  "en:v.pose.pigeon.guide": {
    "kind": "voice",
    "spec": "voice|Bring your right knee forward behind your right wrist, and angle your right shin across the mat. Slide your left leg straight back. Keep your hips level, and either stay upright on your hands or fold forward onto your forearms.",
    "key": "89e96badc6277015e5b479bf50b7f4be",
@@ -892,7 +905,7 @@
    "length": 237443,
    "duration": 14.84
   },
-  "v.pose.bound-angle.name": {
+  "en:v.pose.bound-angle.name": {
    "kind": "voice",
    "spec": "voice|Bound angle pose. Baddha Konasana.",
    "key": "5ead5299d7fb5eab4682760a147d26e2",
@@ -901,7 +914,7 @@
    "length": 44764,
    "duration": 2.8
   },
-  "v.pose.bound-angle.guide": {
+  "en:v.pose.bound-angle.guide": {
    "kind": "voice",
    "spec": "voice|Bring the soles of your feet together and let your knees fall open. Hold your ankles or feet, and lengthen your spine. If you like, hinge forward gently from your hips, keeping your back long.",
    "key": "4bde11b106c871b3fcb3d8b90765d0a4",
@@ -910,7 +923,7 @@
    "length": 211530,
    "duration": 13.22
   },
-  "v.pose.head-to-knee.name": {
+  "en:v.pose.head-to-knee.name": {
    "kind": "voice",
    "spec": "voice|Head-to-knee pose. Janu Sirsasana.",
    "key": "23dd1bed188818b4b74fc288f45b0639",
@@ -919,7 +932,7 @@
    "length": 47272,
    "duration": 2.95
   },
-  "v.pose.head-to-knee.guide": {
+  "en:v.pose.head-to-knee.guide": {
    "kind": "voice",
    "spec": "voice|Extend your right leg forward and bend your left knee, placing the sole of your left foot against your inner right thigh. Turn your chest toward your right leg, lengthen up, then fold forward over the straight leg. Keep a bend in that knee if your hamstrings are tight.",
    "key": "82a8ba9f3a25b681c78c683c211b03a0",
@@ -928,7 +941,7 @@
    "length": 265447,
    "duration": 16.59
   },
-  "v.pose.seated-forward-fold.name": {
+  "en:v.pose.seated-forward-fold.name": {
    "kind": "voice",
    "spec": "voice|Seated forward fold. Paschimottanasana.",
    "key": "0155997e283b62e4b1961aa52adbfca9",
@@ -937,7 +950,7 @@
    "length": 55213,
    "duration": 3.45
   },
-  "v.pose.seated-forward-fold.guide": {
+  "en:v.pose.seated-forward-fold.guide": {
    "kind": "voice",
    "spec": "voice|Extend both legs in front of you. Inhale to lengthen your spine, and exhale to hinge forward from your hips, reaching for your shins, ankles, or feet. Bend your knees as much as you need, and let your head relax.",
    "key": "2444f3427d3629dec52340d3e202d065",
@@ -946,7 +959,7 @@
    "length": 250818,
    "duration": 15.68
   },
-  "v.pose.half-lord-fishes.name": {
+  "en:v.pose.half-lord-fishes.name": {
    "kind": "voice",
    "spec": "voice|Half lord of the fishes. Ardha Matsyendrasana.",
    "key": "d0fbd18c3590904a6b6574d49029a576",
@@ -955,7 +968,7 @@
    "length": 56049,
    "duration": 3.5
   },
-  "v.pose.half-lord-fishes.guide": {
+  "en:v.pose.half-lord-fishes.guide": {
    "kind": "voice",
    "spec": "voice|With your legs extended, bend your right knee and place your right foot on the floor outside your left thigh. Hug your right knee with your left arm, place your right hand behind you, and sit tall. With each exhale, turn a little further to the right.",
    "key": "5dd06d9250ca61becd8ced1311ab4de7",
@@ -964,7 +977,7 @@
    "length": 246221,
    "duration": 15.39
   },
-  "v.pose.bridge.name": {
+  "en:v.pose.bridge.name": {
    "kind": "voice",
    "spec": "voice|Bridge pose. Setu Bandha Sarvangasana.",
    "key": "e0199fd91cb394eb38ed01c7e8ab1f87",
@@ -973,7 +986,7 @@
    "length": 51034,
    "duration": 3.19
   },
-  "v.pose.bridge.guide": {
+  "en:v.pose.bridge.guide": {
    "kind": "voice",
    "spec": "voice|Bend your knees and place your feet flat, hip-width apart, close to your hips. Press into your feet and lift your hips toward the ceiling. Keep your knees pointing forward, and you can clasp your hands underneath you.",
    "key": "bd62c59fe85926b23cbf9b3fc540cf4e",
@@ -982,7 +995,7 @@
    "length": 224069,
    "duration": 14
   },
-  "v.pose.figure-four.name": {
+  "en:v.pose.figure-four.name": {
    "kind": "voice",
    "spec": "voice|Reclined figure four. Sucirandhrasana.",
    "key": "303a5e3f5b6b62bdb634ca5271351d1d",
@@ -991,7 +1004,7 @@
    "length": 52287,
    "duration": 3.27
   },
-  "v.pose.figure-four.guide": {
+  "en:v.pose.figure-four.guide": {
    "kind": "voice",
    "spec": "voice|With your knees bent, cross your right ankle over your left thigh. Lift your left foot and hold behind your left thigh, drawing it gently toward you. Keep your right foot flexed and your shoulders relaxed.",
    "key": "3211368c19cbdb8aa64b34e8d591fb8b",
@@ -1000,7 +1013,7 @@
    "length": 200245,
    "duration": 12.52
   },
-  "v.pose.knees-to-chest.name": {
+  "en:v.pose.knees-to-chest.name": {
    "kind": "voice",
    "spec": "voice|Knees to chest. Apanasana.",
    "key": "52db9687bf582c4f7d221cb66dc4e104",
@@ -1009,7 +1022,7 @@
    "length": 32225,
    "duration": 2.01
   },
-  "v.pose.knees-to-chest.guide": {
+  "en:v.pose.knees-to-chest.guide": {
    "kind": "voice",
    "spec": "voice|Hug both knees toward your chest. Rock gently from side to side to massage your lower back. Let your shoulders and head stay heavy on the mat.",
    "key": "c3357a5ece925bcec0fce227338d38c3",
@@ -1018,7 +1031,7 @@
    "length": 155523,
    "duration": 9.72
   },
-  "v.pose.supine-twist.name": {
+  "en:v.pose.supine-twist.name": {
    "kind": "voice",
    "spec": "voice|Supine twist. Supta Matsyendrasana.",
    "key": "9b2245f704e405b631915e249dbe485c",
@@ -1027,7 +1040,7 @@
    "length": 51034,
    "duration": 3.19
   },
-  "v.pose.supine-twist.guide": {
+  "en:v.pose.supine-twist.guide": {
    "kind": "voice",
    "spec": "voice|Hug your right knee into your chest, then guide it across your body to the left with your left hand. Stretch your right arm out to the side, and if it's comfortable, turn your gaze to the right. Let both shoulders stay heavy.",
    "key": "e91d2df2d3fca3f03954642447814ae9",
@@ -1036,7 +1049,7 @@
    "length": 218635,
    "duration": 13.66
   },
-  "v.pose.happy-baby.name": {
+  "en:v.pose.happy-baby.name": {
    "kind": "voice",
    "spec": "voice|Happy baby. Ananda Balasana.",
    "key": "f899ffa7a4ec4d8b1616a93c326a5c76",
@@ -1045,7 +1058,7 @@
    "length": 41838,
    "duration": 2.61
   },
-  "v.pose.happy-baby.guide": {
+  "en:v.pose.happy-baby.guide": {
    "kind": "voice",
    "spec": "voice|Bend your knees toward your armpits, and hold the outer edges of your feet or the backs of your thighs. Stack your ankles over your knees, and gently draw your knees down. Let your lower back rest on the mat.",
    "key": "22cb3c84b8dd6dce540f3244d1260a50",
@@ -1054,7 +1067,7 @@
    "length": 211530,
    "duration": 13.22
   },
-  "v.pose.reclined-bound-angle.name": {
+  "en:v.pose.reclined-bound-angle.name": {
    "kind": "voice",
    "spec": "voice|Reclined bound angle. Supta Baddha Konasana.",
    "key": "e51aaffecdaa44ddfe2c8286ae432984",
@@ -1063,7 +1076,7 @@
    "length": 56885,
    "duration": 3.56
   },
-  "v.pose.reclined-bound-angle.guide": {
+  "en:v.pose.reclined-bound-angle.guide": {
    "kind": "voice",
    "spec": "voice|Bring the soles of your feet together and let your knees fall open. Rest one hand on your belly and one on your heart. Let gravity do the work.",
    "key": "7b95ba3cb57545133bd1e823eb0676d0",
@@ -1072,7 +1085,7 @@
    "length": 165972,
    "duration": 10.37
   },
-  "v.pose.savasana.name": {
+  "en:v.pose.savasana.name": {
    "kind": "voice",
    "spec": "voice|Corpse pose. Shavasana.",
    "key": "0933060d6594e85ed0fd6ed265001ff4",
@@ -1081,7 +1094,7 @@
    "length": 36823,
    "duration": 2.3
   },
-  "v.pose.savasana.guide": {
+  "en:v.pose.savasana.guide": {
    "kind": "voice",
    "spec": "voice|Let your legs and arms relax, palms facing up, and close your eyes. Release any effort, and let your breath return to its natural rhythm. Rest here.",
    "key": "191c2573b2b304aebc6b1b0338e66cf4",
@@ -1090,7 +1103,7 @@
    "length": 195647,
    "duration": 12.23
   },
-  "v.pose.half-sun.name": {
+  "en:v.pose.half-sun.name": {
    "kind": "voice",
    "spec": "voice|Half sun salutation. Ardha Surya Namaskar.",
    "key": "db8a56f9acfe4ca4a65f896456488fa2",
@@ -1099,7 +1112,7 @@
    "length": 58975,
    "duration": 3.69
   },
-  "v.pose.half-sun.guide": {
+  "en:v.pose.half-sun.guide": {
    "kind": "voice",
    "spec": "voice|A gentle standing flow. We'll move through it slowly once, holding each shape, then flow with one movement for each chime.",
    "key": "b885279408d2971a8c883fd1e6751cf5",
@@ -1108,7 +1121,7 @@
    "length": 143821,
    "duration": 8.99
   },
-  "v.pose.sun-a.name": {
+  "en:v.pose.sun-a.name": {
    "kind": "voice",
    "spec": "voice|Sun salutation A. Surya Namaskar A.",
    "key": "a1685f50a02129a0fcacb41af5061f4a",
@@ -1117,7 +1130,7 @@
    "length": 46436,
    "duration": 2.9
   },
-  "v.pose.sun-a.guide": {
+  "en:v.pose.sun-a.guide": {
    "kind": "voice",
    "spec": "voice|The classic vinyasa sequence. We'll move through it slowly once, holding each shape, then flow with one movement for each chime.",
    "key": "2e4575627b503b395e5693b2a888569e",
@@ -1126,7 +1139,7 @@
    "length": 137969,
    "duration": 8.62
   },
-  "v.pose.warrior-flow.name": {
+  "en:v.pose.warrior-flow.name": {
    "kind": "voice",
    "spec": "voice|Warrior flow.",
    "key": "a0a2771a745e31db6d7de49de4948f89",
@@ -1135,7 +1148,7 @@
    "length": 20941,
    "duration": 1.31
   },
-  "v.pose.warrior-flow.guide": {
+  "en:v.pose.warrior-flow.guide": {
    "kind": "voice",
    "spec": "voice|Three warrior shapes linked together. We'll learn it slowly on the first side, then flow with one movement for each chime.",
    "key": "140e8bdf79410a23c9c6dc3adece0c70",
@@ -1144,7 +1157,7 @@
    "length": 122923,
    "duration": 7.68
   },
-  "v.flow.half-sun.0.teach": {
+  "en:v.flow.half-sun.0.teach": {
    "kind": "voice",
    "spec": "voice|From mountain, sweep your arms out to the sides and up overhead.",
    "key": "cfcfe3a3a158900adac19bdd156b3250",
@@ -1153,7 +1166,7 @@
    "length": 67334,
    "duration": 4.21
   },
-  "v.flow.half-sun.1.teach": {
+  "en:v.flow.half-sun.1.teach": {
    "kind": "voice",
    "spec": "voice|Hinge at your hips and fold forward, with soft knees.",
    "key": "2464cb3792453ba7ed4ed8de1b630d60",
@@ -1162,7 +1175,7 @@
    "length": 58139,
    "duration": 3.63
   },
-  "v.flow.half-sun.2.teach": {
+  "en:v.flow.half-sun.2.teach": {
    "kind": "voice",
    "spec": "voice|Bring your hands to your shins and lengthen your spine forward, like a tabletop.",
    "key": "833c96f04b40f50425fc8f289b1012b4",
@@ -1171,7 +1184,7 @@
    "length": 70260,
    "duration": 4.39
   },
-  "v.flow.half-sun.3.teach": {
+  "en:v.flow.half-sun.3.teach": {
    "kind": "voice",
    "spec": "voice|Fold forward again, and let your head hang.",
    "key": "244afe7bdb3f3e66c7734b05d1bcbb8d",
@@ -1180,7 +1193,7 @@
    "length": 40585,
    "duration": 2.54
   },
-  "v.flow.half-sun.4.teach": {
+  "en:v.flow.half-sun.4.teach": {
    "kind": "voice",
    "spec": "voice|Bend your knees, reach your arms out, and rise all the way up.",
    "key": "ac4fbe6c598217e55371642c8ca16896",
@@ -1189,7 +1202,7 @@
    "length": 64826,
    "duration": 4.05
   },
-  "v.flow.half-sun.5.teach": {
+  "en:v.flow.half-sun.5.teach": {
    "kind": "voice",
    "spec": "voice|Bring your palms together at your heart.",
    "key": "766844189b06c30b4a5a5637f3a623c1",
@@ -1198,7 +1211,7 @@
    "length": 35987,
    "duration": 2.25
   },
-  "v.flow.sun-a.0.teach": {
+  "en:v.flow.sun-a.0.teach": {
    "kind": "voice",
    "spec": "voice|From mountain, sweep your arms out to the sides and up overhead.",
    "key": "cfcfe3a3a158900adac19bdd156b3250",
@@ -1207,7 +1220,7 @@
    "length": 67334,
    "duration": 4.21
   },
-  "v.flow.sun-a.1.teach": {
+  "en:v.flow.sun-a.1.teach": {
    "kind": "voice",
    "spec": "voice|Hinge at your hips and fold forward, with soft knees.",
    "key": "2464cb3792453ba7ed4ed8de1b630d60",
@@ -1216,7 +1229,7 @@
    "length": 58139,
    "duration": 3.63
   },
-  "v.flow.sun-a.2.teach": {
+  "en:v.flow.sun-a.2.teach": {
    "kind": "voice",
    "spec": "voice|Bring your hands to your shins and lengthen your spine forward, like a tabletop.",
    "key": "833c96f04b40f50425fc8f289b1012b4",
@@ -1225,7 +1238,7 @@
    "length": 70260,
    "duration": 4.39
   },
-  "v.flow.sun-a.3.teach": {
+  "en:v.flow.sun-a.3.teach": {
    "kind": "voice",
    "spec": "voice|Plant your hands and step back, one foot at a time, into plank.",
    "key": "dc2092685f5ee477f994ca44ef90d574",
@@ -1234,7 +1247,7 @@
    "length": 67334,
    "duration": 4.21
   },
-  "v.flow.sun-a.4.teach": {
+  "en:v.flow.sun-a.4.teach": {
    "kind": "voice",
    "spec": "voice|Shoulders over wrists, belly gently in. One long line from head to heels.",
    "key": "0a4a1450fd4eb7c2c68136138ba0ef43",
@@ -1243,7 +1256,7 @@
    "length": 92412,
    "duration": 5.78
   },
-  "v.flow.sun-a.5.teach": {
+  "en:v.flow.sun-a.5.teach": {
    "kind": "voice",
    "spec": "voice|Bring your knees to the mat, hug your elbows in, and lower your chest slowly to the floor.",
    "key": "77a3a58d3ed936f1cb30dafac10423a4",
@@ -1252,7 +1265,7 @@
    "length": 89486,
    "duration": 5.59
   },
-  "v.flow.sun-a.5.teach2": {
+  "en:v.flow.sun-a.5.teach2": {
    "kind": "voice",
    "spec": "voice|Hug your elbows in and lower halfway down, keeping one long line from head to heels. Drop your knees any time.",
    "key": "a9bee8e0708944b5eada91312b0cd9b6",
@@ -1261,7 +1274,7 @@
    "length": 120833,
    "duration": 7.55
   },
-  "v.flow.sun-a.6.teach": {
+  "en:v.flow.sun-a.6.teach": {
    "kind": "voice",
    "spec": "voice|Untuck your toes, press lightly into your hands, and lift your chest with your back muscles.",
    "key": "c3379f5a45fe27a7d09c8e035ce374c6",
@@ -1270,7 +1283,7 @@
    "length": 92412,
    "duration": 5.78
   },
-  "v.flow.sun-a.7.teach": {
+  "en:v.flow.sun-a.7.teach": {
    "kind": "voice",
    "spec": "voice|Tuck your toes and lift your hips up and back.",
    "key": "c2b6ba89726b2ef4f922c7572562b16f",
@@ -1279,7 +1292,7 @@
    "length": 45600,
    "duration": 2.85
   },
-  "v.flow.sun-a.8.teach": {
+  "en:v.flow.sun-a.8.teach": {
    "kind": "voice",
    "spec": "voice|Stay here. Pedal your heels, bending one knee, then the other.",
    "key": "62bb4e87a49e2694195ae00dc07a6f63",
@@ -1288,7 +1301,7 @@
    "length": 70260,
    "duration": 4.39
   },
-  "v.flow.sun-a.9.teach": {
+  "en:v.flow.sun-a.9.teach": {
    "kind": "voice",
    "spec": "voice|Walk your feet up to your hands, or hop if you like, and lift halfway with a long spine.",
    "key": "81d9727095b2e2f406dce8b6d3b4f546",
@@ -1297,7 +1310,7 @@
    "length": 91576,
    "duration": 5.72
   },
-  "v.flow.sun-a.10.teach": {
+  "en:v.flow.sun-a.10.teach": {
    "kind": "voice",
    "spec": "voice|Fold forward again, and let your head hang.",
    "key": "244afe7bdb3f3e66c7734b05d1bcbb8d",
@@ -1306,7 +1319,7 @@
    "length": 40585,
    "duration": 2.54
   },
-  "v.flow.sun-a.11.teach": {
+  "en:v.flow.sun-a.11.teach": {
    "kind": "voice",
    "spec": "voice|Bend your knees, reach your arms out, and rise all the way up.",
    "key": "ac4fbe6c598217e55371642c8ca16896",
@@ -1315,7 +1328,7 @@
    "length": 64826,
    "duration": 4.05
   },
-  "v.flow.sun-a.12.teach": {
+  "en:v.flow.sun-a.12.teach": {
    "kind": "voice",
    "spec": "voice|Bring your palms together at your heart.",
    "key": "766844189b06c30b4a5a5637f3a623c1",
@@ -1324,7 +1337,7 @@
    "length": 35987,
    "duration": 2.25
   },
-  "v.flow.warrior-flow.setup": {
+  "en:v.flow.warrior-flow.setup": {
    "kind": "voice",
    "spec": "voice|Step your feet wide, turn your right foot out, and bend your right knee over your ankle. Reach your arms out wide. This is warrior two.",
    "key": "a71e85a7b19b18820876ec586402846d",
@@ -1333,7 +1346,7 @@
    "length": 148836,
    "duration": 9.3
   },
-  "v.flow.warrior-flow.0.teach": {
+  "en:v.flow.warrior-flow.0.teach": {
    "kind": "voice",
    "spec": "voice|Slide your left hand down your back leg, and reach your right arm up and back. Keep your front knee bent.",
    "key": "0000a08f24c475cb6f1a62d0442c8e47",
@@ -1342,7 +1355,7 @@
    "length": 102025,
    "duration": 6.38
   },
-  "v.flow.warrior-flow.1.teach": {
+  "en:v.flow.warrior-flow.1.teach": {
    "kind": "voice",
    "spec": "voice|Bring your right forearm to your right thigh, and reach your left arm up and over your ear.",
    "key": "e8bcfb3deb0d553a1636ed8105ddec48",
@@ -1351,7 +1364,7 @@
    "length": 87814,
    "duration": 5.49
   },
-  "v.flow.warrior-flow.2.teach": {
+  "en:v.flow.warrior-flow.2.teach": {
    "kind": "voice",
    "spec": "voice|Sweep back up into reverse warrior.",
    "key": "3b0523e6a85bc336a0417c5ff6df1ec7",
@@ -1360,7 +1373,7 @@
    "length": 38077,
    "duration": 2.38
   },
-  "v.flow.warrior-flow.3.teach": {
+  "en:v.flow.warrior-flow.3.teach": {
    "kind": "voice",
    "spec": "voice|Arms wide, back to warrior two.",
    "key": "1a52cfd7a284165d7c6b40d2608a39b0",
@@ -1369,7 +1382,7 @@
    "length": 40585,
    "duration": 2.54
   },
-  "v.cue.reach-up": {
+  "en:v.cue.reach-up": {
    "kind": "voice",
    "spec": "voice|Reach up.",
    "key": "8848c58977368e131a2d6c409f67d8bd",
@@ -1378,7 +1391,7 @@
    "length": 16761,
    "duration": 1.05
   },
-  "v.cue.fold": {
+  "en:v.cue.fold": {
    "kind": "voice",
    "spec": "voice|Fold.",
    "key": "04a017de29e10cb7d3bf7d4b855413d0",
@@ -1387,7 +1400,7 @@
    "length": 15089,
    "duration": 0.94
   },
-  "v.cue.halfway-lift": {
+  "en:v.cue.halfway-lift": {
    "kind": "voice",
    "spec": "voice|Halfway lift.",
    "key": "8cc8549cc3e0751ad5327641e8ca535a",
@@ -1396,7 +1409,7 @@
    "length": 20523,
    "duration": 1.28
   },
-  "v.cue.rise-up": {
+  "en:v.cue.rise-up": {
    "kind": "voice",
    "spec": "voice|Rise up.",
    "key": "41cd759978d782219fb29bf18d0e8e02",
@@ -1405,7 +1418,7 @@
    "length": 17597,
    "duration": 1.1
   },
-  "v.cue.hands-to-heart": {
+  "en:v.cue.hands-to-heart": {
    "kind": "voice",
    "spec": "voice|Hands to heart.",
    "key": "1abe97bfd28ef57463297271ac024f8b",
@@ -1414,7 +1427,7 @@
    "length": 20941,
    "duration": 1.31
   },
-  "v.cue.step-back-to-plank": {
+  "en:v.cue.step-back-to-plank": {
    "kind": "voice",
    "spec": "voice|Step back to plank.",
    "key": "a702a41cdaa60e937aa902a84733685c",
@@ -1423,7 +1436,7 @@
    "length": 24702,
    "duration": 1.54
   },
-  "v.cue.lengthen": {
+  "en:v.cue.lengthen": {
    "kind": "voice",
    "spec": "voice|Lengthen.",
    "key": "a01512717ef323fb2bea5d550c3f6dc5",
@@ -1432,7 +1445,7 @@
    "length": 15089,
    "duration": 0.94
   },
-  "v.cue.knees-down-lower-slowly": {
+  "en:v.cue.knees-down-lower-slowly": {
    "kind": "voice",
    "spec": "voice|Knees down. Lower slowly.",
    "key": "96a34ec57c532a579e4b85da1e27b38c",
@@ -1441,7 +1454,7 @@
    "length": 31390,
    "duration": 1.96
   },
-  "v.cue.chaturanga": {
+  "en:v.cue.chaturanga": {
    "kind": "voice",
    "spec": "voice|Chaturanga.",
    "key": "698ebcc03818dbea861745d4f3a5ec95",
@@ -1450,7 +1463,7 @@
    "length": 19687,
    "duration": 1.23
   },
-  "v.cue.cobra": {
+  "en:v.cue.cobra": {
    "kind": "voice",
    "spec": "voice|Cobra.",
    "key": "0d7a9ae1b39736f15561022f9f737f00",
@@ -1459,7 +1472,7 @@
    "length": 15089,
    "duration": 0.94
   },
-  "v.cue.downward-dog": {
+  "en:v.cue.downward-dog": {
    "kind": "voice",
    "spec": "voice|Downward dog.",
    "key": "57c599345efc2435c06af8b3af15648b",
@@ -1468,7 +1481,7 @@
    "length": 21776,
    "duration": 1.36
   },
-  "v.cue.pedal-your-heels": {
+  "en:v.cue.pedal-your-heels": {
    "kind": "voice",
    "spec": "voice|Pedal your heels.",
    "key": "688a23c1092d31c88c08707ac2aff174",
@@ -1477,7 +1490,7 @@
    "length": 22612,
    "duration": 1.41
   },
-  "v.cue.walk-forward-halfway-lift": {
+  "en:v.cue.walk-forward-halfway-lift": {
    "kind": "voice",
    "spec": "voice|Walk forward. Halfway lift.",
    "key": "d46f83868e1e81dc57345433ad0f9ccf",
@@ -1486,7 +1499,7 @@
    "length": 32225,
    "duration": 2.01
   },
-  "v.cue.warrior-two": {
+  "en:v.cue.warrior-two": {
    "kind": "voice",
    "spec": "voice|Warrior two.",
    "key": "3ac1f71adc3397dc7b46d2b0db38336d",
@@ -1495,7 +1508,7 @@
    "length": 19687,
    "duration": 1.23
   },
-  "v.cue.reverse-warrior": {
+  "en:v.cue.reverse-warrior": {
    "kind": "voice",
    "spec": "voice|Reverse warrior.",
    "key": "b414dc31dd9107a22295bef95bd295dc",
@@ -1504,7 +1517,7 @@
    "length": 22612,
    "duration": 1.41
   },
-  "v.cue.side-angle": {
+  "en:v.cue.side-angle": {
    "kind": "voice",
    "spec": "voice|Side angle.",
    "key": "1d892061310c58981b1767c5fb85b101",
@@ -1513,12 +1526,1488 @@
    "length": 19687,
    "duration": 1.23
   },
+  "fr:v.welcome": {
+   "kind": "voice",
+   "spec": "voice|Bienvenue. Commençons notre pratique ensemble.",
+   "key": "d26f8aaa55505210b00c88b12ad2be98",
+   "proc": "de4bcaf573",
+   "offset": 15978882,
+   "length": 48526,
+   "duration": 3.03
+  },
+  "fr:v.release": {
+   "kind": "voice",
+   "spec": "voice|Et relâchez.",
+   "key": "207e45017c6ccad0563449598583db6a",
+   "proc": "de4bcaf573",
+   "offset": 16027408,
+   "length": 19687,
+   "duration": 1.23
+  },
+  "fr:v.switch": {
+   "kind": "voice",
+   "spec": "voice|Maintenant, l'autre côté.",
+   "key": "743fce60142c12a2cba3b95963ab35e5",
+   "proc": "de4bcaf573",
+   "offset": 16047095,
+   "length": 27628,
+   "duration": 1.73
+  },
+  "fr:v.lastBreath": {
+   "kind": "voice",
+   "spec": "voice|Encore une respiration.",
+   "key": "7f2ee5a9d5fdb09c605b2daaa1c2fc66",
+   "proc": "de4bcaf573",
+   "offset": 16074723,
+   "length": 27628,
+   "duration": 1.73
+  },
+  "fr:v.wake": {
+   "kind": "voice",
+   "spec": "voice|Approfondissez doucement votre respiration. Bougez les doigts et les orteils. Lorsque vous le souhaitez, roulez sur le côté droit, et remontez lentement en position assise.",
+   "key": "ff56ec989fb2fead1b05244be3b5ecfa",
+   "proc": "de4bcaf573",
+   "offset": 16102351,
+   "length": 187706,
+   "duration": 11.73
+  },
+  "fr:v.close": {
+   "kind": "voice",
+   "spec": "voice|Merci pour votre pratique. Namasté.",
+   "key": "d1399a67805dc921062517cb1118a267",
+   "proc": "de4bcaf573",
+   "offset": 16290057,
+   "length": 41838,
+   "duration": 2.61
+  },
+  "fr:v.flowOn": {
+   "kind": "voice",
+   "spec": "voice|Maintenant, enchaînons. Un mouvement à chaque son de cloche.",
+   "key": "234451284576b9f6a0bd8d42eb5192eb",
+   "proc": "de4bcaf573",
+   "offset": 16331895,
+   "length": 61065,
+   "duration": 3.82
+  },
+  "fr:v.hold.2": {
+   "kind": "voice",
+   "spec": "voice|Restez ici pendant deux respirations.",
+   "key": "15fd3dad8b06dc1909fd6c7e52f82792",
+   "proc": "de4bcaf573",
+   "offset": 16392960,
+   "length": 43510,
+   "duration": 2.72
+  },
+  "fr:v.hold.3": {
+   "kind": "voice",
+   "spec": "voice|Restez ici pendant trois respirations.",
+   "key": "48c65a2a94d7a066e8d4b02eb9b5b39a",
+   "proc": "de4bcaf573",
+   "offset": 16436470,
+   "length": 44346,
+   "duration": 2.77
+  },
+  "fr:v.hold.4": {
+   "kind": "voice",
+   "spec": "voice|Restez ici pendant quatre respirations.",
+   "key": "42cf6d8970a069be65c560ed7bcdf783",
+   "proc": "de4bcaf573",
+   "offset": 16480816,
+   "length": 43510,
+   "duration": 2.72
+  },
+  "fr:v.hold.5": {
+   "kind": "voice",
+   "spec": "voice|Restez ici pendant cinq respirations.",
+   "key": "1f194e84dcf939113ef2b87315714127",
+   "proc": "de4bcaf573",
+   "offset": 16524326,
+   "length": 45600,
+   "duration": 2.85
+  },
+  "fr:v.hold.6": {
+   "kind": "voice",
+   "spec": "voice|Restez ici pendant six respirations.",
+   "key": "fce2400d30d87aa8f6cabba90a51477b",
+   "proc": "de4bcaf573",
+   "offset": 16569926,
+   "length": 44346,
+   "duration": 2.77
+  },
+  "fr:v.hold.7": {
+   "kind": "voice",
+   "spec": "voice|Restez ici pendant sept respirations.",
+   "key": "7ecb8cf4e3974963ce497a72f443ba3e",
+   "proc": "de4bcaf573",
+   "offset": 16614272,
+   "length": 41003,
+   "duration": 2.56
+  },
+  "fr:v.hold.8": {
+   "kind": "voice",
+   "spec": "voice|Restez ici pendant huit respirations.",
+   "key": "2fb6b9f7c87fc4a37ca68433a99f6989",
+   "proc": "de4bcaf573",
+   "offset": 16655275,
+   "length": 41838,
+   "duration": 2.61
+  },
+  "fr:v.hold.9": {
+   "kind": "voice",
+   "spec": "voice|Restez ici pendant neuf respirations.",
+   "key": "e2ea5c4016bd4a995028968721b07e14",
+   "proc": "de4bcaf573",
+   "offset": 16697113,
+   "length": 41838,
+   "duration": 2.61
+  },
+  "fr:v.hold.10": {
+   "kind": "voice",
+   "spec": "voice|Restez ici pendant dix respirations.",
+   "key": "387cfbff5e21f3ef98bca6f6ac331ca3",
+   "proc": "de4bcaf573",
+   "offset": 16738951,
+   "length": 43510,
+   "duration": 2.72
+  },
+  "fr:v.hold.11": {
+   "kind": "voice",
+   "spec": "voice|Restez ici pendant onze respirations.",
+   "key": "f69aa182835e07b348eb6c177e3b95e7",
+   "proc": "de4bcaf573",
+   "offset": 16782461,
+   "length": 44346,
+   "duration": 2.77
+  },
+  "fr:v.hold.12": {
+   "kind": "voice",
+   "spec": "voice|Restez ici pendant douze respirations.",
+   "key": "8ff03ff874701ad22fc1de36c56aba81",
+   "proc": "de4bcaf573",
+   "offset": 16826807,
+   "length": 42674,
+   "duration": 2.67
+  },
+  "fr:v.pos.seat": {
+   "kind": "voice",
+   "spec": "voice|Venez vous asseoir confortablement sur votre tapis.",
+   "key": "781a0dbcd1c3d56759c46c7f153ce85d",
+   "proc": "de4bcaf573",
+   "offset": 16869481,
+   "length": 53959,
+   "duration": 3.37
+  },
+  "fr:v.pos.table": {
+   "kind": "voice",
+   "spec": "voice|Venez à quatre pattes.",
+   "key": "64076cea3c4c42e2c9531da6668ec699",
+   "proc": "de4bcaf573",
+   "offset": 16923440,
+   "length": 27210,
+   "duration": 1.7
+  },
+  "fr:v.pos.stand": {
+   "kind": "voice",
+   "spec": "voice|Remontez debout, à l'avant de votre tapis.",
+   "key": "7159a6dc5b6320b5527095b8e3dbf1d9",
+   "proc": "de4bcaf573",
+   "offset": 16950650,
+   "length": 46436,
+   "duration": 2.9
+  },
+  "fr:v.pos.prone": {
+   "kind": "voice",
+   "spec": "voice|Allongez-vous sur le ventre.",
+   "key": "b527ef722a34037e974464c69da5febd",
+   "proc": "de4bcaf573",
+   "offset": 16997086,
+   "length": 27628,
+   "duration": 1.73
+  },
+  "fr:v.pos.supine": {
+   "kind": "voice",
+   "spec": "voice|Allongez-vous sur le dos.",
+   "key": "bfc2923e166607cdd45e56147c2192c9",
+   "proc": "de4bcaf573",
+   "offset": 17024714,
+   "length": 26374,
+   "duration": 1.65
+  },
+  "fr:v.pose.easy-seat.name": {
+   "kind": "voice",
+   "spec": "voice|Posture facile. Sukhasana.",
+   "key": "ba25105059eca682bb5760aef0a71bec",
+   "proc": "de4bcaf573",
+   "offset": 17051088,
+   "length": 27628,
+   "duration": 1.73
+  },
+  "fr:v.pose.easy-seat.guide": {
+   "kind": "voice",
+   "spec": "voice|Assoyez-vous les jambes croisées confortablement, et déposez les mains sur vos genoux. Grandissez-vous par le sommet de la tête, et laissez vos épaules se détendre. Laissez votre respiration ralentir et s'approfondir.",
+   "key": "db1bbdf3692ff2f0e6c82523c1cc3615",
+   "proc": "de4bcaf573",
+   "offset": 17078716,
+   "length": 240369,
+   "duration": 15.02
+  },
+  "fr:v.pose.neck-release.name": {
+   "kind": "voice",
+   "spec": "voice|Étirement du cou.",
+   "key": "de64cc864ca3058352d8da56db1f504d",
+   "proc": "de4bcaf573",
+   "offset": 17319085,
+   "length": 21776,
+   "duration": 1.36
+  },
+  "fr:v.pose.neck-release.guide": {
+   "kind": "voice",
+   "spec": "voice|Toujours en position assise, laissez votre oreille droite descendre doucement vers l'épaule droite. Gardez l'épaule opposée détendue et lourde. Ne tirez pas; laissez le poids de la tête faire le travail.",
+   "key": "d144b9b9199ae95d36e6c81abc12b6e1",
+   "proc": "de4bcaf573",
+   "offset": 17340861,
+   "length": 244131,
+   "duration": 15.26
+  },
+  "fr:v.pose.seated-side-bend.name": {
+   "kind": "voice",
+   "spec": "voice|Flexion latérale assise. Parsva Sukhasana.",
+   "key": "79bd5eb5369cd27b211b3c071d52ed56",
+   "proc": "de4bcaf573",
+   "offset": 17584992,
+   "length": 44764,
+   "duration": 2.8
+  },
+  "fr:v.pose.seated-side-bend.guide": {
+   "kind": "voice",
+   "spec": "voice|En position assise, le dos long, déposez la main gauche au sol à côté de vous, et tendez le bras droit vers le haut puis vers la gauche. Gardez les deux ischions bien ancrés, et respirez dans les côtes du côté droit.",
+   "key": "e6890f3c9ee2456690576b39697ab3f2",
+   "proc": "de4bcaf573",
+   "offset": 17629756,
+   "length": 248310,
+   "duration": 15.52
+  },
+  "fr:v.pose.seated-twist-easy.name": {
+   "kind": "voice",
+   "spec": "voice|Torsion assise facile. Parivrtta Sukhasana.",
+   "key": "ec301767da2733f7c5d0913521602b9d",
+   "proc": "de4bcaf573",
+   "offset": 17878066,
+   "length": 45600,
+   "duration": 2.85
+  },
+  "fr:v.pose.seated-twist-easy.guide": {
+   "kind": "voice",
+   "spec": "voice|En position assise, le dos long, placez la main gauche sur le genou droit et le bout des doigts de la main droite au sol derrière vous. Inspirez pour allonger la colonne, et expirez pour tourner doucement vers la droite. Laissez la torsion partir du ventre, pas du cou.",
+   "key": "d01a2e7b6b230dc8c2599b4bbc5fc4b6",
+   "proc": "de4bcaf573",
+   "offset": 17923666,
+   "length": 318945,
+   "duration": 19.93
+  },
+  "fr:v.pose.cat-cow.name": {
+   "kind": "voice",
+   "spec": "voice|Chat et vache. Marjaryasana Bitilasana.",
+   "key": "c0509f78c6453be1e5ae863e352dd22c",
+   "proc": "de4bcaf573",
+   "offset": 18242611,
+   "length": 44346,
+   "duration": 2.77
+  },
+  "fr:v.pose.cat-cow.guide": {
+   "kind": "voice",
+   "spec": "voice|Placez les poignets sous les épaules et les genoux sous les hanches. À l'inspiration, laissez descendre le ventre et levez le regard pour la vache. À l'expiration, arrondissez le dos et rentrez le menton pour le chat. Laissez la respiration guider le mouvement.",
+   "key": "f41371af4fd3e048795674b498904a9a",
+   "proc": "de4bcaf573",
+   "offset": 18286957,
+   "length": 306407,
+   "duration": 19.15
+  },
+  "fr:v.pose.thread-needle.name": {
+   "kind": "voice",
+   "spec": "voice|Enfiler l'aiguille. Parsva Balasana.",
+   "key": "9f1ec7c2e4c02b66f6870ec6cbe07e03",
+   "proc": "de4bcaf573",
+   "offset": 18593364,
+   "length": 44346,
+   "duration": 2.77
+  },
+  "fr:v.pose.thread-needle.guide": {
+   "kind": "voice",
+   "spec": "voice|Tendez le bras droit vers le plafond, puis glissez-le sous le bras gauche, en déposant l'épaule droite et le côté de la tête sur le tapis. Gardez les hanches au-dessus des genoux, et laissez le haut du dos se détendre.",
+   "key": "49062c166e2035b6729ea648149ebede",
+   "proc": "de4bcaf573",
+   "offset": 18637710,
+   "length": 248310,
+   "duration": 15.52
+  },
+  "fr:v.pose.balancing-table.name": {
+   "kind": "voice",
+   "spec": "voice|Table en équilibre. Dandayamana Bharmanasana.",
+   "key": "ab121d00935dd9369e89f33a4bd717f7",
+   "proc": "de4bcaf573",
+   "offset": 18886020,
+   "length": 58139,
+   "duration": 3.63
+  },
+  "fr:v.pose.balancing-table.guide": {
+   "kind": "voice",
+   "spec": "voice|Allongez le bras droit vers l'avant et la jambe gauche vers l'arrière, tous deux à la hauteur des hanches. Rentrez doucement le ventre, et gardez les hanches à niveau. Étirez-vous loin, du bout des doigts jusqu'au talon.",
+   "key": "45f199a18e6267e8e694f3ad13ec901f",
+   "proc": "de4bcaf573",
+   "offset": 18944159,
+   "length": 221561,
+   "duration": 13.85
+  },
+  "fr:v.pose.childs-pose.name": {
+   "kind": "voice",
+   "spec": "voice|Posture de l'enfant. Balasana.",
+   "key": "3add83dc9eeff0c3bc5508590c3049d4",
+   "proc": "de4bcaf573",
+   "offset": 19165720,
+   "length": 34315,
+   "duration": 2.14
+  },
+  "fr:v.pose.childs-pose.guide": {
+   "kind": "voice",
+   "spec": "voice|Rapprochez les gros orteils et écartez les genoux. Descendez les hanches vers les talons et déposez le front sur le tapis, les bras allongés vers l'avant. Laissez votre dos s'élargir à chaque respiration.",
+   "key": "c192e957178d3eb6ee446027365c057f",
+   "proc": "de4bcaf573",
+   "offset": 19200035,
+   "length": 242459,
+   "duration": 15.15
+  },
+  "fr:v.pose.puppy.name": {
+   "kind": "voice",
+   "spec": "voice|Posture du chiot. Uttana Shishosana.",
+   "key": "606c44f1f4448705ac8f6c720274cc51",
+   "proc": "de4bcaf573",
+   "offset": 19442494,
+   "length": 42674,
+   "duration": 2.67
+  },
+  "fr:v.pose.puppy.guide": {
+   "kind": "voice",
+   "spec": "voice|Gardez les hanches au-dessus des genoux et avancez les mains. Descendez la poitrine vers le tapis, et déposez le front ou le menton. Sentez l'étirement dans les épaules et le haut du dos.",
+   "key": "93c73c8af7181fb1270f65c708893c75",
+   "proc": "de4bcaf573",
+   "offset": 19485168,
+   "length": 211948,
+   "duration": 13.25
+  },
+  "fr:v.pose.downward-dog.name": {
+   "kind": "voice",
+   "spec": "voice|Chien tête en bas. Adho Mukha Svanasana.",
+   "key": "8669d67267dddcd0c9e4cd48923674a0",
+   "proc": "de4bcaf573",
+   "offset": 19697116,
+   "length": 44764,
+   "duration": 2.8
+  },
+  "fr:v.pose.downward-dog.guide": {
+   "kind": "voice",
+   "spec": "voice|Repliez les orteils et soulevez les hanches vers le haut et l'arrière. Poussez fermement dans les mains, et pliez les genoux autant qu'il le faut pour garder la colonne longue. Laissez la tête pendre entre les bras.",
+   "key": "fd770eac669c106fa5bbd3327317091e",
+   "proc": "de4bcaf573",
+   "offset": 19741880,
+   "length": 249146,
+   "duration": 15.57
+  },
+  "fr:v.pose.low-lunge.name": {
+   "kind": "voice",
+   "spec": "voice|Fente basse. Anjaneyasana.",
+   "key": "982fd30d480f95ebbc335f7c6d454816",
+   "proc": "de4bcaf573",
+   "offset": 19991026,
+   "length": 31390,
+   "duration": 1.96
+  },
+  "fr:v.pose.low-lunge.guide": {
+   "kind": "voice",
+   "spec": "voice|Avancez le pied droit entre vos mains, et déposez le genou arrière sur le tapis. Soulevez la poitrine, et posez les mains sur la cuisse avant ou tendez les bras vers le haut. Laissez les hanches descendre doucement vers l'avant, le genou avant au-dessus de la cheville.",
+   "key": "edd693a3f1873a2751dadcb0722c6a62",
+   "proc": "de4bcaf573",
+   "offset": 20022416,
+   "length": 320617,
+   "duration": 20.04
+  },
+  "fr:v.pose.ragdoll.name": {
+   "kind": "voice",
+   "spec": "voice|Flexion avant debout. Uttanasana.",
+   "key": "4715dddb56102cc77f49e9a8696fd858",
+   "proc": "de4bcaf573",
+   "offset": 20343033,
+   "length": 38913,
+   "duration": 2.43
+  },
+  "fr:v.pose.ragdoll.guide": {
+   "kind": "voice",
+   "spec": "voice|Les pieds écartés à la largeur des hanches, penchez-vous vers l'avant en pliant généreusement les genoux. Tenez vos coudes opposés et laissez pendre la tête et le cou. Balancez-vous doucement de gauche à droite si c'est agréable.",
+   "key": "f18297fdb0fe76c64efaefacdf8e7541",
+   "proc": "de4bcaf573",
+   "offset": 20381946,
+   "length": 258341,
+   "duration": 16.15
+  },
+  "fr:v.pose.mountain.name": {
+   "kind": "voice",
+   "spec": "voice|Posture de la montagne. Tadasana.",
+   "key": "63aef4bb31eeab287f0b33ec5652a96e",
+   "proc": "de4bcaf573",
+   "offset": 20640287,
+   "length": 38913,
+   "duration": 2.43
+  },
+  "fr:v.pose.mountain.guide": {
+   "kind": "voice",
+   "spec": "voice|Debout, les pieds écartés à la largeur des hanches et les bras le long du corps. Écartez les orteils et sentez votre poids réparti également sur les deux pieds. Grandissez-vous par le sommet de la tête, et relâchez les épaules vers le bas.",
+   "key": "b3870d624deb9e0cbaa9ac5727f15089",
+   "proc": "de4bcaf573",
+   "offset": 20679200,
+   "length": 293868,
+   "duration": 18.37
+  },
+  "fr:v.pose.upward-salute.name": {
+   "kind": "voice",
+   "spec": "voice|Salutation vers le haut. Urdhva Hastasana.",
+   "key": "f76fd1fc7abe090fac3c26671bd3601f",
+   "proc": "de4bcaf573",
+   "offset": 20973068,
+   "length": 51034,
+   "duration": 3.19
+  },
+  "fr:v.pose.upward-salute.guide": {
+   "kind": "voice",
+   "spec": "voice|Debout, balayez les bras sur les côtés et jusqu'au-dessus de la tête. Gardez les épaules loin des oreilles et les côtes détendues. Étirez-vous jusqu'au bout des doigts.",
+   "key": "1f24b883f7b3e2382ce4dbbb67f9c150",
+   "proc": "de4bcaf573",
+   "offset": 21024102,
+   "length": 181437,
+   "duration": 11.34
+  },
+  "fr:v.pose.chair.name": {
+   "kind": "voice",
+   "spec": "voice|Posture de la chaise. Utkatasana.",
+   "key": "a053ebd742582741c2c7fe89c4e65037",
+   "proc": "de4bcaf573",
+   "offset": 21205539,
+   "length": 40585,
+   "duration": 2.54
+  },
+  "fr:v.pose.chair.guide": {
+   "kind": "voice",
+   "spec": "voice|Les pieds écartés à la largeur des hanches, pliez les genoux et reculez les hanches comme pour vous asseoir sur une chaise. Tendez les bras vers le haut, le long des oreilles. Gardez le poids dans les talons, et les genoux derrière les orteils.",
+   "key": "e1d457bb35d7e57d86abc0c8af98cf33",
+   "proc": "de4bcaf573",
+   "offset": 21246124,
+   "length": 264193,
+   "duration": 16.51
+  },
+  "fr:v.pose.warrior-1.name": {
+   "kind": "voice",
+   "spec": "voice|Guerrier un. Virabhadrasana One.",
+   "key": "5d9c9acc4a4965341a91a4808d0aa64b",
+   "proc": "de4bcaf573",
+   "offset": 21510317,
+   "length": 40585,
+   "duration": 2.54
+  },
+  "fr:v.pose.warrior-1.guide": {
+   "kind": "voice",
+   "spec": "voice|Reculez le pied gauche d'environ une longueur de jambe, et tournez légèrement les orteils arrière vers l'extérieur. Pliez le genou droit au-dessus de la cheville, orientez les hanches vers l'avant du tapis, et tendez les bras au-dessus de la tête. Poussez fermement dans le bord extérieur du pied arrière.",
+   "key": "40b74977b6c5848f1d65e323ff4ced87",
+   "proc": "de4bcaf573",
+   "offset": 21550902,
+   "length": 343605,
+   "duration": 21.48
+  },
+  "fr:v.pose.crescent-lunge.name": {
+   "kind": "voice",
+   "spec": "voice|Fente haute en croissant. Ashta Chandrasana.",
+   "key": "4ab1e58f7c8b4661830411ea67366d93",
+   "proc": "de4bcaf573",
+   "offset": 21894507,
+   "length": 50198,
+   "duration": 3.14
+  },
+  "fr:v.pose.crescent-lunge.guide": {
+   "kind": "voice",
+   "spec": "voice|Reculez loin le pied gauche et restez sur la plante du pied arrière. Pliez le genou droit au-dessus de la cheville et tendez les bras au-dessus de la tête. Soulevez la cuisse arrière, et rentrez doucement le bas du ventre.",
+   "key": "e8a06b6e613e706dab4fbe4011362dc8",
+   "proc": "de4bcaf573",
+   "offset": 21944705,
+   "length": 255834,
+   "duration": 15.99
+  },
+  "fr:v.pose.warrior-2.name": {
+   "kind": "voice",
+   "spec": "voice|Guerrier deux. Virabhadrasana Two.",
+   "key": "597255c536b30adcf69687cac34c6341",
+   "proc": "de4bcaf573",
+   "offset": 22200539,
+   "length": 41838,
+   "duration": 2.61
+  },
+  "fr:v.pose.warrior-2.guide": {
+   "kind": "voice",
+   "spec": "voice|Écartez largement les pieds. Tournez le pied droit vers le bout du tapis, et pliez le genou droit au-dessus de la cheville. Ouvrez les bras à la hauteur des épaules, et posez doucement le regard au-delà des doigts de la main droite.",
+   "key": "3e100f775cbccca9e567124f816f76c3",
+   "proc": "de4bcaf573",
+   "offset": 22242377,
+   "length": 258759,
+   "duration": 16.17
+  },
+  "fr:v.pose.reverse-warrior.name": {
+   "kind": "voice",
+   "spec": "voice|Guerrier inversé. Viparita Virabhadrasana.",
+   "key": "b5a9a7610657334cd65e9f0089ec7c61",
+   "proc": "de4bcaf573",
+   "offset": 22501136,
+   "length": 48526,
+   "duration": 3.03
+  },
+  "fr:v.pose.reverse-warrior.guide": {
+   "kind": "voice",
+   "spec": "voice|Les pieds écartés, tournez le pied droit vers l'extérieur et pliez le genou droit. Glissez la main gauche le long de la jambe arrière, et tendez le bras droit vers le haut et l'arrière. Gardez le genou avant plié pendant que vous allongez le côté du corps.",
+   "key": "d9a4cc7e3b3689dd813e0d70850e4ec5",
+   "proc": "de4bcaf573",
+   "offset": 22549662,
+   "length": 280493,
+   "duration": 17.53
+  },
+  "fr:v.pose.side-angle.name": {
+   "kind": "voice",
+   "spec": "voice|Angle latéral étendu. Utthita Parsvakonasana.",
+   "key": "fd28e264d18f8772faffd2a3fab56891",
+   "proc": "de4bcaf573",
+   "offset": 22830155,
+   "length": 58975,
+   "duration": 3.69
+  },
+  "fr:v.pose.side-angle.guide": {
+   "kind": "voice",
+   "spec": "voice|Les pieds écartés, tournez le pied droit vers l'extérieur et pliez le genou droit au-dessus de la cheville. Déposez l'avant-bras droit sur la cuisse droite, et tendez le bras gauche vers le haut et par-dessus l'oreille. Formez une longue ligne du talon arrière jusqu'au bout des doigts.",
+   "key": "444338ce67ac82952a4d1a1c2d073833",
+   "proc": "de4bcaf573",
+   "offset": 22889130,
+   "length": 319781,
+   "duration": 19.99
+  },
+  "fr:v.pose.triangle.name": {
+   "kind": "voice",
+   "spec": "voice|Posture du triangle. Utthita Trikonasana.",
+   "key": "8a00ec6049fe77a2b1406aae4fb59090",
+   "proc": "de4bcaf573",
+   "offset": 23208911,
+   "length": 51034,
+   "duration": 3.19
+  },
+  "fr:v.pose.triangle.guide": {
+   "kind": "voice",
+   "spec": "voice|Les pieds écartés, tournez le pied droit vers l'extérieur, et gardez les deux jambes tendues sans verrouiller les genoux. Étirez-vous vers l'avant au-dessus de la jambe droite, puis descendez la main droite sur le tibia ou sur un bloc, et levez le bras gauche vers le plafond. Ouvrez la poitrine sur le côté.",
+   "key": "e5fb0e96b88320e1f000ce6c4b371be7",
+   "proc": "de4bcaf573",
+   "offset": 23259945,
+   "length": 328141,
+   "duration": 20.51
+  },
+  "fr:v.pose.pyramid.name": {
+   "kind": "voice",
+   "spec": "voice|Posture de la pyramide. Parsvottanasana.",
+   "key": "d3342de83b9cece8ddfc4586e69f7d8d",
+   "proc": "de4bcaf573",
+   "offset": 23588086,
+   "length": 43510,
+   "duration": 2.72
+  },
+  "fr:v.pose.pyramid.guide": {
+   "kind": "voice",
+   "spec": "voice|Reculez le pied gauche d'environ un mètre, les orteils arrière légèrement tournés vers l'extérieur et les hanches orientées vers l'avant. Allongez la colonne, puis penchez-vous au-dessus de la jambe droite, les mains sur le tibia ou sur des blocs. Gardez une légère flexion dans le genou avant.",
+   "key": "44e362c1833f9c09b2eb7ca233e5df83",
+   "proc": "de4bcaf573",
+   "offset": 23631596,
+   "length": 317692,
+   "duration": 19.86
+  },
+  "fr:v.pose.wide-fold.name": {
+   "kind": "voice",
+   "spec": "voice|Flexion avant jambes écartées. Prasarita Padottanasana.",
+   "key": "8ff7ee0e720fb004e349392d98c10ccc",
+   "proc": "de4bcaf573",
+   "offset": 23949288,
+   "length": 69424,
+   "duration": 4.34
+  },
+  "fr:v.pose.wide-fold.guide": {
+   "kind": "voice",
+   "spec": "voice|Écartez largement les pieds, les orteils vers l'avant. Les mains sur les hanches, allongez la colonne et penchez-vous vers l'avant à partir des hanches. Posez les mains au sol sous les épaules, et laissez pendre la tête.",
+   "key": "3eb257d0f45014946c419158acd05b76",
+   "proc": "de4bcaf573",
+   "offset": 24018712,
+   "length": 239533,
+   "duration": 14.97
+  },
+  "fr:v.pose.goddess.name": {
+   "kind": "voice",
+   "spec": "voice|Posture de la déesse. Utkata Konasana.",
+   "key": "f50fd307d97c667a37ff97c7ca2ade92",
+   "proc": "de4bcaf573",
+   "offset": 24258245,
+   "length": 41003,
+   "duration": 2.56
+  },
+  "fr:v.pose.goddess.guide": {
+   "kind": "voice",
+   "spec": "voice|Écartez largement les pieds et tournez les orteils vers l'extérieur. Pliez profondément les genoux, dans l'axe des orteils, et descendez les hanches vers la hauteur des genoux. Pliez les coudes en forme de cactus, paumes vers l'avant, et gardez la colonne droite.",
+   "key": "a0eab5eaa999a79506231ea7e0d011cc",
+   "proc": "de4bcaf573",
+   "offset": 24299248,
+   "length": 288434,
+   "duration": 18.03
+  },
+  "fr:v.pose.garland.name": {
+   "kind": "voice",
+   "spec": "voice|Posture de la guirlande. Malasana.",
+   "key": "d04c2bddb7c8463a1b1ef474a5d3e073",
+   "proc": "de4bcaf573",
+   "offset": 24587682,
+   "length": 38077,
+   "duration": 2.38
+  },
+  "fr:v.pose.garland.guide": {
+   "kind": "voice",
+   "spec": "voice|Écartez les pieds un peu plus que la largeur des hanches, les orteils vers l'extérieur, et descendez les hanches en accroupissement profond. Joignez les paumes et poussez doucement les coudes contre l'intérieur des genoux. Soulevez la poitrine.",
+   "key": "7f52e9eaf8dedb0cb926ac7eb52bb98e",
+   "proc": "de4bcaf573",
+   "offset": 24625759,
+   "length": 250818,
+   "duration": 15.68
+  },
+  "fr:v.pose.tree.name": {
+   "kind": "voice",
+   "spec": "voice|Posture de l'arbre. Vrksasana.",
+   "key": "826c4b4882db56f6161c0e9b1b0f676f",
+   "proc": "de4bcaf573",
+   "offset": 24876577,
+   "length": 34315,
+   "duration": 2.14
+  },
+  "fr:v.pose.tree.guide": {
+   "kind": "voice",
+   "spec": "voice|Transférez votre poids sur le pied gauche. Placez la plante du pied droit sur la cheville, le mollet ou l'intérieur de la cuisse gauche, mais jamais sur le genou. Joignez les paumes devant la poitrine, ou tendez-les au-dessus de la tête. Fixez le regard sur un point immobile.",
+   "key": "b8eb364f102e6756f03f975e5caf314a",
+   "proc": "de4bcaf573",
+   "offset": 24910892,
+   "length": 270880,
+   "duration": 16.93
+  },
+  "fr:v.pose.warrior-3.name": {
+   "kind": "voice",
+   "spec": "voice|Guerrier trois. Virabhadrasana Three.",
+   "key": "9044f5b206a7b3adef3d6c8be8cd5401",
+   "proc": "de4bcaf573",
+   "offset": 25181772,
+   "length": 44764,
+   "duration": 2.8
+  },
+  "fr:v.pose.warrior-3.guide": {
+   "kind": "voice",
+   "spec": "voice|Transférez votre poids sur le pied gauche. Penchez-vous vers l'avant à partir des hanches pendant que la jambe droite se soulève derrière vous, jusqu'à ce que votre corps forme un T. Gardez les hanches à niveau et le genou d'appui souple. Les mains peuvent rester sur les hanches ou sur des blocs.",
+   "key": "a427216979db5bc9449dc42694a689e8",
+   "proc": "de4bcaf573",
+   "offset": 25226536,
+   "length": 312258,
+   "duration": 19.52
+  },
+  "fr:v.pose.half-moon.name": {
+   "kind": "voice",
+   "spec": "voice|Demi-lune. Ardha Chandrasana.",
+   "key": "895460d787c72ef735be7e9debbff5a0",
+   "proc": "de4bcaf573",
+   "offset": 25538794,
+   "length": 35987,
+   "duration": 2.25
+  },
+  "fr:v.pose.half-moon.guide": {
+   "kind": "voice",
+   "spec": "voice|Les pieds écartés, tournez le pied droit vers l'extérieur et pliez le genou droit. Posez la main droite au sol ou sur un bloc, environ trente centimètres devant le pied droit. Tendez la jambe droite pendant que la jambe gauche monte à la hauteur des hanches, et ouvrez la poitrine et le bras gauche vers le plafond.",
+   "key": "17a246c9dbe857f476b975e22bd7e989",
+   "proc": "de4bcaf573",
+   "offset": 25574781,
+   "length": 339007,
+   "duration": 21.19
+  },
+  "fr:v.pose.eagle.name": {
+   "kind": "voice",
+   "spec": "voice|Posture de l'aigle. Garudasana.",
+   "key": "8480d38798742afd2f65794a889d1a1c",
+   "proc": "de4bcaf573",
+   "offset": 25913788,
+   "length": 35151,
+   "duration": 2.2
+  },
+  "fr:v.pose.eagle.guide": {
+   "kind": "voice",
+   "spec": "voice|Pliez légèrement les genoux et croisez la cuisse droite par-dessus la gauche. Enroulez le pied droit derrière le mollet gauche, ou déposez les orteils au sol. Croisez le bras gauche sous le droit, pliez les coudes et rapprochez les paumes. Descendez un peu plus et soulevez les coudes.",
+   "key": "d04948ba6c48314ecbe652d649771a2a",
+   "proc": "de4bcaf573",
+   "offset": 25948939,
+   "length": 290106,
+   "duration": 18.13
+  },
+  "fr:v.pose.plank.name": {
+   "kind": "voice",
+   "spec": "voice|Planche. Phalakasana.",
+   "key": "1f04e302a6fe7f9c89e1144a4bbe6249",
+   "proc": "de4bcaf573",
+   "offset": 26239045,
+   "length": 27210,
+   "duration": 1.7
+  },
+  "fr:v.pose.plank.guide": {
+   "kind": "voice",
+   "spec": "voice|Reculez les pieds un à la fois pour former une longue ligne de la tête aux talons. Gardez les épaules au-dessus des poignets et le ventre doucement rentré. Déposez les genoux sur le tapis à tout moment.",
+   "key": "0e0db8bdda67e7c2e715f651d57d1c25",
+   "proc": "de4bcaf573",
+   "offset": 26266255,
+   "length": 226158,
+   "duration": 14.13
+  },
+  "fr:v.pose.side-plank.name": {
+   "kind": "voice",
+   "spec": "voice|Planche latérale. Vasisthasana.",
+   "key": "604478054650b0d06d7f3b4eaaa6ced3",
+   "proc": "de4bcaf573",
+   "offset": 26492413,
+   "length": 37659,
+   "duration": 2.35
+  },
+  "fr:v.pose.side-plank.guide": {
+   "kind": "voice",
+   "spec": "voice|Reculez en planche. Roulez sur le bord extérieur du pied droit et sur la main droite, et superposez le pied gauche, ou déposez le genou du bas pour plus de soutien. Soulevez les hanches, et tendez le bras gauche vers le plafond.",
+   "key": "6ba35fb1bddf424414f4f9a397f858c7",
+   "proc": "de4bcaf573",
+   "offset": 26530072,
+   "length": 237443,
+   "duration": 14.84
+  },
+  "fr:v.pose.boat.name": {
+   "kind": "voice",
+   "spec": "voice|Posture du bateau. Navasana.",
+   "key": "7cb53fc7f3e1fbec331ab63a5ec28ad9",
+   "proc": "de4bcaf573",
+   "offset": 26767515,
+   "length": 33897,
+   "duration": 2.12
+  },
+  "fr:v.pose.boat.guide": {
+   "kind": "voice",
+   "spec": "voice|Assoyez-vous les genoux pliés et les pieds au sol. Tenez l'arrière des cuisses, penchez-vous légèrement vers l'arrière avec la colonne longue, et soulevez les pieds jusqu'à ce que les tibias soient parallèles au sol. Gardez la poitrine soulevée, et tendez les bras vers l'avant lorsque vous le pouvez.",
+   "key": "35a7248833a973c07dadc797bc132cc5",
+   "proc": "de4bcaf573",
+   "offset": 26801412,
+   "length": 318945,
+   "duration": 19.93
+  },
+  "fr:v.pose.sphinx.name": {
+   "kind": "voice",
+   "spec": "voice|Posture du sphinx. Salamba Bhujangasana.",
+   "key": "612ac9b1ed35defc2e3efb20276f2d30",
+   "proc": "de4bcaf573",
+   "offset": 27120357,
+   "length": 43510,
+   "duration": 2.72
+  },
+  "fr:v.pose.sphinx.guide": {
+   "kind": "voice",
+   "spec": "voice|Placez les coudes sous les épaules, les avant-bras parallèles. Poussez doucement dans les avant-bras pour soulever la poitrine. Laissez les jambes se détendre, et gardez la nuque longue.",
+   "key": "623a07fce0af144ad18108fc756b1767",
+   "proc": "de4bcaf573",
+   "offset": 27163867,
+   "length": 185198,
+   "duration": 11.57
+  },
+  "fr:v.pose.cobra.name": {
+   "kind": "voice",
+   "spec": "voice|Posture du cobra. Bhujangasana.",
+   "key": "163272173fd2a00854c49d2ce24302e8",
+   "proc": "de4bcaf573",
+   "offset": 27349065,
+   "length": 40585,
+   "duration": 2.54
+  },
+  "fr:v.pose.cobra.guide": {
+   "kind": "voice",
+   "spec": "voice|Placez les mains sous les épaules, les coudes près du corps. Poussez le dessus des pieds dans le sol, et soulevez la poitrine avec les muscles du dos, en mettant peu de poids dans les mains. Gardez les coudes pliés et les épaules détendues.",
+   "key": "704312754e2e9c736ff7da603e1ac591",
+   "proc": "de4bcaf573",
+   "offset": 27389650,
+   "length": 241623,
+   "duration": 15.1
+  },
+  "fr:v.pose.locust.name": {
+   "kind": "voice",
+   "spec": "voice|Posture de la sauterelle. Salabhasana.",
+   "key": "e1c697e0f48e8554632ca7d856fc10a9",
+   "proc": "de4bcaf573",
+   "offset": 27631273,
+   "length": 37659,
+   "duration": 2.35
+  },
+  "fr:v.pose.locust.guide": {
+   "kind": "voice",
+   "spec": "voice|Déposez les bras le long du corps, paumes vers le bas. Soulevez la poitrine, les bras et les jambes de quelques centimètres. Étirez-vous vers l'arrière par le bout des doigts et des orteils, et gardez le regard vers le bas pour protéger la nuque.",
+   "key": "cdca063eb6bb7be33e7bea3273615acf",
+   "proc": "de4bcaf573",
+   "offset": 27668932,
+   "length": 262521,
+   "duration": 16.41
+  },
+  "fr:v.pose.pigeon.name": {
+   "kind": "voice",
+   "spec": "voice|Posture du pigeon. Eka Pada Raja Kapotasana.",
+   "key": "ee532516bd35637f1fd6b0596c924ce2",
+   "proc": "de4bcaf573",
+   "offset": 27931453,
+   "length": 47272,
+   "duration": 2.95
+  },
+  "fr:v.pose.pigeon.guide": {
+   "kind": "voice",
+   "spec": "voice|Avancez le genou droit derrière le poignet droit, et placez le tibia droit en diagonale sur le tapis. Glissez la jambe gauche droit vers l'arrière. Gardez les hanches à niveau, et restez le buste droit sur les mains, ou penchez-vous vers l'avant sur les avant-bras.",
+   "key": "a8187226aa15d64677b39d1cb876e49e",
+   "proc": "de4bcaf573",
+   "offset": 27978725,
+   "length": 304317,
+   "duration": 19.02
+  },
+  "fr:v.pose.bound-angle.name": {
+   "kind": "voice",
+   "spec": "voice|Posture du papillon. Baddha Konasana.",
+   "key": "2066ce8188fde4424df504997b41c2b3",
+   "proc": "de4bcaf573",
+   "offset": 28283042,
+   "length": 39749,
+   "duration": 2.48
+  },
+  "fr:v.pose.bound-angle.guide": {
+   "kind": "voice",
+   "spec": "voice|Joignez les plantes des pieds et laissez les genoux s'ouvrir. Tenez vos chevilles ou vos pieds, et allongez la colonne. Si vous le souhaitez, penchez-vous doucement vers l'avant à partir des hanches, en gardant le dos long.",
+   "key": "c5f31eadb7775de9f75685a69ae32c24",
+   "proc": "de4bcaf573",
+   "offset": 28322791,
+   "length": 234518,
+   "duration": 14.66
+  },
+  "fr:v.pose.head-to-knee.name": {
+   "kind": "voice",
+   "spec": "voice|Tête au genou. Janu Sirsasana.",
+   "key": "7d2f325ced6eebbf794b00f2688a8be7",
+   "proc": "de4bcaf573",
+   "offset": 28557309,
+   "length": 38913,
+   "duration": 2.43
+  },
+  "fr:v.pose.head-to-knee.guide": {
+   "kind": "voice",
+   "spec": "voice|Allongez la jambe droite devant vous et pliez le genou gauche, en plaçant la plante du pied gauche contre l'intérieur de la cuisse droite. Tournez la poitrine vers la jambe droite, grandissez-vous, puis penchez-vous vers l'avant au-dessus de la jambe tendue. Gardez ce genou plié si l'arrière de vos cuisses est raide.",
+   "key": "5b9f21ecdffe44477e0aa67934267d36",
+   "proc": "de4bcaf573",
+   "offset": 28596222,
+   "length": 350292,
+   "duration": 21.89
+  },
+  "fr:v.pose.seated-forward-fold.name": {
+   "kind": "voice",
+   "spec": "voice|Flexion avant assise. Paschimottanasana.",
+   "key": "52d30f3dc8ef4e4bd5f67cb10506387e",
+   "proc": "de4bcaf573",
+   "offset": 28946514,
+   "length": 43510,
+   "duration": 2.72
+  },
+  "fr:v.pose.seated-forward-fold.guide": {
+   "kind": "voice",
+   "spec": "voice|Allongez les deux jambes devant vous. Inspirez pour allonger la colonne, et expirez pour vous pencher vers l'avant à partir des hanches, en allant vers les tibias, les chevilles ou les pieds. Pliez les genoux autant qu'il le faut, et laissez la tête se détendre.",
+   "key": "a4a8fcf7519b145cccb5b443538891c9",
+   "proc": "de4bcaf573",
+   "offset": 28990024,
+   "length": 279657,
+   "duration": 17.48
+  },
+  "fr:v.pose.half-lord-fishes.name": {
+   "kind": "voice",
+   "spec": "voice|Demi-seigneur des poissons. Ardha Matsyendrasana.",
+   "key": "e7d6fc0f1355f5944ff2fa3084f6d647",
+   "proc": "de4bcaf573",
+   "offset": 29269681,
+   "length": 53123,
+   "duration": 3.32
+  },
+  "fr:v.pose.half-lord-fishes.guide": {
+   "kind": "voice",
+   "spec": "voice|Les jambes allongées, pliez le genou droit et posez le pied droit au sol, à l'extérieur de la cuisse gauche. Enlacez le genou droit avec le bras gauche, placez la main droite derrière vous, et grandissez-vous. À chaque expiration, tournez un peu plus vers la droite.",
+   "key": "aa86ab7827cb5f97dbba084c0fc47cb8",
+   "proc": "de4bcaf573",
+   "offset": 29322804,
+   "length": 298465,
+   "duration": 18.65
+  },
+  "fr:v.pose.bridge.name": {
+   "kind": "voice",
+   "spec": "voice|Posture du pont. Setu Bandha Sarvangasana.",
+   "key": "916bed36e55d098a9b53ddbf1b7dbfa5",
+   "proc": "de4bcaf573",
+   "offset": 29621269,
+   "length": 46436,
+   "duration": 2.9
+  },
+  "fr:v.pose.bridge.guide": {
+   "kind": "voice",
+   "spec": "voice|Pliez les genoux et posez les pieds à plat, à la largeur des hanches, près des fesses. Poussez dans les pieds et soulevez les hanches vers le plafond. Gardez les genoux pointés vers l'avant; vous pouvez joindre les mains sous vous.",
+   "key": "7d6c2980c1db34094dd8f09c86827723",
+   "proc": "de4bcaf573",
+   "offset": 29667705,
+   "length": 235772,
+   "duration": 14.74
+  },
+  "fr:v.pose.figure-four.name": {
+   "kind": "voice",
+   "spec": "voice|Figure quatre couchée. Sucirandhrasana.",
+   "key": "b8df9176b81e35376f1c35230c589e64",
+   "proc": "de4bcaf573",
+   "offset": 29903477,
+   "length": 44346,
+   "duration": 2.77
+  },
+  "fr:v.pose.figure-four.guide": {
+   "kind": "voice",
+   "spec": "voice|Les genoux pliés, croisez la cheville droite sur la cuisse gauche. Soulevez le pied gauche et tenez l'arrière de la cuisse gauche, en la ramenant doucement vers vous. Gardez le pied droit fléchi et les épaules détendues.",
+   "key": "1e4f69fee8a93311533fe2c78d72abcf",
+   "proc": "de4bcaf573",
+   "offset": 29947823,
+   "length": 236607,
+   "duration": 14.79
+  },
+  "fr:v.pose.knees-to-chest.name": {
+   "kind": "voice",
+   "spec": "voice|Genoux à la poitrine. Apanasana.",
+   "key": "b58ad444ec19d006e4468509fb5fa677",
+   "proc": "de4bcaf573",
+   "offset": 30184430,
+   "length": 44346,
+   "duration": 2.77
+  },
+  "fr:v.pose.knees-to-chest.guide": {
+   "kind": "voice",
+   "spec": "voice|Ramenez les deux genoux vers la poitrine. Bercez-vous doucement de gauche à droite pour masser le bas du dos. Laissez les épaules et la tête lourdes sur le tapis.",
+   "key": "814cd5a66d29aab6e4362aceebddb590",
+   "proc": "de4bcaf573",
+   "offset": 30228776,
+   "length": 163883,
+   "duration": 10.24
+  },
+  "fr:v.pose.supine-twist.name": {
+   "kind": "voice",
+   "spec": "voice|Torsion couchée. Supta Matsyendrasana.",
+   "key": "3ce74037b64d9b8f740d2daf582e82f0",
+   "proc": "de4bcaf573",
+   "offset": 30392659,
+   "length": 42674,
+   "duration": 2.67
+  },
+  "fr:v.pose.supine-twist.guide": {
+   "kind": "voice",
+   "spec": "voice|Ramenez le genou droit vers la poitrine, puis guidez-le de l'autre côté du corps, vers la gauche, avec la main gauche. Allongez le bras droit sur le côté et, si c'est confortable, tournez le regard vers la droite. Laissez les deux épaules lourdes.",
+   "key": "ee18b13e2b131acb4153b9f44cb247c1",
+   "proc": "de4bcaf573",
+   "offset": 30435333,
+   "length": 262521,
+   "duration": 16.41
+  },
+  "fr:v.pose.happy-baby.name": {
+   "kind": "voice",
+   "spec": "voice|Bébé heureux. Ananda Balasana.",
+   "key": "6abb84270d439a216c177cb6fc74ab19",
+   "proc": "de4bcaf573",
+   "offset": 30697854,
+   "length": 40585,
+   "duration": 2.54
+  },
+  "fr:v.pose.happy-baby.guide": {
+   "kind": "voice",
+   "spec": "voice|Pliez les genoux vers les aisselles, et tenez le bord extérieur des pieds ou l'arrière des cuisses. Alignez les chevilles au-dessus des genoux, et ramenez doucement les genoux vers le bas. Laissez le bas du dos reposer sur le tapis.",
+   "key": "073dc7af518e7d10205e43e655260e6d",
+   "proc": "de4bcaf573",
+   "offset": 30738439,
+   "length": 247056,
+   "duration": 15.44
+  },
+  "fr:v.pose.reclined-bound-angle.name": {
+   "kind": "voice",
+   "spec": "voice|Papillon couché. Supta Baddha Konasana.",
+   "key": "084601510c8e0fb959fc5f29b0594a8d",
+   "proc": "de4bcaf573",
+   "offset": 30985495,
+   "length": 42674,
+   "duration": 2.67
+  },
+  "fr:v.pose.reclined-bound-angle.guide": {
+   "kind": "voice",
+   "spec": "voice|Joignez les plantes des pieds et laissez les genoux s'ouvrir. Déposez une main sur le ventre et l'autre sur le cœur. Laissez la gravité faire le travail.",
+   "key": "df2fb1db403fa38ea51538c709f6f044",
+   "proc": "de4bcaf573",
+   "offset": 31028169,
+   "length": 183945,
+   "duration": 11.5
+  },
+  "fr:v.pose.savasana.name": {
+   "kind": "voice",
+   "spec": "voice|Posture du cadavre. Shavasana.",
+   "key": "7ca5d62bb9e6c05ecbd9ea0a7ba057ce",
+   "proc": "de4bcaf573",
+   "offset": 31212114,
+   "length": 35151,
+   "duration": 2.2
+  },
+  "fr:v.pose.savasana.guide": {
+   "kind": "voice",
+   "spec": "voice|Laissez les jambes et les bras se détendre, paumes vers le haut, et fermez les yeux. Relâchez tout effort, et laissez la respiration retrouver son rythme naturel. Reposez-vous ici.",
+   "key": "609f9a8ef171dfe76b104674873c8ae8",
+   "proc": "de4bcaf573",
+   "offset": 31247265,
+   "length": 221143,
+   "duration": 13.82
+  },
+  "fr:v.pose.half-sun.name": {
+   "kind": "voice",
+   "spec": "voice|Demi-salutation au soleil. Ardha Surya Namaskar.",
+   "key": "68d65aa9806174af69e3c576ae419766",
+   "proc": "de4bcaf573",
+   "offset": 31468408,
+   "length": 60647,
+   "duration": 3.79
+  },
+  "fr:v.pose.half-sun.guide": {
+   "kind": "voice",
+   "spec": "voice|Un enchaînement doux, debout. Nous le ferons lentement une première fois, en tenant chaque forme, puis nous enchaînerons avec un mouvement à chaque son de cloche.",
+   "key": "bdf6ab708df9485139a77b3ab4f939cf",
+   "proc": "de4bcaf573",
+   "offset": 31529055,
+   "length": 154270,
+   "duration": 9.64
+  },
+  "fr:v.pose.sun-a.name": {
+   "kind": "voice",
+   "spec": "voice|Salutation au soleil A. Surya Namaskar A.",
+   "key": "1d6cccff8992c5a08fd81d03255ec110",
+   "proc": "de4bcaf573",
+   "offset": 31683325,
+   "length": 47690,
+   "duration": 2.98
+  },
+  "fr:v.pose.sun-a.guide": {
+   "kind": "voice",
+   "spec": "voice|L'enchaînement classique du vinyasa. Nous le ferons lentement une première fois, en tenant chaque forme, puis nous enchaînerons avec un mouvement à chaque son de cloche.",
+   "key": "57522f15410f20cbfbd34373b14e7fca",
+   "proc": "de4bcaf573",
+   "offset": 31731015,
+   "length": 168062,
+   "duration": 10.5
+  },
+  "fr:v.pose.warrior-flow.name": {
+   "kind": "voice",
+   "spec": "voice|Enchaînement des guerriers.",
+   "key": "0d61e0529767297685ef94de84df8cf5",
+   "proc": "de4bcaf573",
+   "offset": 31899077,
+   "length": 27210,
+   "duration": 1.7
+  },
+  "fr:v.pose.warrior-flow.guide": {
+   "kind": "voice",
+   "spec": "voice|Trois formes de guerrier enchaînées. Nous l'apprendrons lentement du premier côté, puis nous enchaînerons avec un mouvement à chaque son de cloche.",
+   "key": "fa20486427114269a08b24aa74cb39b8",
+   "proc": "de4bcaf573",
+   "offset": 31926287,
+   "length": 145910,
+   "duration": 9.12
+  },
+  "fr:v.flow.half-sun.0.teach": {
+   "kind": "voice",
+   "spec": "voice|Depuis la montagne, balayez les bras sur les côtés et jusqu'au-dessus de la tête.",
+   "key": "61517e42e072c9923332d72ce11aeaca",
+   "proc": "de4bcaf573",
+   "offset": 32072197,
+   "length": 80709,
+   "duration": 5.04
+  },
+  "fr:v.flow.half-sun.1.teach": {
+   "kind": "voice",
+   "spec": "voice|Pliez-vous aux hanches et penchez-vous vers l'avant, les genoux souples.",
+   "key": "d5c507fbda7a1b85d2b539195d06064f",
+   "proc": "de4bcaf573",
+   "offset": 32152906,
+   "length": 74439,
+   "duration": 4.65
+  },
+  "fr:v.flow.half-sun.2.teach": {
+   "kind": "voice",
+   "spec": "voice|Posez les mains sur les tibias et allongez la colonne vers l'avant, comme une table.",
+   "key": "1d7bdb43f2efbfb9fa542bbc1e11d88d",
+   "proc": "de4bcaf573",
+   "offset": 32227345,
+   "length": 76947,
+   "duration": 4.81
+  },
+  "fr:v.flow.half-sun.3.teach": {
+   "kind": "voice",
+   "spec": "voice|Penchez-vous de nouveau vers l'avant, et laissez pendre la tête.",
+   "key": "2801c4ac16ae953af37e8c30630e8ea1",
+   "proc": "de4bcaf573",
+   "offset": 32304292,
+   "length": 59811,
+   "duration": 3.74
+  },
+  "fr:v.flow.half-sun.4.teach": {
+   "kind": "voice",
+   "spec": "voice|Pliez les genoux, ouvrez les bras, et remontez jusqu'en haut.",
+   "key": "afc93655265f0ca20b31b6de84c14e44",
+   "proc": "de4bcaf573",
+   "offset": 32364103,
+   "length": 68588,
+   "duration": 4.29
+  },
+  "fr:v.flow.half-sun.5.teach": {
+   "kind": "voice",
+   "spec": "voice|Joignez les paumes devant le cœur.",
+   "key": "3df8ff06f17dd957591bf44820a44ffa",
+   "proc": "de4bcaf573",
+   "offset": 32432691,
+   "length": 39749,
+   "duration": 2.48
+  },
+  "fr:v.flow.sun-a.0.teach": {
+   "kind": "voice",
+   "spec": "voice|Depuis la montagne, balayez les bras sur les côtés et jusqu'au-dessus de la tête.",
+   "key": "61517e42e072c9923332d72ce11aeaca",
+   "proc": "de4bcaf573",
+   "offset": 32472440,
+   "length": 80709,
+   "duration": 5.04
+  },
+  "fr:v.flow.sun-a.1.teach": {
+   "kind": "voice",
+   "spec": "voice|Pliez-vous aux hanches et penchez-vous vers l'avant, les genoux souples.",
+   "key": "d5c507fbda7a1b85d2b539195d06064f",
+   "proc": "de4bcaf573",
+   "offset": 32553149,
+   "length": 74439,
+   "duration": 4.65
+  },
+  "fr:v.flow.sun-a.2.teach": {
+   "kind": "voice",
+   "spec": "voice|Posez les mains sur les tibias et allongez la colonne vers l'avant, comme une table.",
+   "key": "1d7bdb43f2efbfb9fa542bbc1e11d88d",
+   "proc": "de4bcaf573",
+   "offset": 32627588,
+   "length": 76947,
+   "duration": 4.81
+  },
+  "fr:v.flow.sun-a.3.teach": {
+   "kind": "voice",
+   "spec": "voice|Plantez les mains et reculez, un pied à la fois, en planche.",
+   "key": "a84fbf4be3645a73ec2b26b74049d736",
+   "proc": "de4bcaf573",
+   "offset": 32704535,
+   "length": 63572,
+   "duration": 3.97
+  },
+  "fr:v.flow.sun-a.4.teach": {
+   "kind": "voice",
+   "spec": "voice|Les épaules au-dessus des poignets, le ventre doucement rentré. Une longue ligne de la tête aux talons.",
+   "key": "e8cad73fd0e12589fc6d57dd3002b4b6",
+   "proc": "de4bcaf573",
+   "offset": 32768107,
+   "length": 105786,
+   "duration": 6.61
+  },
+  "fr:v.flow.sun-a.5.teach": {
+   "kind": "voice",
+   "spec": "voice|Déposez les genoux sur le tapis, serrez les coudes près du corps, et descendez lentement la poitrine jusqu'au sol.",
+   "key": "11cd85ee3d26240e500ddf93dc1deec8",
+   "proc": "de4bcaf573",
+   "offset": 32873893,
+   "length": 120833,
+   "duration": 7.55
+  },
+  "fr:v.flow.sun-a.5.teach2": {
+   "kind": "voice",
+   "spec": "voice|Serrez les coudes près du corps et descendez à mi-chemin, en gardant une longue ligne de la tête aux talons. Déposez les genoux à tout moment.",
+   "key": "58696ce8b846fee9646118377e86ada0",
+   "proc": "de4bcaf573",
+   "offset": 32994726,
+   "length": 150508,
+   "duration": 9.41
+  },
+  "fr:v.flow.sun-a.6.teach": {
+   "kind": "voice",
+   "spec": "voice|Dépliez les orteils, appuyez légèrement dans les mains, et soulevez la poitrine avec les muscles du dos.",
+   "key": "f2988b562c70aa859a6b8dece78bb899",
+   "proc": "de4bcaf573",
+   "offset": 33145234,
+   "length": 103696,
+   "duration": 6.48
+  },
+  "fr:v.flow.sun-a.7.teach": {
+   "kind": "voice",
+   "spec": "voice|Repliez les orteils et soulevez les hanches vers le haut et l'arrière.",
+   "key": "d4a68a493cbeca169888c83482c0eae9",
+   "proc": "de4bcaf573",
+   "offset": 33248930,
+   "length": 75275,
+   "duration": 4.7
+  },
+  "fr:v.flow.sun-a.8.teach": {
+   "kind": "voice",
+   "spec": "voice|Restez ici. Pédalez avec les talons, en pliant un genou, puis l'autre.",
+   "key": "bc2508a166a7b228b93e543b2d567797",
+   "proc": "de4bcaf573",
+   "offset": 33324205,
+   "length": 76111,
+   "duration": 4.76
+  },
+  "fr:v.flow.sun-a.9.teach": {
+   "kind": "voice",
+   "spec": "voice|Avancez les pieds jusqu'aux mains en marchant, ou en sautant si vous le souhaitez, et allongez la colonne, le dos plat.",
+   "key": "b547af0faefc09b128d3efc65ee2c98e",
+   "proc": "de4bcaf573",
+   "offset": 33400316,
+   "length": 121251,
+   "duration": 7.58
+  },
+  "fr:v.flow.sun-a.10.teach": {
+   "kind": "voice",
+   "spec": "voice|Penchez-vous de nouveau vers l'avant, et laissez pendre la tête.",
+   "key": "2801c4ac16ae953af37e8c30630e8ea1",
+   "proc": "de4bcaf573",
+   "offset": 33521567,
+   "length": 59811,
+   "duration": 3.74
+  },
+  "fr:v.flow.sun-a.11.teach": {
+   "kind": "voice",
+   "spec": "voice|Pliez les genoux, ouvrez les bras, et remontez jusqu'en haut.",
+   "key": "afc93655265f0ca20b31b6de84c14e44",
+   "proc": "de4bcaf573",
+   "offset": 33581378,
+   "length": 68588,
+   "duration": 4.29
+  },
+  "fr:v.flow.sun-a.12.teach": {
+   "kind": "voice",
+   "spec": "voice|Joignez les paumes devant le cœur.",
+   "key": "3df8ff06f17dd957591bf44820a44ffa",
+   "proc": "de4bcaf573",
+   "offset": 33649966,
+   "length": 39749,
+   "duration": 2.48
+  },
+  "fr:v.flow.warrior-flow.setup": {
+   "kind": "voice",
+   "spec": "voice|Écartez largement les pieds, tournez le pied droit vers l'extérieur, et pliez le genou droit au-dessus de la cheville. Ouvrez grand les bras. Voici le guerrier deux.",
+   "key": "c6a2a18168d44f8490c6973880d312aa",
+   "proc": "de4bcaf573",
+   "offset": 33689715,
+   "length": 174332,
+   "duration": 10.9
+  },
+  "fr:v.flow.warrior-flow.0.teach": {
+   "kind": "voice",
+   "spec": "voice|Glissez la main gauche le long de la jambe arrière, et tendez le bras droit vers le haut et l'arrière. Gardez le genou avant plié.",
+   "key": "3f3886dcf9c609957d9d5a0e0810d937",
+   "proc": "de4bcaf573",
+   "offset": 33864047,
+   "length": 147582,
+   "duration": 9.22
+  },
+  "fr:v.flow.warrior-flow.1.teach": {
+   "kind": "voice",
+   "spec": "voice|Déposez l'avant-bras droit sur la cuisse droite, et tendez le bras gauche vers le haut et par-dessus l'oreille.",
+   "key": "45260a09d0293ad3a11dce99cd626d9f",
+   "proc": "de4bcaf573",
+   "offset": 34011629,
+   "length": 108712,
+   "duration": 6.79
+  },
+  "fr:v.flow.warrior-flow.2.teach": {
+   "kind": "voice",
+   "spec": "voice|Remontez en guerrier inversé.",
+   "key": "d3f43ecc7be9d7864a2e95ffaa4faf92",
+   "proc": "de4bcaf573",
+   "offset": 34120341,
+   "length": 29300,
+   "duration": 1.83
+  },
+  "fr:v.flow.warrior-flow.3.teach": {
+   "kind": "voice",
+   "spec": "voice|Les bras grands ouverts, revenez en guerrier deux.",
+   "key": "c6b85ff0d5e04e5911578dcc173a51d9",
+   "proc": "de4bcaf573",
+   "offset": 34149641,
+   "length": 56885,
+   "duration": 3.56
+  },
+  "fr:v.cue.reach-up": {
+   "kind": "voice",
+   "spec": "voice|Levez les bras.",
+   "key": "33eeb476cdc09f40fcae698d187829c5",
+   "proc": "de4bcaf573",
+   "offset": 34206526,
+   "length": 20523,
+   "duration": 1.28
+  },
+  "fr:v.cue.fold": {
+   "kind": "voice",
+   "spec": "voice|Penchez-vous.",
+   "key": "9b4c708238fd3757e74513e04c0a5257",
+   "proc": "de4bcaf573",
+   "offset": 34227049,
+   "length": 18015,
+   "duration": 1.13
+  },
+  "fr:v.cue.halfway-lift": {
+   "kind": "voice",
+   "spec": "voice|Dos plat.",
+   "key": "8c08c0cb436145208554bb985a179469",
+   "proc": "de4bcaf573",
+   "offset": 34245064,
+   "length": 17597,
+   "duration": 1.1
+  },
+  "fr:v.cue.rise-up": {
+   "kind": "voice",
+   "spec": "voice|Remontez.",
+   "key": "b7eb23ea7d1019505666e9cd86654a73",
+   "proc": "de4bcaf573",
+   "offset": 34262661,
+   "length": 17597,
+   "duration": 1.1
+  },
+  "fr:v.cue.hands-to-heart": {
+   "kind": "voice",
+   "spec": "voice|Mains au cœur.",
+   "key": "6a0ca81b20ce9ce5e834c104f8a82c3f",
+   "proc": "de4bcaf573",
+   "offset": 34280258,
+   "length": 21776,
+   "duration": 1.36
+  },
+  "fr:v.cue.step-back-to-plank": {
+   "kind": "voice",
+   "spec": "voice|Reculez en planche.",
+   "key": "f03c7bf1006c2459257eb059c5d49a5a",
+   "proc": "de4bcaf573",
+   "offset": 34302034,
+   "length": 25538,
+   "duration": 1.6
+  },
+  "fr:v.cue.lengthen": {
+   "kind": "voice",
+   "spec": "voice|Allongez.",
+   "key": "3e218565446d2b24f329778f0de37e0d",
+   "proc": "de4bcaf573",
+   "offset": 34327572,
+   "length": 16761,
+   "duration": 1.05
+  },
+  "fr:v.cue.knees-down-lower-slowly": {
+   "kind": "voice",
+   "spec": "voice|Genoux au sol. Descendez lentement.",
+   "key": "445b99b0d1233d517c727f5225331c46",
+   "proc": "de4bcaf573",
+   "offset": 34344333,
+   "length": 44346,
+   "duration": 2.77
+  },
+  "fr:v.cue.chaturanga": {
+   "kind": "voice",
+   "spec": "voice|Chaturanga.",
+   "key": "ef5dd24eafeba0a4bd9aba8631e054c3",
+   "proc": "de4bcaf573",
+   "offset": 34388679,
+   "length": 15089,
+   "duration": 0.94
+  },
+  "fr:v.cue.cobra": {
+   "kind": "voice",
+   "spec": "voice|Cobra.",
+   "key": "240af51b8efe2d8ec7a9559db2c9eaec",
+   "proc": "de4bcaf573",
+   "offset": 34403768,
+   "length": 14253,
+   "duration": 0.89
+  },
+  "fr:v.cue.downward-dog": {
+   "kind": "voice",
+   "spec": "voice|Chien tête en bas.",
+   "key": "84d38ed435b8296f7704e83a8fe39ae5",
+   "proc": "de4bcaf573",
+   "offset": 34418021,
+   "length": 24702,
+   "duration": 1.54
+  },
+  "fr:v.cue.pedal-your-heels": {
+   "kind": "voice",
+   "spec": "voice|Pédalez avec les talons.",
+   "key": "a8ef916e7c127967a72ddbc04bec8e18",
+   "proc": "de4bcaf573",
+   "offset": 34442723,
+   "length": 26374,
+   "duration": 1.65
+  },
+  "fr:v.cue.walk-forward-halfway-lift": {
+   "kind": "voice",
+   "spec": "voice|Avancez. Dos plat.",
+   "key": "7eca2fc6ace17621c80a99f717418b82",
+   "proc": "de4bcaf573",
+   "offset": 34469097,
+   "length": 27210,
+   "duration": 1.7
+  },
+  "fr:v.cue.warrior-two": {
+   "kind": "voice",
+   "spec": "voice|Guerrier deux.",
+   "key": "bffb9de687ba2dbf6555003fe1650f10",
+   "proc": "de4bcaf573",
+   "offset": 34496307,
+   "length": 19687,
+   "duration": 1.23
+  },
+  "fr:v.cue.reverse-warrior": {
+   "kind": "voice",
+   "spec": "voice|Guerrier inversé.",
+   "key": "7b04b5414cb0ffae1758c2f8009eaed4",
+   "proc": "de4bcaf573",
+   "offset": 34515994,
+   "length": 24702,
+   "duration": 1.54
+  },
+  "fr:v.cue.side-angle": {
+   "kind": "voice",
+   "spec": "voice|Angle latéral.",
+   "key": "934e2e0ea94bb5e6d9afe3ee4163b05d",
+   "proc": "de4bcaf573",
+   "offset": 34540696,
+   "length": 22612,
+   "duration": 1.41
+  },
   "sfx.bell.start": {
    "kind": "sfx",
    "spec": "sfx|6|A single deep Tibetan singing bowl struck softly, long warm shimmering resonance slowly fading out, calm meditation, clean recording, no other sounds.",
    "key": "76b8823ed61c55548cdeff28bebed5dc",
    "proc": "aa3d4456ae",
-   "offset": 15978882,
+   "offset": 34563308,
    "length": 97009,
    "duration": 6.06
   },
@@ -1527,7 +3016,7 @@
    "spec": "sfx|2.5|One single soft strike of a small brass meditation bell, a clear pure tone with a gentle ring that fades out smoothly. Only one strike. Studio quality, completely clean, no background noise, no hiss, no other sounds.",
    "key": "21848c376af9d9085db00ecf8c29a2a4",
    "proc": "aa3d4456ae",
-   "offset": 16075891,
+   "offset": 34660317,
    "length": 40585,
    "duration": 2.54
   },
@@ -1536,7 +3025,7 @@
    "spec": "sfx|8|Three soft singing bowl strikes, spaced slowly, warm resonance fading out gently, peaceful end of meditation, clean recording, no other sounds.",
    "key": "0619e0b3492cca26ce2ad4dec108a0ca",
    "proc": "aa3d4456ae",
-   "offset": 16116476,
+   "offset": 34700902,
    "length": 129192,
    "duration": 8.07
   },
@@ -1545,7 +3034,7 @@
    "spec": "sfx|2.5|One single soft strike of a small crystal singing bowl: a clear, pure, high bell tone that rings and fades out smoothly. Only one strike. Studio quality, completely clean, no background noise, no hiss, no shimmer, no breathing, no other sounds.",
    "key": "79e534384bf325d1be1de062b745d3c1",
    "proc": "aa3d4456ae",
-   "offset": 16245668,
+   "offset": 34830094,
    "length": 40585,
    "duration": 2.54
   },
@@ -1554,7 +3043,7 @@
    "spec": "sfx|2.5|One single soft strike of a crystal singing bowl: a clear, pure, warm bell tone, noticeably lower and mellower, that rings and fades out smoothly. Only one strike. Studio quality, completely clean, no background noise, no hiss, no shimmer, no breathing, no other sounds.",
    "key": "89e40b97bfd75bd9decc307dd4d6b3db",
    "proc": "aa3d4456ae",
-   "offset": 16286253,
+   "offset": 34870679,
    "length": 40585,
    "duration": 2.54
   },
@@ -1563,7 +3052,7 @@
    "spec": "music|180|Calm ambient music for a yoga practice. Soft, warm synth pads and a slow evolving drone, gentle forest atmosphere with distant birdsong and light rustling leaves. Very slow, spacious and peaceful. No drums, no percussion, no vocals, no sudden changes.",
    "key": "5404fbff7246e89da1fd7df920dfd06f",
    "proc": "82edf5d4fb",
-   "offset": 16326838,
+   "offset": 34911264,
    "length": 2881453,
    "duration": 180.09
   },
@@ -1572,7 +3061,7 @@
    "spec": "music|180|Gentle ambient music for yoga and meditation. Sparse soft felt piano notes over a warm low drone, a light breeze in an open meadow. Slow, airy and calming. No drums, no percussion, no vocals, no sudden changes.",
    "key": "524c8fbe72137d6cc3f0cc4c504b9d86",
    "proc": "82edf5d4fb",
-   "offset": 19208291,
+   "offset": 37792717,
    "length": 2881453,
    "duration": 180.09
   }

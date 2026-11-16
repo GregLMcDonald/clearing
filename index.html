@@ -18,45 +18,46 @@
     <header class="topbar">
       <div class="brand"><span data-icon="spa"></span>Clearing</div>
       <div class="topbar-actions">
-        <button id="libraryBtn" class="icon-btn" type="button" aria-label="Pose library" title="Pose library"><span data-icon="menu_book"></span></button>
-        <button id="settingsBtn" class="icon-btn" type="button" aria-label="Settings" title="Settings"><span data-icon="tune"></span></button>
+        <button id="libraryBtn" class="icon-btn" type="button" data-i18n-aria="nav.library" aria-label="Pose library" title="Pose library"><span data-icon="menu_book"></span></button>
+        <button id="langBtn" class="icon-btn" type="button" data-i18n-aria="nav.language" aria-label="Language" title="Language"><span data-icon="language"></span></button>
+        <button id="settingsBtn" class="icon-btn" type="button" data-i18n-aria="nav.settings" aria-label="Settings" title="Settings"><span data-icon="tune"></span></button>
       </div>
     </header>
 
     <!-- ───────── HOME ───────── -->
     <section id="homeScreen" class="screen active">
       <div class="wrap narrow">
-        <h1>Practice.</h1>
-        <p class="lede">Pick a length. You'll get a gentle arc: arrive, warm up, build, cool down, rest.</p>
+        <h1 data-i18n="home.title">Practice.</h1>
+        <p class="lede" data-i18n="home.lede">Pick a length. You'll get a gentle arc: arrive, warm up, build, cool down, rest.</p>
 
         <div class="field">
-          <span class="field-label">Length</span>
-          <div class="chips" id="lengthChips" role="radiogroup" aria-label="Session length"></div>
+          <span class="field-label" data-i18n="home.length">Length</span>
+          <div class="chips" id="lengthChips" role="radiogroup" data-i18n-aria="home.lengthAria" aria-label="Session length"></div>
         </div>
 
         <div class="field">
-          <span class="field-label">Level</span>
-          <div class="segmented" id="levelSeg" role="radiogroup" aria-label="Level">
-            <button class="seg-btn" type="button" data-level="beginner">Beginner</button>
-            <button class="seg-btn" type="button" data-level="intermediate">Intermediate</button>
+          <span class="field-label" data-i18n="home.level">Level</span>
+          <div class="segmented" id="levelSeg" role="radiogroup" data-i18n-aria="home.level" aria-label="Level">
+            <button class="seg-btn" type="button" data-level="beginner" data-i18n="level.beginner">Beginner</button>
+            <button class="seg-btn" type="button" data-level="intermediate" data-i18n="level.intermediate">Intermediate</button>
           </div>
         </div>
 
         <div class="field">
-          <span class="field-label">Style</span>
-          <div class="segmented" id="styleSeg" role="radiogroup" aria-label="Style">
-            <button class="seg-btn" type="button" data-style="steady">Steady</button>
-            <button class="seg-btn" type="button" data-style="flow">Flow</button>
+          <span class="field-label" data-i18n="home.style">Style</span>
+          <div class="segmented" id="styleSeg" role="radiogroup" data-i18n-aria="home.style" aria-label="Style">
+            <button class="seg-btn" type="button" data-style="steady" data-i18n="style.steady">Steady</button>
+            <button class="seg-btn" type="button" data-style="flow" data-i18n="style.flow">Flow</button>
           </div>
           <p class="hint" id="styleHint"></p>
         </div>
 
-        <button id="buildBtn" class="primary big" type="button"><span data-icon="auto_awesome"></span>Build my session</button>
+        <button id="buildBtn" class="primary big" type="button" data-i18n="home.build"><span data-icon="auto_awesome"></span>Build my session</button>
 
         <button id="lastSessionCard" class="card-btn" type="button" hidden>
           <span class="card-btn-icon" data-icon="history"></span>
           <span class="card-btn-body">
-            <span class="card-btn-title">Your last proposed session</span>
+            <span class="card-btn-title" data-i18n="home.last">Your last proposed session</span>
             <span class="card-btn-sub" id="lastSessionSub"></span>
           </span>
         </button>
@@ -69,22 +70,22 @@
     <!-- ───────── PREVIEW ───────── -->
     <section id="previewScreen" class="screen">
       <div class="wrap">
-        <button class="back-link" type="button" data-back="home"><span data-icon="arrow_back"></span>Practice</button>
+        <button class="back-link" type="button" data-back="home" data-i18n="preview.back"><span data-icon="arrow_back"></span>Practice</button>
         <h1 id="previewTitle">Session</h1>
         <div class="meta-row">
           <span id="previewMeta" class="meta"></span>
           <span id="prepChip" class="chip-status"></span>
         </div>
         <label class="toggle-row compact">
-          <span class="toggle-label">Show guidance text</span>
+          <span class="toggle-label" data-i18n="preview.showGuide">Show guidance text</span>
           <span class="switch"><input id="guidanceToggle" type="checkbox" /><span class="switch-track" aria-hidden="true"></span></span>
         </label>
         <div id="previewList" class="phase-list"></div>
       </div>
       <div class="dock">
         <div class="dock-inner">
-          <button id="regenBtn" class="ghost" type="button"><span data-icon="refresh"></span>New mix</button>
-          <button id="startBtn" class="primary big" type="button"><span data-icon="play_arrow"></span>Begin</button>
+          <button id="regenBtn" class="ghost" type="button" data-i18n="preview.newMix"><span data-icon="refresh"></span>New mix</button>
+          <button id="startBtn" class="primary big" type="button" data-i18n="preview.begin"><span data-icon="play_arrow"></span>Begin</button>
         </div>
       </div>
     </section>
@@ -93,13 +94,13 @@
     <section id="playerScreen" class="screen">
       <div class="player">
         <div class="player-head">
-          <button id="endBtn" class="icon-btn" type="button" aria-label="End session" title="End session"><span data-icon="close"></span></button>
+          <button id="endBtn" class="icon-btn" type="button" data-i18n-aria="player.end" aria-label="End session" title="End session"><span data-icon="close"></span></button>
           <div class="player-where">
             <span id="playerPhase">Arrive</span>
             <span class="dot">·</span>
             <span id="playerCount">1 of 10</span>
           </div>
-          <div class="player-time" id="playerTime" aria-label="Time remaining">--:--</div>
+          <div class="player-time" id="playerTime" data-i18n-aria="player.remaining" aria-label="Time remaining">--:--</div>
         </div>
         <div class="progress"><div class="progress-fill" id="progressFill"></div></div>
 
@@ -122,7 +123,7 @@
             <div id="poseShape" class="pose-shape" hidden></div>
             <p id="caption" class="caption" aria-live="polite"></p>
             <details id="guideDetails" class="guide-details">
-              <summary>Guidance</summary>
+              <summary data-i18n="player.guidance">Guidance</summary>
               <p id="guideText"></p>
               <div id="guideMoves"></div>
               <p id="guideMods" class="mods"></p>
@@ -132,17 +133,17 @@
         </div>
 
         <div class="player-controls">
-          <button id="prevBtn" class="round-btn" type="button" aria-label="Previous posture" title="Previous posture"><span data-icon="skip_previous"></span></button>
+          <button id="prevBtn" class="round-btn" type="button" data-i18n-aria="player.prev" aria-label="Previous posture" title="Previous posture"><span data-icon="skip_previous"></span></button>
           <button id="playPauseBtn" class="round-btn main" type="button" aria-label="Pause" title="Pause"><span data-icon="pause"></span></button>
-          <button id="nextBtn" class="round-btn" type="button" aria-label="Next posture" title="Next posture"><span data-icon="skip_next"></span></button>
+          <button id="nextBtn" class="round-btn" type="button" data-i18n-aria="player.nextPose" aria-label="Next posture" title="Next posture"><span data-icon="skip_next"></span></button>
         </div>
       </div>
 
       <div id="pauseOverlay" class="pause-overlay" hidden>
         <div class="pause-card">
-          <h2>Paused</h2>
-          <button id="resumeBtn" class="primary big" type="button"><span data-icon="play_arrow"></span>Resume</button>
-          <button id="quitBtn" class="ghost" type="button">End session</button>
+          <h2 data-i18n="player.paused">Paused</h2>
+          <button id="resumeBtn" class="primary big" type="button" data-i18n="player.resume"><span data-icon="play_arrow"></span>Resume</button>
+          <button id="quitBtn" class="ghost" type="button" data-i18n="player.end">End session</button>
         </div>
       </div>
     </section>
@@ -154,8 +155,8 @@
         <h1>Namaste.</h1>
         <p class="lede" id="doneText"></p>
         <div class="stack">
-          <button id="againBtn" class="primary" type="button"><span data-icon="refresh"></span>Repeat this session</button>
-          <button id="homeBtn" class="ghost" type="button">Back to practice</button>
+          <button id="againBtn" class="primary" type="button" data-i18n="done.again"><span data-icon="refresh"></span>Repeat this session</button>
+          <button id="homeBtn" class="ghost" type="button" data-i18n="done.home">Back to practice</button>
         </div>
       </div>
     </section>
@@ -163,15 +164,15 @@
     <!-- ───────── LIBRARY ───────── -->
     <section id="libraryScreen" class="screen">
       <div class="wrap">
-        <button class="back-link" type="button" data-back="home"><span data-icon="arrow_back"></span>Practice</button>
-        <h1>Library.</h1>
+        <button class="back-link" type="button" data-back="home" data-i18n="preview.back"><span data-icon="arrow_back"></span>Practice</button>
+        <h1 data-i18n="library.title">Library.</h1>
         <div class="search">
           <span data-icon="search"></span>
-          <input id="librarySearch" type="search" placeholder="Search English or Sanskrit" autocomplete="off" />
+          <input id="librarySearch" type="search" data-i18n-ph="library.search" placeholder="Search English or Sanskrit" autocomplete="off" />
         </div>
         <div class="chips scroll" id="familyChips"></div>
         <ul id="libraryList" class="pose-grid"></ul>
-        <p class="empty-note" id="libraryEmpty" hidden>No postures match.</p>
+        <p class="empty-note" id="libraryEmpty" data-i18n="library.empty" hidden>No postures match.</p>
       </div>
     </section>
   </main>
@@ -180,67 +181,79 @@
   <div id="settingsModal" class="modal" hidden>
     <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
       <div class="modal-head">
-        <h2 id="settingsTitle" class="modal-title">Settings</h2>
-        <button class="icon-btn" type="button" data-close-modal aria-label="Close"><span data-icon="close"></span></button>
+        <h2 id="settingsTitle" class="modal-title" data-i18n="settings.title">Settings</h2>
+        <button class="icon-btn" type="button" data-close-modal data-i18n-aria="close" aria-label="Close"><span data-icon="close"></span></button>
       </div>
 
       <div class="set-group">
-        <span class="set-label"><span data-icon="air"></span>Breath pace</span>
+        <span class="set-label" data-i18n="settings.pace"><span data-icon="air"></span>Breath pace</span>
         <div class="set-row">
-          <span>Inhale</span>
+          <span data-i18n="settings.inhale">Inhale</span>
           <div class="stepper" id="inhaleStepper">
-            <button class="step-btn" type="button" data-step="-1" aria-label="Shorter inhale">−</button>
+            <button class="step-btn" type="button" data-step="-1" data-i18n-aria="settings.inhaleLess" aria-label="Shorter inhale">−</button>
             <span class="step-val" id="inhaleVal">4 s</span>
-            <button class="step-btn" type="button" data-step="1" aria-label="Longer inhale">+</button>
+            <button class="step-btn" type="button" data-step="1" data-i18n-aria="settings.inhaleMore" aria-label="Longer inhale">+</button>
           </div>
         </div>
         <div class="set-row">
-          <span>Exhale</span>
+          <span data-i18n="settings.exhale">Exhale</span>
           <div class="stepper" id="exhaleStepper">
-            <button class="step-btn" type="button" data-step="-1" aria-label="Shorter exhale">−</button>
+            <button class="step-btn" type="button" data-step="-1" data-i18n-aria="settings.exhaleLess" aria-label="Shorter exhale">−</button>
             <span class="step-val" id="exhaleVal">5 s</span>
-            <button class="step-btn" type="button" data-step="1" aria-label="Longer exhale">+</button>
+            <button class="step-btn" type="button" data-step="1" data-i18n-aria="settings.exhaleMore" aria-label="Longer exhale">+</button>
           </div>
         </div>
-        <p class="hint">One breath in and out. Hold lengths are counted in these breaths.</p>
+        <p class="hint" data-i18n="settings.paceHint">One breath in and out. Hold lengths are counted in these breaths.</p>
       </div>
 
       <div class="set-group">
-        <span class="set-label"><span data-icon="record_voice_over"></span>Guidance</span>
+        <span class="set-label" data-i18n="settings.guidance"><span data-icon="record_voice_over"></span>Guidance</span>
         <label class="toggle-row compact">
-          <span class="toggle-label">Read guidance aloud
-            <small>Shown on screen as it's spoken. When off, you hear only the posture's name and hold, and the full guidance stays in the Guidance panel.</small>
+          <span class="toggle-label"><span data-i18n="settings.readGuide">Read guidance aloud</span>
+            <small data-i18n="settings.readGuideHint">Shown on screen as it's spoken.</small>
           </span>
           <span class="switch"><input id="readGuideToggle" type="checkbox" /><span class="switch-track" aria-hidden="true"></span></span>
         </label>
       </div>
 
       <div class="set-group">
-        <span class="set-label"><span data-icon="music_note"></span>Music</span>
+        <span class="set-label" data-i18n="settings.music"><span data-icon="music_note"></span>Music</span>
         <div class="segmented" id="musicSeg"></div>
       </div>
 
       <div class="set-group">
-        <span class="set-label"><span data-icon="graphic_eq"></span>Volume</span>
-        <label class="slider-row"><span>Voice</span><input type="range" id="volVoice" min="0" max="1" step="0.05" /></label>
-        <label class="slider-row"><span>Music</span><input type="range" id="volMusic" min="0" max="1" step="0.05" /></label>
-        <label class="slider-row"><span>Chimes and bells</span><input type="range" id="volSfx" min="0" max="1" step="0.05" /></label>
+        <span class="set-label" data-i18n="settings.volume"><span data-icon="graphic_eq"></span>Volume</span>
+        <label class="slider-row"><span data-i18n="settings.volVoice">Voice</span><input type="range" id="volVoice" min="0" max="1" step="0.05" /></label>
+        <label class="slider-row"><span data-i18n="settings.volMusic">Music</span><input type="range" id="volMusic" min="0" max="1" step="0.05" /></label>
+        <label class="slider-row"><span data-i18n="settings.volSfx">Chimes and bells</span><input type="range" id="volSfx" min="0" max="1" step="0.05" /></label>
       </div>
 
       <div class="set-group">
-        <span class="set-label">Theme</span>
+        <span class="set-label" data-i18n="settings.theme">Theme</span>
         <div class="segmented" id="themeSeg">
-          <button class="seg-btn" type="button" data-theme-opt="auto">Auto</button>
-          <button class="seg-btn" type="button" data-theme-opt="meadow">Meadow</button>
-          <button class="seg-btn" type="button" data-theme-opt="forest">Forest</button>
+          <button class="seg-btn" type="button" data-theme-opt="auto" data-i18n="theme.auto">Auto</button>
+          <button class="seg-btn" type="button" data-theme-opt="meadow" data-i18n="theme.meadow">Meadow</button>
+          <button class="seg-btn" type="button" data-theme-opt="forest" data-i18n="theme.forest">Forest</button>
         </div>
       </div>
 
       <div class="set-group">
-        <span class="set-label"><span data-icon="cloud_download"></span>Audio pack</span>
+        <span class="set-label" data-i18n="pack.label"><span data-icon="cloud_download"></span>Audio pack</span>
         <p class="hint" id="packInfo"></p>
         <button id="packBtn" class="btn-soft" type="button">Check for updates</button>
       </div>
+    </div>
+  </div>
+
+  <!-- ───────── LANGUAGE SHEET ───────── -->
+  <div id="langModal" class="modal" hidden>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="langTitle">
+      <div class="modal-head">
+        <h2 id="langTitle" class="modal-title" data-i18n="lang.title">Language</h2>
+        <button class="icon-btn" type="button" data-close-modal data-i18n-aria="close" aria-label="Close"><span data-icon="close"></span></button>
+      </div>
+      <div id="langList" class="lang-list" role="radiogroup" data-i18n-aria="lang.title" aria-label="Language"></div>
+      <p class="hint" data-i18n="lang.hint">Changes the app and the voice.</p>
     </div>
   </div>
 
@@ -252,7 +265,7 @@
           <h2 id="poseTitle" class="modal-title">Pose</h2>
           <div id="poseSubtitle" class="pose-sanskrit small"></div>
         </div>
-        <button class="icon-btn" type="button" data-close-modal aria-label="Close"><span data-icon="close"></span></button>
+        <button class="icon-btn" type="button" data-close-modal data-i18n-aria="close" aria-label="Close"><span data-icon="close"></span></button>
       </div>
       <div id="poseTags" class="tags"></div>
       <p id="poseGuide" class="guide-quote"></p>

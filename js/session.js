@@ -94,7 +94,8 @@ export function estimateDuration(clipId) {
 //                                        optional voice line layered on the inhale
 //   { t: "half", phase, cue }            flows: ONE inhale or exhale with its chime,
 //                                        the movement cue spoken over it
-// Flow actions also carry round, rounds and show (the current shape's name).
+// Flow actions also carry round, rounds and mv (index of the current move, or
+// "setup"), so the UI can name the shape in the current language.
 // stage: intro | enter | hold | switch | flow | release | rest | outro
 export function buildActions(session, breath) {
   const A = [];
@@ -172,10 +173,9 @@ function addFlow(add, i, f, rounds, level, teach) {
       add(i, "switch", { t: "gap", s: GAP.afterSwitch, side, sides });
     }
     if (f.setup) {
-      const show = f.setup.cue.replace(/\.$/, "");
       const clip = teach && side === 1 ? id.setup(f.id) : id.cue(f.setup.cue);
-      add(i, "enter", { t: "voice", clip, side, sides, show });
-      add(i, "enter", { t: "gap", s: GAP.afterSetup, side, sides, show });
+      add(i, "enter", { t: "voice", clip, side, sides, mv: "setup" });
+      add(i, "enter", { t: "gap", s: GAP.afterSetup, side, sides, mv: "setup" });
     }
     for (let r = 1; r <= rounds; r++) {
       const teaching = teach && side === 1 && r === 1;
@@ -185,7 +185,7 @@ function addFlow(add, i, f, rounds, level, teach) {
         add(i, "flow", { t: "gap", s: GAP.afterFlowOn, ...ctx });
       }
       moves.forEach((mv, k) => {
-        const c = { ...ctx, show: mv.show };
+        const c = { ...ctx, mv: k };
         if (teaching) {
           add(i, "enter", { t: "voice", clip: id.teach(f.id, k, lvl === 2 && !!f.moves[k].l2), ...c });
           const n = mv.breath === "stay" ? mv.n : 1;

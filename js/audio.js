@@ -11,7 +11,7 @@
 //   voice → device speech synthesis, bells/breath chimes → synthesized tones,
 //   music → a soft synthesized pad.
 
-import { getClip, clipSpec, estimateSpeechSeconds, id as clipIds } from "./phrases.js";
+import { getClip, clipSpec, estimateSpeechSeconds, langId, id as clipIds } from "./phrases.js";
 
 const MANIFEST_URL = "audio/manifest.json";
 const AUDIO_CACHE = "clearing-audio";
@@ -29,6 +29,10 @@ export class AudioEngine {
     this.music = null;
     this.voicesActive = 0;
     this.vol = { voice: 1, sfx: 0.6, music: 0.5 };
+    // Voice clips are looked up in this language: the timeline says "v.welcome",
+    // the pack holds "en:v.welcome" and "fr:v.welcome". Buffers are keyed by
+    // full id, so switching language keeps what's already decoded.
+    this.lang = "en";
   }
 
   // ───────── manifest + pack ─────────
@@ -99,9 +103,11 @@ export class AudioEngine {
 
   // The manifest entry for a clip, but only if it was rendered from the
   // current wording/prompt. Edited text without a rebuild → null → fallback.
+  full(cid) { return langId(cid, this.lang); }
   entryFor(clipId) {
-    const entry = this.manifest && this.manifest.clips[clipId];
-    const clip = getClip(clipId);
+    const full = this.full(clipId);
+    const entry = this.manifest && this.manifest.clips[full];
+    const clip = getClip(full);
     return entry && clip && entry.spec === clipSpec(clip) ? entry : null;
   }
 
@@ -145,17 +151,18 @@ export class AudioEngine {
     let done = 0, ready = 0;
     const hasPack = await this.loadPack();
     for (const cid of ids) {
-      const clip = getClip(cid);
-      if (this.buffers.has(cid) || this.musicUrls.has(cid)) ready++;
+      const full = this.full(cid);
+      const clip = getClip(full);
+      if (this.buffers.has(full) || this.musicUrls.has(full)) ready++;
       else if (hasPack && clip) {
         const e = this.entryFor(cid);
         if (e) {
           try {
             const bytes = this.pack.slice(e.offset, e.offset + e.length);
             if (clip.kind === "music") {
-              this.musicUrls.set(cid, URL.createObjectURL(new Blob([bytes], { type: "audio/mpeg" })));
+              this.musicUrls.set(full, URL.createObjectURL(new Blob([bytes], { type: "audio/mpeg" })));
             } else {
-              this.buffers.set(cid, await this.ctx.decodeAudioData(bytes));
+              this.buffers.set(full, await this.ctx.decodeAudioData(bytes));
             }
             ready++;
           } catch (_) { /* undecodable → fallback */ }
@@ -169,11 +176,11 @@ export class AudioEngine {
 
   // Best-known duration: decoded buffer > manifest > text estimate.
   duration(cid) {
-    const buf = this.buffers.get(cid);
+    const buf = this.buffers.get(this.full(cid));
     if (buf) return buf.duration;
     const e = this.entryFor(cid);
     if (e && e.duration) return e.duration;
-    const clip = getClip(cid);
+    const clip = getClip(this.full(cid));
     if (!clip) return 0;
     return clip.kind === "voice" ? estimateSpeechSeconds(clip.text) : clip.seconds;
   }
@@ -212,7 +219,7 @@ export class AudioEngine {
   }
 
   playBuffer(cid, busName, maxSeconds) {
-    const buf = this.buffers.get(cid);
+    const buf = this.buffers.get(this.full(cid));
     if (!buf) return null;
     const ctx = this.ctx;
     const src = ctx.createBufferSource();
@@ -238,7 +245,7 @@ export class AudioEngine {
 
   // Returns { ended: Promise, tts: boolean }.
   voice(cid) {
-    const clip = getClip(cid);
+    const clip = getClip(this.full(cid));
     this.duck(+1);
     const unduck = () => this.duck(-1);
     const ended = this.playBuffer(cid, "voice");
@@ -279,9 +286,12 @@ export class AudioEngine {
       const u = new SpeechSynthesisUtterance(text);
       u.rate = 0.9;
       u.volume = Math.min(1, this.vol.voice);
+      u.lang = this.lang === "fr" ? "fr-CA" : "en-US";
       const voices = speechSynthesis.getVoices();
-      const v = voices.find((x) => /en[-_](GB|US)/i.test(x.lang) && /female|samantha|serena|google uk/i.test(x.name))
-        || voices.find((x) => /^en/i.test(x.lang));
+      const v = this.lang === "fr"
+        ? voices.find((x) => /fr[-_]CA/i.test(x.lang)) || voices.find((x) => /^fr/i.test(x.lang))
+        : voices.find((x) => /en[-_](GB|US)/i.test(x.lang) && /female|samantha|serena|google uk/i.test(x.name))
+          || voices.find((x) => /^en/i.test(x.lang));
       if (v) u.voice = v;
       let settled = false;
       const finish = () => { if (settled) return; settled = true; clearTimeout(timer); resolve(); };
@@ -326,7 +336,7 @@ export class AudioEngine {
     this.stopMusic(0);
     if (!trackId || trackId === "off") return;
     this.ensureContext();
-    const url = this.musicUrls.get(trackId);
+    const url = this.musicUrls.get(this.full(trackId));
     this.music = url ? new LoopingTrack(this, url) : new SynthPad(this, trackId);
     this.music.start();
   }

@@ -10,6 +10,7 @@
 //   { id, kind: "music", prompt, seconds, label } ElevenLabs music, looped with crossfade
 
 import { POSES, FLOWS, POSITIONS } from "./library.js";
+import { LANGS, locPose, positionOf, linesFor, holdTextFor } from "./content.js";
 
 // Breath pace options (seconds per inhale / exhale). The breath chimes are
 // independent of pace, so these ranges can change freely.
@@ -57,6 +58,11 @@ const BREATH_CUES = {
 };
 
 // ───────── ids ─────────
+// The timeline uses language-neutral ids ("v.welcome"); voice clips exist once
+// per language in the catalog ("en:v.welcome", "fr:v.welcome"). SFX and music
+// are shared and never prefixed.
+export const langId = (clipId, lang = "en") => clipId.startsWith("v.") ? `${lang}:${clipId}` : clipId;
+
 export const id = {
   line:  (k) => `v.${k}`,
   hold:  (n) => `v.hold.${n}`,
@@ -77,29 +83,39 @@ export function holdText(n) {
 }
 
 function range([a, b]) { const out = []; for (let i = a; i <= b; i++) out.push(i); return out; }
-const voice = (clipId, text, caption = text) => ({ id: clipId, kind: "voice", text, caption });
-
-function buildCatalog() {
+function voiceClips(lang) {
   const clips = [];
-  for (const [k, text] of Object.entries(LINES)) clips.push(voice(id.line(k), text));
-  for (const n of range(HOLD_RANGE)) clips.push(voice(id.hold(n), holdText(n)));
-  for (const [base, p] of Object.entries(POSITIONS)) clips.push(voice(id.pos(base), p.cue));
-  for (const p of [...POSES, ...FLOWS]) {
+  const voice = (clipId, text, caption = text) => clips.push({ id: langId(clipId, lang), kind: "voice", lang, text, caption });
+  const lines = linesFor(LINES, lang);
+  const hold = holdTextFor(holdText, lang);
+  for (const k of Object.keys(LINES)) voice(id.line(k), lines[k]);
+  for (const n of range(HOLD_RANGE)) voice(id.hold(n), hold(n));
+  for (const base of Object.keys(POSITIONS)) voice(id.pos(base), positionOf(base, lang).cue);
+  for (const base of [...POSES, ...FLOWS]) {
+    const p = locPose(base, lang);
     const spoken = p.sanskrit ? `${p.english}. ${p.say || p.sanskrit}.` : `${p.english}.`;
     const shown  = p.sanskrit ? `${p.english}. ${p.sanskrit}.` : `${p.english}.`;
-    clips.push(voice(id.name(p.id), spoken, shown));
-    clips.push(voice(id.guide(p.id), p.guide));
+    voice(id.name(p.id), spoken, shown);
+    voice(id.guide(p.id), p.guide);
   }
+  // Cue clips are keyed by the ENGLISH cue text; the clip says it in `lang`.
   const cues = new Map();
-  for (const f of FLOWS) {
-    if (f.setup) { clips.push(voice(id.setup(f.id), f.setup.teach)); cues.set(id.cue(f.setup.cue), f.setup.cue); }
-    f.moves.forEach((mv, k) => {
-      clips.push(voice(id.teach(f.id, k), mv.teach));
-      cues.set(id.cue(mv.cue), mv.cue);
-      if (mv.l2) { clips.push(voice(id.teach(f.id, k, true), mv.l2.teach)); cues.set(id.cue(mv.l2.cue), mv.l2.cue); }
+  for (const en of FLOWS) {
+    const f = locPose(en, lang);
+    if (en.setup) { voice(id.setup(f.id), f.setup.teach); cues.set(id.cue(en.setup.cue), f.setup.cue); }
+    en.moves.forEach((mv, k) => {
+      const lm = f.moves[k];
+      voice(id.teach(f.id, k), lm.teach);
+      cues.set(id.cue(mv.cue), lm.cue);
+      if (mv.l2) { voice(id.teach(f.id, k, true), lm.l2.teach); cues.set(id.cue(mv.l2.cue), lm.l2.cue); }
     });
   }
-  for (const [clipId, text] of cues) clips.push(voice(clipId, text));
+  for (const [clipId, text] of cues) voice(clipId, text);
+  return clips;
+}
+
+function buildCatalog() {
+  const clips = LANGS.flatMap(voiceClips);
   for (const [clipId, s] of Object.entries(SFX_PROMPTS)) clips.push({ id: clipId, kind: "sfx", ...s });
   for (const [clipId, s] of Object.entries(BREATH_CUES)) clips.push({ id: clipId, kind: "sfx", ...s });
   for (const t of MUSIC_TRACKS) clips.push({ id: t.id, kind: "music", seconds: t.seconds, prompt: t.prompt, label: t.label });
@@ -110,7 +126,8 @@ const CATALOG = buildCatalog();
 const BY_ID = new Map(CATALOG.map((c) => [c.id, c]));
 
 export function catalog() { return CATALOG; }
-export function getClip(clipId) { return BY_ID.get(clipId) || null; }
+// Accepts a full id ("fr:v.welcome", "sfx.chime") or a timeline id + lang.
+export function getClip(clipId, lang = "en") { return BY_ID.get(clipId) || BY_ID.get(langId(clipId, lang)) || null; }
 
 // Canonical description of WHAT a clip should sound like (not how it's
 // rendered). The manifest stores clipSpec per clip; if the text or prompt

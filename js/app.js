@@ -1,7 +1,7 @@
 // Clearing — guided yoga sessions. Vanilla ES modules, no framework, no bundler.
 // Persistence: one localStorage key (STORAGE_KEY). Audio: see audio.js.
 
-import { POSES, FLOWS, PHASES, FAMILIES, LEVELS, POSITIONS, poseById, isFlow, flowMoves } from "./library.js";
+import { POSES, FLOWS, FAMILIES, poseById, isFlow, flowMoves } from "./library.js";
 import { MUSIC_TRACKS, INHALE_RANGE, EXHALE_RANGE, getClip, id as clipId } from "./phrases.js";
 import {
   LENGTH_OPTIONS, generateSession, newSeed, estimateSeconds, buildActions, actionSeconds, clipsFor, phasesOf,
@@ -9,6 +9,11 @@ import {
 import { AudioEngine } from "./audio.js";
 import { Player } from "./player.js";
 import { ICONS } from "./icons.js";
+import { t, plural, getLang, setLang, locale, applyStatic } from "./i18n.js";
+import { LANGS, LANG_NAMES, locPose, positionOf, phaseLabel, familyLabel, levelLabel, musicLabel } from "./content.js";
+
+// A pose or flow in the current language.
+const L = (p) => locPose(p, getLang());
 
 const STORAGE_KEY = "clearing.state.v1";
 const $ = (id) => document.getElementById(id);
@@ -81,13 +86,13 @@ const fmtClock = (sec) => {
   return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
 };
 const fmtMin = (sec) => `${Math.max(1, Math.round(sec / 60))} min`;
-const fmtMB = (bytes) => `${(bytes / 1048576).toFixed(1)} MB`;
-const plural = (n, w) => `${n} ${w}${n === 1 ? "" : "s"}`;
+const fmtMB = (bytes) => `${(bytes / 1048576).toLocaleString(locale(), { minimumFractionDigits: 1, maximumFractionDigits: 1 })}\u00a0${t("unit.mb")}`;
 function holdLabel(item, pose) {
-  if (isFlow(pose)) return { main: plural(item.rounds, "round"), sub: pose.sided ? "each side" : "" };
-  if (pose.hold === "time") return { main: fmtClock(item.seconds), sub: "rest" };
-  return { main: plural(item.breaths, "breath"), sub: pose.sided ? "each side" : "" };
+  if (isFlow(pose)) return { main: plural(item.rounds, "round"), sub: pose.sided ? t("hold.eachSide") : "" };
+  if (pose.hold === "time") return { main: fmtClock(item.seconds), sub: t("hold.rest") };
+  return { main: plural(item.breaths, "breath"), sub: pose.sided ? t("hold.eachSide") : "" };
 }
+const levelName = (level) => levelLabel(level === "intermediate" ? 2 : 1, getLang());
 
 // ───────── state ─────────
 const DEFAULT_SETTINGS = {
@@ -99,6 +104,8 @@ const DEFAULT_SETTINGS = {
   showGuide: false,
   readGuide: true,
   style: "steady",
+  // First launch follows the device language.
+  lang: (typeof navigator !== "undefined" && /^fr/i.test(navigator.language || "")) ? "fr" : "en",
 };
 const clampNum = (v, lo, hi, d) => (Number.isFinite(+v) ? Math.max(lo, Math.min(hi, +v)) : d);
 
@@ -118,6 +125,7 @@ function validateState(raw) {
     showGuide: !!st.showGuide,
     readGuide: st.readGuide !== false,
     style: st.style === "flow" ? "flow" : "steady",
+    lang: LANGS.includes(st.lang) ? st.lang : DEFAULT_SETTINGS.lang,
   };
   let session = s.session;
   const okItem = (it) => it && poseById(it.poseId) && (Number.isFinite(it.breaths) || Number.isFinite(it.seconds) || Number.isFinite(it.rounds));
@@ -133,6 +141,7 @@ function saveState() {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (_) {}
 }
 let state = loadState();
+setLang(state.settings.lang);
 // Everything that shapes a session's timing. Generating, estimating and
 // playing must all use the same cfg or lengths drift.
 const timingCfg = () => ({ inhale: state.settings.inhale, exhale: state.settings.exhale, readGuide: state.settings.readGuide });
@@ -174,7 +183,7 @@ async function downloadPack() {
     await engine.downloadPack((pct) => setAudio({ state: "downloading", pct }));
     setAudio({ state: "ready" });
   } catch (e) {
-    setAudio({ state: "error", error: e.message || "Download failed" });
+    setAudio({ state: "error", error: e.message || t("audio.error") });
   }
 }
 
@@ -189,24 +198,24 @@ function renderAudioStatus() {
   switch (audio.state) {
     case "none":
       box.classList.add("warn");
-      row("record_voice_over", "Using your device's voice", "No audio pack has been built yet, so guidance uses built-in speech and simple tones.");
+      row("record_voice_over", t("audio.device"), t("audio.deviceSub"));
       break;
     case "downloading": {
       const bar = el("div", { class: "bar" }, el("i", { style: `width:${Math.round(audio.pct * 100)}%` }));
-      row("cloud_download", `Downloading audio pack ${Math.round(audio.pct * 100)}%`, fmtMB(engine.packBytes()), bar);
+      row("cloud_download", t("audio.downloading", { pct: Math.round(audio.pct * 100) }), fmtMB(engine.packBytes()), bar);
       break;
     }
     case "ready":
-      row("check_circle", "Audio pack ready", `${fmtMB(engine.packBytes())}, works offline`);
+      row("check_circle", t("audio.ready"), t("audio.readySub", { mb: fmtMB(engine.packBytes()) }));
       break;
     case "missing":
     case "error": {
       box.classList.add("warn");
-      const btn = el("button", { class: "ghost", type: "button", text: "Download", onclick: () => { audioReady = downloadPack(); } });
+      const btn = el("button", { class: "ghost", type: "button", text: t("audio.download"), onclick: () => { audioReady = downloadPack(); } });
       box.append(icon(audio.state === "missing" ? "cloud_off" : "error_outline"),
         el("div", { class: "grow" }, [
-          audio.state === "missing" ? "Audio pack not downloaded" : "Audio download failed",
-          el("small", { text: audio.state === "missing" ? "Connect to download it. Until then your device's voice is used." : audio.error }),
+          audio.state === "missing" ? t("audio.missing") : t("audio.error"),
+          el("small", { text: audio.state === "missing" ? t("audio.missingSub") : audio.error }),
         ]), btn);
       break;
     }
@@ -219,15 +228,15 @@ function renderPackInfo() {
   const m = engine.manifest;
   btn.disabled = audio.state === "downloading" || audio.state === "checking";
   if (!m) {
-    info.textContent = "No audio pack is published with this build. Voice uses your device's speech, and bells, breath chimes and music are synthesized.";
-    btn.textContent = "Check again";
+    info.textContent = t("pack.none");
+    btn.textContent = t("pack.checkAgain");
     return;
   }
-  const when = m.generatedAt ? new Date(m.generatedAt).toLocaleDateString(undefined, { dateStyle: "medium" }) : "unknown date";
+  const when = m.generatedAt ? new Date(m.generatedAt).toLocaleDateString(locale(), { dateStyle: "medium" }) : t("pack.unknownDate");
   const n = Object.keys(m.clips).length;
-  const tail = audio.state === "ready" ? "Downloaded to this device." : audio.state === "downloading" ? `Downloading ${Math.round(audio.pct * 100)}%…` : "Not downloaded yet.";
-  info.textContent = `${n} clips, ${fmtMB(m.pack.bytes)}, built ${when}. ${tail}`;
-  btn.textContent = audio.state === "ready" ? "Check for updates" : "Download now";
+  const tail = audio.state === "ready" ? t("pack.isReady") : audio.state === "downloading" ? t("pack.isDownloading", { pct: Math.round(audio.pct * 100) }) : t("pack.notYet");
+  info.textContent = `${t("pack.info", { n, mb: fmtMB(m.pack.bytes), when })} ${tail}`;
+  btn.textContent = audio.state === "ready" ? t("pack.check") : t("pack.downloadNow");
 }
 
 // ───────── home ─────────
@@ -249,22 +258,17 @@ function renderHome() {
     b.classList.toggle("active", on);
     b.setAttribute("aria-checked", String(on));
   });
-  $("styleHint").textContent = state.settings.style === "flow"
-    ? "Adds sun salutations and a warrior flow, moving with one movement for each chime."
-    : "Come into each posture and hold it still for a few breaths.";
+  $("styleHint").textContent = t(state.settings.style === "flow" ? "style.hint.flow" : "style.hint.steady");
 
   const s = state.session;
   $("lastSessionCard").hidden = !s;
-  if (s) {
-    const poses = s.items.length;
-    $("lastSessionSub").textContent = sessionSummary(s, s.minutes * 60);
-  }
+  if (s) $("lastSessionSub").textContent = sessionSummary(s, s.minutes * 60);
 
   const last = state.history[state.history.length - 1];
   $("lastPractice").hidden = !last;
   if (last) {
-    const d = new Date(last.dateISO).toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" });
-    $("lastPractice").textContent = `Last practice: ${d}, ${fmtMin(last.practicedSec)}${last.completed ? "" : " (ended early)"}`;
+    const d = new Date(last.dateISO).toLocaleDateString(locale(), { weekday: "short", month: "short", day: "numeric" });
+    $("lastPractice").textContent = t("home.lastPractice", { date: d, dur: fmtMin(last.practicedSec) }) + (last.completed ? "" : t("home.endedEarly"));
   }
   renderAudioStatus();
 }
@@ -272,16 +276,17 @@ function renderHome() {
 function sessionSummary(s, seconds) {
   const flows = s.items.filter((it) => isFlow(poseById(it.poseId))).length;
   const poses = s.items.length - flows;
-  return [`About ${fmtMin(seconds)}`, plural(poses, "posture"), flows ? plural(flows, "flow") : null,
-    LEVELS[s.level === "intermediate" ? 2 : 1]].filter(Boolean).join(" · ");
+  return [t("summary.about", { dur: fmtMin(seconds) }), plural(poses, "posture"), flows ? plural(flows, "flow") : null,
+    levelName(s.level)].filter(Boolean).join(" · ");
 }
 
 // Ordered list of a flow's moves: breath, shape, and the teaching line.
+// `f` must already be localized (L(flow)).
 function movesList(f, level) {
   const lvl = level === "intermediate" ? 2 : level;
-  const breathLabel = (mv) => mv.breath === "in" ? "In" : mv.breath === "out" ? "Out" : plural(mv.n, "breath");
+  const breathLabel = (mv) => mv.breath === "in" ? t("moves.in") : mv.breath === "out" ? t("moves.out") : plural(mv.n, "breath");
   return el("ol", { class: "moves" }, [
-    f.setup ? el("li", {}, [el("span", { class: "move-breath", text: "Start" }), el("span", { class: "move-body" }, [
+    f.setup ? el("li", {}, [el("span", { class: "move-breath", text: t("moves.start") }), el("span", { class: "move-body" }, [
       el("span", { class: "move-show", text: f.setup.cue.replace(/\.$/, "") }), el("span", { class: "move-teach", text: f.setup.teach })])]) : null,
     ...flowMoves(f, lvl).map((mv) => el("li", {}, [
       el("span", { class: `move-breath ${mv.breath}`, text: breathLabel(mv) }),
@@ -318,8 +323,8 @@ function renderPreview() {
   const s = state.session;
   const stepSecs = stepSecondsOf(s);
   const total = stepSecs.reduce((a, b) => a + b, 0);
-  $("previewTitle").textContent = `${s.minutes}-minute session`;
-  $("previewMeta").textContent = sessionSummary(s, total) + (s.style === "flow" ? " · Flow" : "");
+  $("previewTitle").textContent = t("preview.title", { n: s.minutes });
+  $("previewMeta").textContent = sessionSummary(s, total) + (s.style === "flow" ? ` · ${t("style.flow")}` : "");
   $("guidanceToggle").checked = state.settings.showGuide;
 
   const list = $("previewList");
@@ -327,9 +332,9 @@ function renderPreview() {
   for (const group of phasesOf(s)) {
     const secs = group.items.reduce((sum, it) => sum + stepSecs[it.index], 0);
     const ul = el("ul", { class: "step-list" });
-    for (const it of group.items) ul.append(stepCard(it, poseById(it.poseId)));
+    for (const it of group.items) ul.append(stepCard(it, L(poseById(it.poseId))));
     list.append(el("section", {}, [
-      el("h2", { class: "phase-head" }, [el("span", { text: group.label }), el("span", { text: fmtMin(secs) })]),
+      el("h2", { class: "phase-head" }, [el("span", { text: phaseLabel(group.id, getLang()) }), el("span", { text: fmtMin(secs) })]),
       ul,
     ]));
   }
@@ -367,21 +372,21 @@ function renderPrepChip() {
   const chip = $("prepChip");
   chip.replaceChildren();
   chip.className = "chip-status";
-  let iconName = "check_circle", text = "Audio ready";
+  let iconName = "check_circle", text = t("prep.ready");
   if (audio.state === "none" || audio.state === "missing" || audio.state === "error") {
     chip.classList.add("warn");
     iconName = "record_voice_over";
-    text = "Device voice";
+    text = t("prep.device");
   } else if (audio.state === "downloading") {
     iconName = "cloud_download";
-    text = `Downloading audio ${Math.round(audio.pct * 100)}%`;
+    text = t("prep.downloading", { pct: Math.round(audio.pct * 100) });
   } else if (prep.state === "preparing" || audio.state === "checking") {
     iconName = "graphic_eq";
-    text = `Preparing audio ${Math.round(prep.pct * 100)}%`;
+    text = t("prep.preparing", { pct: Math.round(prep.pct * 100) });
   } else if (prep.state === "ready" && prep.ready < prep.total) {
     chip.classList.add("warn");
     iconName = "graphic_eq";
-    text = `Audio ${prep.ready}/${prep.total}, rest uses device voice`;
+    text = t("prep.partial", { ready: prep.ready, total: prep.total });
   }
   chip.append(icon(iconName), text);
 }
@@ -439,15 +444,7 @@ async function startSession() {
 }
 
 function stageWord(p) {
-  switch (p.stage) {
-    case "intro": return "Arrive";
-    case "enter": return "Move in";
-    case "switch": return "Switch";
-    case "release": return "Release";
-    case "rest": return "Rest";
-    case "outro": return "Return";
-    default: return "";
-  }
+  return ["intro", "enter", "switch", "release", "rest", "outro"].includes(p.stage) ? t(`stage.${p.stage}`) : "";
 }
 
 function renderPlayer() {
@@ -455,33 +452,36 @@ function renderPlayer() {
   if (!p) return;
   const items = p.session.items;
   const item = p.item;
-  const pose = poseById(item.poseId);
-  const phase = PHASES.find((x) => x.id === item.phase);
-  $("playerPhase").textContent = p.stage === "outro" ? "Closing" : phase ? phase.label : "";
-  $("playerCount").textContent = `${p.step + 1} of ${items.length}`;
+  const pose = L(poseById(item.poseId));
+  $("playerPhase").textContent = p.stage === "outro" ? t("player.closing") : phaseLabel(item.phase, getLang()) || "";
+  $("playerCount").textContent = t("player.count", { a: p.step + 1, b: items.length });
   $("poseEnglish").textContent = pose.english;
   $("poseSanskrit").textContent = pose.sanskrit || "";
 
   const showSide = pose.sided && ["hold", "switch", "flow"].includes(p.stage);
   $("sidePill").hidden = !showSide;
-  if (showSide) $("sidePill").textContent = p.side === 1 ? "First side" : "Other side";
+  if (showSide) $("sidePill").textContent = t(p.side === 1 ? "side.first" : "side.other");
 
   $("caption").textContent = p.caption;
-  $("poseShape").hidden = !p.show;
-  $("poseShape").textContent = p.show;
-  if ($("guideText").dataset.for !== pose.id) {
-    $("guideText").dataset.for = pose.id;
+  const mv = p.move;
+  const shape = mv === null || !isFlow(pose) ? "" : mv === "setup" ? pose.setup.cue.replace(/\.$/, "") : pose.moves[mv].show;
+  $("poseShape").hidden = !shape;
+  $("poseShape").textContent = shape;
+  const guideKey = `${pose.id}|${getLang()}`;
+  if ($("guideText").dataset.for !== guideKey) {
+    $("guideText").dataset.for = guideKey;
     $("guideText").textContent = pose.guide;
     $("guideMoves").replaceChildren(...(isFlow(pose) ? [movesList(pose, p.session.level)] : []));
     $("guideMods").textContent = pose.mods;
   }
 
   const next = items[p.step + 1];
-  $("nextUp").textContent = p.stage === "outro" ? "" : next ? `Next: ${poseById(next.poseId).english}` : "Next: closing";
+  $("nextUp").textContent = p.stage === "outro" ? "" : next ? t("player.next", { name: L(poseById(next.poseId)).english }) : t("player.nextClosing");
 
   const pp = $("playPauseBtn");
   setIcon(pp, p.paused ? "play_arrow" : "pause");
-  pp.setAttribute("aria-label", p.paused ? "Resume" : "Pause");
+  pp.setAttribute("aria-label", t(p.paused ? "player.resume" : "player.pause"));
+  pp.setAttribute("title", t(p.paused ? "player.resume" : "player.pause"));
   $("pauseOverlay").hidden = !p.paused;
 }
 
@@ -496,8 +496,8 @@ function frame() {
   if (bs) {
     const t = (now - bs.t0) / bs.dur;
     discScale = bs.phase === "in" ? LOW + (HIGH - LOW) * ease(t) : HIGH - (HIGH - LOW) * ease(t);
-    word = bs.phase === "in" ? "Breathe in" : "Breathe out";
-    count = bs.round ? `Round ${bs.round} of ${bs.rounds}` : `${bs.n} of ${bs.of}`;
+    word = t(bs.phase === "in" ? "breath.in" : "breath.out");
+    count = bs.round ? t("breath.round", { a: bs.round, b: bs.rounds }) : t("player.count", { a: bs.n, b: bs.of });
   } else {
     const target = p.stage === "rest" ? 0.7 + 0.03 * Math.sin(now * 0.6) : LOW;
     discScale += (target - discScale) * 0.06;
@@ -529,9 +529,7 @@ function finishSession(completed) {
     state.history = state.history.slice(-200);
     saveState();
   }
-  $("doneText").textContent = completed
-    ? `You practiced for ${fmtMin(practiced)}. Take a moment before you get up.`
-    : `You practiced for ${fmtMin(practiced)}. Every bit counts.`;
+  $("doneText").textContent = t(completed ? "done.completed" : "done.early", { dur: fmtMin(practiced) });
   show("done");
 }
 
@@ -560,37 +558,39 @@ let libQuery = "";
 const norm = (s) => (s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
 
 function renderLibrary() {
-  const fams = ["all", ...Object.keys(FAMILIES).filter((f) => POSES.some((p) => p.family === f))];
+  const lang = getLang();
+  const fams = ["all", ...Object.keys(FAMILIES).filter((f) => [...POSES, ...FLOWS].some((p) => p.family === f))];
   $("familyChips").replaceChildren(...fams.map((f) => el("button", {
     class: `chip${f === libFamily ? " active" : ""}`, type: "button",
-    text: f === "all" ? "All" : FAMILIES[f],
+    text: f === "all" ? t("library.all") : familyLabel(f, lang),
     onclick: () => { libFamily = f; renderLibrary(); },
   })));
   const q = norm(libQuery.trim());
-  const poses = [...POSES, ...FLOWS]
+  const poses = [...POSES, ...FLOWS].map(L)
     .filter((p) => libFamily === "all" || p.family === libFamily)
     .filter((p) => !q || norm(p.english).includes(q) || norm(p.sanskrit).includes(q))
-    .sort((a, b) => a.english.localeCompare(b.english));
+    .sort((a, b) => a.english.localeCompare(b.english, locale()));
   $("libraryList").replaceChildren(...poses.map((p) => el("li", {}, el("button", {
     class: "pose-card", type: "button", onclick: () => openPose(p.id),
   }, [
     el("span", { class: "step-en", text: p.english }),
     p.sanskrit ? el("span", { class: "step-sa", text: p.sanskrit }) : null,
-    el("span", { class: "pose-meta", text: [FAMILIES[p.family], LEVELS[p.level], p.sided ? "Each side" : null].filter(Boolean).join(" · ") }),
+    el("span", { class: "pose-meta", text: [familyLabel(p.family, lang), levelLabel(p.level, lang), p.sided ? t("library.eachSide") : null].filter(Boolean).join(" · ") }),
   ]))));
   $("libraryEmpty").hidden = poses.length > 0;
 }
 
 function openPose(poseId) {
-  const p = poseById(poseId);
+  const p = L(poseById(poseId));
+  const lang = getLang();
   $("poseTitle").textContent = p.english;
   $("poseSubtitle").textContent = p.sanskrit || "";
   const tags = [
-    [FAMILIES[p.family]],
-    [LEVELS[p.level], p.level === 2 ? "level-2" : ""],
-    [`Starts: ${POSITIONS[p.base].label}`],
-    p.sided ? ["Each side"] : null,
-    [isFlow(p) ? `${plural(p.moves.length, "move")}` : p.hold === "time" ? "Timed rest" : `${p.breaths} breaths by default`],
+    [familyLabel(p.family, lang)],
+    [levelLabel(p.level, lang), p.level === 2 ? "level-2" : ""],
+    [t("pose.starts", { pos: positionOf(p.base, lang).label })],
+    p.sided ? [t("library.eachSide")] : null,
+    [isFlow(p) ? plural(p.moves.length, "move") : p.hold === "time" ? t("pose.timedRest") : t("pose.defaultBreaths", { n: p.breaths })],
   ].filter(Boolean);
   $("poseTags").replaceChildren(...tags.map(([t, c]) => el("span", { class: `tag ${c || ""}`.trim(), text: t })));
   $("poseGuide").textContent = p.guide;
@@ -611,7 +611,7 @@ function renderSettings() {
   const s = state.settings;
   $("inhaleVal").textContent = `${s.inhale} s`;
   $("exhaleVal").textContent = `${s.exhale} s`;
-  const musicOpts = [...MUSIC_TRACKS.map((t) => ({ id: t.id, label: t.label })), { id: "off", label: "Off" }];
+  const musicOpts = [...MUSIC_TRACKS.map((tr) => ({ id: tr.id, label: musicLabel(tr.id, tr.label, getLang()) })), { id: "off", label: t("settings.musicOff") }];
   $("musicSeg").replaceChildren(...musicOpts.map((o) => el("button", {
     class: `seg-btn${s.music === o.id ? " active" : ""}`, type: "button", text: o.label,
     onclick: () => { s.music = o.id; saveState(); renderSettings(); if (document.body.dataset.screen === "preview") prepareAudio(); },
@@ -632,6 +632,32 @@ function stepBreath(which, delta) {
   refitSession();
 }
 
+// ───────── language ─────────
+function renderLangSheet() {
+  $("langList").replaceChildren(...LANGS.map((l) => el("button", {
+    class: `lang-option${l === getLang() ? " active" : ""}`, type: "button", role: "radio",
+    "aria-checked": String(l === getLang()), lang: l === "fr" ? "fr-CA" : "en",
+    onclick: () => setLanguage(l),
+  }, [LANG_NAMES[l], l === getLang() ? icon("check") : null])));
+}
+
+// Switch UI + voice language. Clip durations differ by language, so the
+// current session is rebuilt (same seed) to keep its length.
+function setLanguage(l) {
+  closeModal($("langModal"));
+  if (l === getLang()) return;
+  state.settings.lang = l;
+  setLang(l);
+  engine.lang = l;
+  saveState();
+  applyStatic();
+  const screen = document.body.dataset.screen;
+  if (state.session) refitSession(); // re-renders the preview when it's showing
+  if (screen === "home") renderHome();
+  else if (screen === "library") renderLibrary();
+  renderPackInfo();
+}
+
 function openModal(m) { m.hidden = false; }
 function closeModal(m) { m.hidden = true; }
 
@@ -641,6 +667,7 @@ function wire() {
 
   $("libraryBtn").addEventListener("click", () => { renderLibrary(); show("library"); });
   $("settingsBtn").addEventListener("click", () => { renderSettings(); openModal($("settingsModal")); });
+  $("langBtn").addEventListener("click", () => { renderLangSheet(); openModal($("langModal")); });
   document.querySelectorAll("[data-back]").forEach((b) => b.addEventListener("click", () => goHome()));
 
   // Home
@@ -669,7 +696,7 @@ function wire() {
     saveState();
     renderPreview();
     prepareAudio();
-    toast("New mix ready");
+    toast(t("toast.newMix"));
   });
   $("startBtn").addEventListener("click", startSession);
 
@@ -723,7 +750,7 @@ function wire() {
     audioReady = initAudio();
     await audioReady;
     const after = engine.manifest && engine.manifest.pack.file;
-    toast(!after ? "No audio pack published" : before === after ? "Audio pack is up to date" : "Audio pack updated");
+    toast(t(!after ? "toast.packNone" : before === after ? "toast.upToDate" : "toast.updated"));
   });
 
   // Sheets: close buttons + backdrop
@@ -750,8 +777,10 @@ function registerSW() {
 }
 
 // ───────── boot ─────────
+engine.lang = getLang();
 applyTheme();
 wire();
+applyStatic();
 renderHome();
 show("home");
 registerSW();

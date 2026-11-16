@@ -12,7 +12,8 @@ Same family as `../limber`: vanilla HTML/CSS/JS, no framework, no bundler, deplo
 2. **Preview**: the session is grouped as Arrive, Warm up, Build, Cool down and Rest. Each posture shows its names and hold. Tap a posture, or turn on **Show guidance text**, to read exactly what will be spoken, plus a tip. **New mix** reshuffles the session with the same settings.
 3. **Begin**: the player announces each posture, reads the guidance, then counts breaths. Each inhale and exhale has its own sound and the circle grows and shrinks with it. Two-sided postures are held on the first side, then on the other. Controls: previous / pause / next. On a keyboard: Space, ←, →.
 4. **Library** (book icon): every posture, with search and filters by family.
-5. **Settings** (sliders icon): breath pace (inhale 3–6 s, exhale 3–7 s), whether guidance is read aloud (when off, you hear only names and holds, and the text stays in the player's Guidance panel), music (Forest, Meadow, Off), volumes, theme, audio pack status.
+5. **Language** (globe icon): English or Québec French, for both the app and the voice. On first launch it follows the device language. Switching rebuilds the current session so it keeps its length (French clips run longer).
+6. **Settings** (sliders icon): breath pace (inhale 3–6 s, exhale 3–7 s), whether guidance is read aloud (when off, you hear only names and holds, and the text stays in the player's Guidance panel), music (Forest, Meadow, Off), volumes, theme, audio pack status.
 
 ## Running locally
 
@@ -33,7 +34,8 @@ Every voice line, sound effect and music track is pre-generated with ElevenLabs 
 ```sh
 cp .env.example .env
 # put your key in .env: ELEVENLABS_API_KEY=...
-# optional: ELEVENLABS_VOICE_ID=... (default is the premade voice "Sarah")
+# ELEVENLABS_VOICE_ID_EN=...  English voice (default: the premade voice "Sarah")
+# ELEVENLABS_VOICE_ID_FR=...  Québec French voice (French clips are skipped without it)
 npm run audio:dry   # see what would be generated and how many characters it costs; no API calls
 npm run audio       # generate missing clips and write the pack
 ```
@@ -44,7 +46,7 @@ What gets generated (all declared in [js/phrases.js](js/phrases.js)):
 
 | Kind | Clips | Notes |
 |---|---|---|
-| Voice | 164 | Names and guidance for each posture and flow, flow teaching lines and short movement cues, position changes ("Lie down on your back."), "Stay here for N breaths." for 2–12, side switch, welcome and closing. About 15k characters. |
+| Voice | 164 × 2 languages | Names and guidance for each posture and flow, flow teaching lines and short movement cues, position changes ("Lie down on your back."), "Stay here for N breaths." for 2–12, side switch, welcome and closing. About 15k characters. |
 | SFX | 5 | Opening bowl, transition chime, closing bowls, and the two breath cues: a higher chime as each inhale starts and a lower one as each exhale starts. |
 | Music | 2 | "Forest" and "Meadow", 3 minutes each. They loop with a 6-second crossfade. |
 
@@ -76,7 +78,10 @@ Settings → Pages → Deploy from a branch → `main` / root. Bump `CACHE` in [
 ```
 index.html, styles.css, sw.js, manifest.webmanifest
 js/library.js    posture library (data, shared with the build)
-js/phrases.js    audio clip catalog: every spoken line, SFX and music prompt
+js/phrases.js    audio clip catalog: every spoken line (per language), SFX and music prompt
+js/lang/fr.js    Québec French content: postures, flows, spoken lines, labels
+js/content.js    language-aware view of the content (French overlays English by id)
+js/i18n.js       UI strings (English + French) and the current language
 js/session.js    session generator + timeline (pure, tested)
 js/audio.js      audio engine: pack download, decoding, playback, fallbacks
 js/player.js     runs a session timeline on the audio clock

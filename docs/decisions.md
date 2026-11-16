@@ -53,6 +53,16 @@ Choices made while building v0, where the brief left room. Each one can be revis
 - **Movement cues are shared by text** (`v.cue.<slug>`), so "Fold." is one clip across all flows. Tests check that each cue is short enough to fit inside one breath, and that inhales and exhales alternate within a round and from one round to the next.
 - **SFX cleanup.** The generated bells and chimes carried broadband hiss. Raised to voice level, it sounded noisy and crackly. The build now denoises and band-limits sound effects before normalizing them, and the transition and breath chimes have stricter prompts ("one single strike, completely clean").
 
+## Québec French (added after flows)
+
+- **Scope:** everything a person sees or hears: UI, posture and flow names, guidance, tips, movement cues, spoken lines. Sanskrit names stay as they are; "Clearing" isn't translated.
+- **Register:** professional Québec French with "vous" (the usual form in Québec studios' guided classes) and Québec vocabulary: *trousse audio* (audio pack), *assoyez-vous*, *rondes* (rounds of a sun salutation), *Paramètres*, "Posé" / "Fluide" for the two styles. Guidance avoids gendered agreement with the listener.
+- **Typography:** non-breaking space before ":" and "%", decimal comma and "Mo" for sizes, `fr-CA` dates.
+- **Structure:** French overlays the English data by id instead of duplicating it, so posture fields that aren't language-specific (phase, sequence, level, breaths) stay in one place. Tests fail if any posture, flow move, label or UI string lacks French.
+- **Audio:** one voice per language. Voice clips exist per language in a single pack; bells, chimes and music are shared. English cache keys were kept identical, so adding French regenerated no English clips.
+- **Switching** rebuilds the current session with the same seed, because French clips run longer than English ones and the session must still fit its length.
+- **Default:** the device language on first launch, then whatever was chosen.
+
 ## Not in v0 (ideas)
 
 - Vinyasas between sides (plank → lower → cobra → down dog between the two sides of standing postures) in Flow style.
