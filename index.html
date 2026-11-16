@@ -52,6 +52,12 @@
           <p class="hint" id="styleHint"></p>
         </div>
 
+        <div class="field">
+          <span class="field-label" data-i18n="home.focus">Focus</span>
+          <div class="chips" id="focusChips" role="radiogroup" data-i18n-aria="home.focus" aria-label="Focus"></div>
+          <p class="hint" id="focusHint"></p>
+        </div>
+
         <button id="buildBtn" class="primary big" type="button" data-i18n="home.build"><span data-icon="auto_awesome"></span>Build my session</button>
 
         <button id="lastSessionCard" class="card-btn" type="button" hidden>
@@ -62,8 +68,15 @@
           </span>
         </button>
 
+        <button id="logCard" class="card-btn" type="button" hidden>
+          <span class="card-btn-icon" data-icon="calendar_month"></span>
+          <span class="card-btn-body">
+            <span class="card-btn-title" id="logCardTitle"></span>
+            <span class="card-btn-sub" id="logCardSub"></span>
+          </span>
+        </button>
+
         <div class="status-card" id="audioStatus"></div>
-        <p class="footnote" id="lastPractice" hidden></p>
       </div>
     </section>
 
@@ -154,10 +167,23 @@
         <span class="done-mark" data-icon="self_improvement"></span>
         <h1>Namaste.</h1>
         <p class="lede" id="doneText"></p>
+        <p class="done-streak" id="doneStreak" hidden></p>
         <div class="stack">
           <button id="againBtn" class="primary" type="button" data-i18n="done.again"><span data-icon="refresh"></span>Repeat this session</button>
           <button id="homeBtn" class="ghost" type="button" data-i18n="done.home">Back to practice</button>
         </div>
+      </div>
+    </section>
+
+    <!-- ───────── LOG ───────── -->
+    <section id="logScreen" class="screen">
+      <div class="wrap narrow">
+        <button class="back-link" type="button" data-back="home" data-i18n="preview.back"><span data-icon="arrow_back"></span>Practice</button>
+        <h1 data-i18n="log.title">Log.</h1>
+        <div class="stats" id="logStats"></div>
+        <div class="cal" id="logCal"></div>
+        <div id="logList" class="log-list"></div>
+        <p class="empty-note" id="logEmpty" data-i18n="log.empty" hidden>Nothing logged yet. Sessions longer than a minute appear here.</p>
       </div>
     </section>
 
@@ -238,6 +264,35 @@
       </div>
 
       <div class="set-group">
+        <span class="set-label" data-i18n="data.label"><span data-icon="save"></span>Your data</span>
+        <div class="data-actions">
+          <button id="exportBtn" class="btn-soft" type="button" data-i18n="data.export"><span data-icon="file_download"></span>Export</button>
+          <button id="importBtn" class="btn-soft" type="button" data-i18n="data.import"><span data-icon="file_upload"></span>Import</button>
+          <input id="importInput" type="file" accept="application/json,.json" hidden />
+        </div>
+        <p class="hint" data-i18n="data.hint">Your log and settings as a JSON file. Importing adds the file's log entries to yours and takes its settings.</p>
+      </div>
+
+      <div class="set-group">
+        <span class="set-label" data-i18n="drive.label"><span data-icon="cloud_sync"></span>Google Drive backup</span>
+        <input id="driveClientId" class="text-input" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" data-i18n-ph="drive.placeholder" placeholder="OAuth client ID (…apps.googleusercontent.com)" />
+        <p class="hint" data-i18n="drive.hint">Optional. Paste your own Google OAuth client ID (see the README). It stays on this device. Until you do, Clearing never contacts Google.</p>
+        <div class="drive-status">
+          <span class="drive-dot" id="driveDot" aria-hidden="true"></span>
+          <span id="driveStatusText"></span>
+        </div>
+        <div class="data-actions" id="driveDisconnected">
+          <button id="driveConnectBtn" class="btn-soft" type="button" data-i18n="drive.connect">Connect Google Drive</button>
+        </div>
+        <div class="data-actions" id="driveConnected" hidden>
+          <button id="driveBackupBtn" class="btn-soft" type="button" data-i18n="drive.backup">Back up now</button>
+          <button id="driveRestoreBtn" class="btn-soft" type="button" data-i18n="drive.restore">Restore</button>
+        </div>
+        <p class="hint" id="driveSyncedHint" hidden></p>
+        <button id="driveDisconnectBtn" class="link-btn" type="button" data-i18n="drive.disconnect" hidden>Disconnect</button>
+      </div>
+
+      <div class="set-group">
         <span class="set-label" data-i18n="pack.label"><span data-icon="cloud_download"></span>Audio pack</span>
         <p class="hint" id="packInfo"></p>
         <button id="packBtn" class="btn-soft" type="button">Check for updates</button>
@@ -254,6 +309,20 @@
       </div>
       <div id="langList" class="lang-list" role="radiogroup" data-i18n-aria="lang.title" aria-label="Language"></div>
       <p class="hint" data-i18n="lang.hint">Changes the app and the voice.</p>
+    </div>
+  </div>
+
+  <!-- ───────── SWAP SHEET ───────── -->
+  <div id="swapModal" class="modal" hidden>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="swapTitle">
+      <div class="modal-head">
+        <div>
+          <h2 id="swapTitle" class="modal-title" data-i18n="swap.title">Swap posture</h2>
+          <div id="swapSubtitle" class="modal-sub"></div>
+        </div>
+        <button class="icon-btn" type="button" data-close-modal data-i18n-aria="close" aria-label="Close"><span data-icon="close"></span></button>
+      </div>
+      <ul id="swapList" class="swap-list"></ul>
     </div>
   </div>
 

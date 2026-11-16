@@ -17,6 +17,8 @@
 //   breaths   default hold in breaths (per side); the generator scales it
 //   hold      "breaths" (default) or "time" (savasana: held in seconds, no breath cues)
 //   priority  true → the generator includes it first when its phase has room
+//   focus     tags from FOCUSES (set in FOCUS_TAGS below): a session with that
+//             focus picks these first and gives them the longer holds
 //   guide     spoken + displayed guidance: how to come in, one or two key cues
 //   mods      displayed only (not spoken): props and easier options
 
@@ -53,6 +55,74 @@ export const FAMILIES = {
 
 export const LEVELS = { 1: "Beginner", 2: "Intermediate" };
 
+// Optional session focus. Body areas pull matching postures in first;
+// energize and calm also reshape the arc (see session.js).
+export const FOCUSES = {
+  all:       "All-round",
+  hips:      "Hips",
+  back:      "Back",
+  shoulders: "Shoulders",
+  energize:  "Energizing",
+  calm:      "Calming",
+};
+
+// Which focus each posture or flow serves. Kept in one table so the tagging
+// can be read and balanced at a glance.
+const FOCUS_TAGS = {
+  "easy-seat":            ["calm"],
+  "neck-release":         ["shoulders", "calm"],
+  "seated-side-bend":     ["back", "shoulders"],
+  "seated-twist-easy":    ["back"],
+  "cat-cow":              ["back"],
+  "thread-needle":        ["shoulders", "back"],
+  "balancing-table":      ["back", "energize"],
+  "childs-pose":          ["back", "hips", "calm"],
+  "puppy":                ["shoulders", "back"],
+  "downward-dog":         ["shoulders", "energize"],
+  "low-lunge":            ["hips"],
+  "ragdoll":              ["back", "calm"],
+  "mountain":             [],
+  "upward-salute":        ["shoulders", "energize"],
+  "chair":                ["energize"],
+  "warrior-1":            ["hips", "energize"],
+  "crescent-lunge":       ["hips", "energize"],
+  "warrior-2":            ["hips", "energize"],
+  "reverse-warrior":      ["energize"],
+  "side-angle":           ["hips"],
+  "triangle":             ["hips"],
+  "pyramid":              ["hips"],
+  "wide-fold":            ["hips", "calm"],
+  "goddess":              ["hips", "energize"],
+  "garland":              ["hips"],
+  "tree":                 ["calm"],
+  "warrior-3":            ["energize"],
+  "half-moon":            ["hips", "energize"],
+  "eagle":                ["shoulders"],
+  "plank":                ["shoulders", "energize"],
+  "side-plank":           ["shoulders", "energize"],
+  "boat":                 ["energize"],
+  "sphinx":               ["back", "calm"],
+  "cobra":                ["back"],
+  "locust":               ["back", "energize"],
+  "pigeon":               ["hips"],
+  "bound-angle":          ["hips", "calm"],
+  "cow-face-arms":        ["shoulders"],
+  "head-to-knee":         ["back", "calm"],
+  "seated-forward-fold":  ["back", "calm"],
+  "half-lord-fishes":     ["back"],
+  "bridge":               ["back", "energize"],
+  "supported-fish":       ["shoulders", "calm"],
+  "figure-four":          ["hips"],
+  "knees-to-chest":       ["back", "calm"],
+  "supine-twist":         ["back", "calm"],
+  "happy-baby":           ["hips", "calm"],
+  "reclined-bound-angle": ["hips", "calm"],
+  "savasana":             ["calm"],
+  "half-sun":             ["energize"],
+  "sun-a":                ["energize", "shoulders"],
+  "warrior-flow":         ["hips", "energize"],
+};
+
 function pose(id, english, sanskrit, o) {
   return {
     id, english, sanskrit,
@@ -66,6 +136,7 @@ function pose(id, english, sanskrit, o) {
     breaths: o.breaths || 5,
     hold: o.hold || "breaths",
     priority: !!o.priority,
+    focus: FOCUS_TAGS[id] || [],
     guide: o.guide,
     mods: o.mods || "",
   };
@@ -256,6 +327,11 @@ export const POSES = [
     guide: "Bring the soles of your feet together and let your knees fall open. Hold your ankles or feet, and lengthen your spine. If you like, hinge forward gently from your hips, keeping your back long.",
     mods: "Blocks or cushions under the knees let the hips release without strain.",
   }),
+  pose("cow-face-arms", "Cow face arms", "Gomukhasana", {
+    phase: "cooldown", family: "seated", base: "seat", seq: 93, sided: true, breaths: 4,
+    guide: "Sitting tall, reach your right arm up, bend the elbow, and let your right hand drop between your shoulder blades. Reach your left arm behind your back, palm facing out, and walk your fingers up toward your right hand. Keep your head lifted and your ribs soft.",
+    mods: "Hold a strap or the hem of your shirt between your hands if they don't meet.",
+  }),
   pose("head-to-knee", "Head-to-knee pose", "Janu Sirsasana", {
     phase: "cooldown", family: "fold", base: "seat", seq: 94, sided: true, breaths: 5,
     guide: "Extend your right leg forward and bend your left knee, placing the sole of your left foot against your inner right thigh. Turn your chest toward your right leg, lengthen up, then fold forward over the straight leg. Keep a bend in that knee if your hamstrings are tight.",
@@ -273,6 +349,11 @@ export const POSES = [
     phase: "cooldown", family: "backbend", base: "supine", seq: 100, breaths: 5, priority: true,
     guide: "Bend your knees and place your feet flat, hip-width apart, close to your hips. Press into your feet and lift your hips toward the ceiling. Keep your knees pointing forward, and you can clasp your hands underneath you.",
     mods: "Slide a block under your sacrum for a supported, restful bridge.",
+  }),
+  pose("supported-fish", "Supported fish", "Matsyasana", {
+    phase: "cooldown", family: "backbend", base: "supine", seq: 101, breaths: 6,
+    guide: "Come up onto your elbows, slide a block or a rolled blanket crosswise under your shoulder blades, and lie back over it. Let your arms rest open at your sides, palms up, and let your head rest on the mat. Feel your chest open with each breath.",
+    mods: "Rest your head on a cushion if your neck feels strained. Without a prop, lie flat with your arms open wide.",
   }),
   pose("figure-four", "Reclined figure four", "Sucirandhrasana", {
     phase: "cooldown", family: "hip", base: "supine", seq: 102, sided: true, breaths: 5,

@@ -23,6 +23,10 @@ export const FR_FAMILIES = {
 
 export const FR_LEVELS = { 1: "Débutant", 2: "Intermédiaire" };
 
+export const FR_FOCUSES = {
+  all: "Équilibrée", hips: "Hanches", back: "Dos", shoulders: "Épaules", energize: "Énergisante", calm: "Apaisante",
+};
+
 export const FR_LINES = {
   welcome:    "Bienvenue. Commençons notre pratique ensemble.",
   release:    "Et relâchez.",
@@ -124,7 +128,7 @@ export const FR_POSES = {
     mods: "Prenez vos épaules opposées dans vos mains plutôt que d'enrouler les bras." },
   "plank": { english: "Planche",
     guide: "Reculez les pieds un à la fois pour former une longue ligne de la tête aux talons. Gardez les épaules au-dessus des poignets et le ventre doucement rentré. Déposez les genoux sur le tapis à tout moment.",
-    mods: "Genoux au sol, hanches alignées avec les épaules : c'est encore la planche." },
+    mods: "Genoux au sol, hanches alignées avec les épaules : c'est encore la planche." },
   "side-plank": { english: "Planche latérale",
     guide: "Reculez en planche. Roulez sur le bord extérieur du pied droit et sur la main droite, et superposez le pied gauche, ou déposez le genou du bas pour plus de soutien. Soulevez les hanches, et tendez le bras gauche vers le plafond.",
     mods: "Genou du bas au sol, tibia vers l'arrière, pour une planche latérale soutenue." },
@@ -144,6 +148,9 @@ export const FR_POSES = {
   "bound-angle": { english: "Posture du papillon",
     guide: "Joignez les plantes des pieds et laissez les genoux s'ouvrir. Tenez vos chevilles ou vos pieds, et allongez la colonne. Si vous le souhaitez, penchez-vous doucement vers l'avant à partir des hanches, en gardant le dos long.",
     mods: "Des blocs ou des coussins sous les genoux permettent aux hanches de relâcher sans tension." },
+  "cow-face-arms": { english: "Bras de la tête de vache",
+    guide: "Le dos bien droit, levez le bras droit, pliez le coude, et laissez la main droite descendre entre les omoplates. Amenez le bras gauche derrière le dos, paume vers l'extérieur, et faites remonter les doigts vers la main droite. Gardez la tête haute et les côtes détendues.",
+    mods: "Tenez une sangle ou le bas de votre chandail entre les mains si elles ne se rejoignent pas." },
   "head-to-knee": { english: "Tête au genou",
     guide: "Allongez la jambe droite devant vous et pliez le genou gauche, en plaçant la plante du pied gauche contre l'intérieur de la cuisse droite. Tournez la poitrine vers la jambe droite, grandissez-vous, puis penchez-vous vers l'avant au-dessus de la jambe tendue. Gardez ce genou plié si l'arrière de vos cuisses est raide." },
   "seated-forward-fold": { english: "Flexion avant assise",
@@ -154,6 +161,9 @@ export const FR_POSES = {
   "bridge": { english: "Posture du pont",
     guide: "Pliez les genoux et posez les pieds à plat, à la largeur des hanches, près des fesses. Poussez dans les pieds et soulevez les hanches vers le plafond. Gardez les genoux pointés vers l'avant; vous pouvez joindre les mains sous vous.",
     mods: "Glissez un bloc sous le sacrum pour un pont soutenu et reposant." },
+  "supported-fish": { english: "Poisson soutenu",
+    guide: "Appuyez-vous sur les coudes, glissez un bloc ou une couverture roulée en travers, sous les omoplates, et allongez-vous par-dessus. Laissez les bras s'ouvrir sur les côtés, paumes vers le haut, et la tête reposer sur le tapis. Sentez la poitrine s'ouvrir à chaque respiration.",
+    mods: "Posez la tête sur un coussin si le cou est tendu. Sans accessoire, allongez-vous à plat, les bras grands ouverts." },
   "figure-four": { english: "Figure quatre couchée",
     guide: "Les genoux pliés, croisez la cheville droite sur la cuisse gauche. Soulevez le pied gauche et tenez l'arrière de la cuisse gauche, en la ramenant doucement vers vous. Gardez le pied droit fléchi et les épaules détendues." },
   "knees-to-chest": { english: "Genoux à la poitrine",

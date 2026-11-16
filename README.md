@@ -6,21 +6,39 @@ Same family as `../limber`: vanilla HTML/CSS/JS, no framework, no bundler, deplo
 
 ## Using it
 
-1. **Practice**: pick a length, a level and a style, then tap **Build my session**.
+1. **Practice**: pick a length, a level, a style and a focus, then tap **Build my session**.
    - **Steady**: come into each posture and hold it still for a few breaths (closer to hatha).
    - **Flow**: adds vinyasa-style flows to the Build phase: a sun salutation (half for 10–15 minute sessions, Sun Salutation A from 20 minutes) and, from 20 minutes, a warrior flow. Round one is taught slowly; later rounds move one movement per chime, with a short spoken cue.
-2. **Preview**: the session is grouped as Arrive, Warm up, Build, Cool down and Rest. Each posture shows its names and hold. Tap a posture, or turn on **Show guidance text**, to read exactly what will be spoken, plus a tip. **New mix** reshuffles the session with the same settings.
+   - **Focus**: All-round, or Hips, Back or Shoulders (matching postures are picked first and get the longer holds), Energizing (more time in Build, shorter rest) or Calming (longer cool down and rest).
+2. **Preview**: the session is grouped as Arrive, Warm up, Build, Cool down and Rest. Each posture shows its names and hold. Tap a posture, or turn on **Show guidance text**, to read exactly what will be spoken, plus a tip. An opened posture can also be edited: **−/+** changes its hold (breaths, rounds for a flow, time for the final rest), **Swap** replaces it with another posture from the same phase, and the bin removes it (Arrive and Rest stay). Removing and swapping can be undone from the message that follows. **New mix** reshuffles the session with the same settings and drops your edits.
 3. **Begin**: the player announces each posture, reads the guidance, then counts breaths. Each inhale and exhale has its own sound and the circle grows and shrinks with it. Two-sided postures are held on the first side, then on the other. Controls: previous / pause / next. On a keyboard: Space, ←, →.
 4. **Library** (book icon): every posture, with search and filters by family.
-5. **Language** (globe icon): English or Québec French, for both the app and the voice. On first launch it follows the device language. Switching rebuilds the current session so it keeps its length (French clips run longer).
-6. **Settings** (sliders icon): breath pace (inhale 3–6 s, exhale 3–7 s), whether guidance is read aloud (when off, you hear only names and holds, and the text stays in the player's Guidance panel), music (Forest, Meadow, Off), volumes, theme, audio pack status.
+5. **Log** (the practice card on the home screen, once you've practiced): current and longest streak, sessions, total time, a 15-week calendar, and every session, which you can delete. A session is logged when it ends after at least a minute.
+6. **Language** (globe icon): English or Québec French, for both the app and the voice. On first launch it follows the device language. Switching rebuilds the current session so it keeps its length (French clips run longer).
+7. **Settings** (sliders icon): breath pace (inhale 3–6 s, exhale 3–7 s), whether guidance is read aloud (when off, you hear only names and holds, and the text stays in the player's Guidance panel), music (Forest, Meadow, Off), volumes, theme, export / import, Google Drive backup, audio pack status.
+
+## Your data
+
+Everything lives in this browser's `localStorage`: settings, the last proposed session and the log. **Export** saves the log and settings as `clearing-YYYY-MM-DD.json`; **Import** adds a file's log entries to yours (no duplicates) and takes its settings.
+
+### Google Drive backup (optional)
+
+Clearing can keep a copy of your log and settings in one file (`clearing-backup.json`) in your own Google Drive and restore it on another device. It stays off, and the app never contacts Google, until you paste an OAuth client ID into **Settings → Google Drive backup**. The same client ID as limber works if both apps are served from the same origin (for example `https://<user>.github.io`). To create one in the [Google Cloud Console](https://console.cloud.google.com/):
+
+1. Create or pick a project, then **APIs & Services → Library →** enable the **Google Drive API**.
+2. **OAuth consent screen**: configure it (External is fine) and add yourself as a test user.
+3. **Credentials → Create credentials → OAuth client ID →** type **Web application**.
+4. Under **Authorized JavaScript origins**, add the origin the app is served from, such as `https://<user>.github.io`, and `http://localhost:8077` for local testing (origins only, no path).
+5. Copy the client ID (`…apps.googleusercontent.com`) and paste it into the app. It's saved on that device only.
+
+The client ID is public by design: there's no secret. The scope is `drive.file`, so the app can see only the file it creates. The access token is kept in memory, never stored. Once connected, changes are backed up a few seconds after they happen, and **Back up now** and **Restore** are there for manual use. Restoring replaces this device's log and settings (the proposed session is kept).
 
 ## Running locally
 
 ```sh
 npm install        # only needed for the icon generator (dev dependency)
 npm run serve      # http://localhost:8077
-npm test           # session generator tests
+npm test           # generator, editing, log and translation tests
 ```
 
 The service worker needs `http://localhost`, not `file://`.
@@ -46,7 +64,7 @@ What gets generated (all declared in [js/phrases.js](js/phrases.js)):
 
 | Kind | Clips | Notes |
 |---|---|---|
-| Voice | 164 × 2 languages | Names and guidance for each posture and flow, flow teaching lines and short movement cues, position changes ("Lie down on your back."), "Stay here for N breaths." for 2–12, side switch, welcome and closing. About 15k characters. |
+| Voice | 168 × 2 languages | Names and guidance for each posture and flow, flow teaching lines and short movement cues, position changes ("Lie down on your back."), "Stay here for N breaths." for 2–12, side switch, welcome and closing. About 15k characters. |
 | SFX | 5 | Opening bowl, transition chime, closing bowls, and the two breath cues: a higher chime as each inhale starts and a lower one as each exhale starts. |
 | Music | 2 | "Forest" and "Meadow", 3 minutes each. They loop with a 6-second crossfade. |
 
@@ -82,7 +100,9 @@ js/phrases.js    audio clip catalog: every spoken line (per language), SFX and m
 js/lang/fr.js    Québec French content: postures, flows, spoken lines, labels
 js/content.js    language-aware view of the content (French overlays English by id)
 js/i18n.js       UI strings (English + French) and the current language
-js/session.js    session generator + timeline (pure, tested)
+js/session.js    session generator, timeline and session editing (pure, tested)
+js/history.js    practice log: streaks, calendar, merging (pure, tested)
+js/backup.js     export / import and the optional Google Drive backup
 js/audio.js      audio engine: pack download, decoding, playback, fallbacks
 js/player.js     runs a session timeline on the audio clock
 js/app.js        UI

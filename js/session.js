@@ -2,7 +2,7 @@
 // Node (see test/session.test.mjs).
 //
 // A *session* is the plan the user previews:
-//   { id, createdISO, minutes, level, seed, items: [item], estSeconds }
+//   { id, createdISO, minutes, level, seed, style, focus, items: [item], estSeconds, edited? }
 //   item: { poseId, phase, breaths }          (breaths per side)
 //       | { poseId, phase, rounds }           (a flow; rounds per side)
 //       | { poseId, phase, seconds }          (hold: "time", i.e. savasana)
@@ -12,15 +12,31 @@
 // to true); the same cfg must be used for generating, estimating and playing. Session length estimates are computed from that same list, so
 // the preview's "≈ 21 min" and the real run can't drift apart structurally.
 
-import { POSES, FLOWS, PHASES, poseById, isFlow, flowMoves } from "./library.js";
+import { POSES, FLOWS, PHASES, FOCUSES, poseById, isFlow, flowMoves } from "./library.js";
 import { id, getClip, estimateSpeechSeconds, HOLD_RANGE } from "./phrases.js";
 
 export const LENGTH_OPTIONS = [10, 15, 20, 30, 45, 60];
 export const STYLES = { steady: "Steady", flow: "Flow" };
 export const MIN_BREATHS = 3;
+export const FOCUS_OPTIONS = Object.keys(FOCUSES);
 
-// Share of the flexible time (after arriving + savasana) per phase.
-const PHASE_SHARE = { warmup: 0.28, main: 0.47, cooldown: 0.25 };
+// Share of the flexible time (after arriving + savasana) per phase. Energizing
+// sessions spend longer in Build; calming ones in Cool down.
+const PHASE_SHARE = {
+  all:      { warmup: 0.28, main: 0.47, cooldown: 0.25 },
+  energize: { warmup: 0.25, main: 0.57, cooldown: 0.18 },
+  calm:     { warmup: 0.30, main: 0.30, cooldown: 0.40 },
+};
+// Where savasana starts inside its range before fitting (0 = min, 1 = max).
+const SAVASANA_START = { all: 0.5, energize: 0.25, calm: 0.85 };
+
+// Limits when editing a proposed session by hand.
+export const EDIT_LIMITS = {
+  breaths: HOLD_RANGE,        // one "Stay here for N breaths" clip per value
+  rounds: [1, 6],
+  seconds: [60, 900],         // savasana
+  secondsStep: 30,
+};
 
 // Gaps (seconds) that give the body time to move between instructions.
 export const GAP = {
@@ -244,12 +260,23 @@ export function clipsFor(session, breath) {
 export function sunRounds(minutes) {
   return minutes <= 10 ? 2 : minutes <= 15 ? 3 : minutes <= 20 ? 2 : minutes <= 30 ? 3 : minutes <= 45 ? 4 : 5;
 }
-export function generateSession({ minutes, level, seed, style = "steady" }, breath, durOf = estimateDuration) {
+export const focusMatch = (p, focus) => !!focus && focus !== "all" && p.focus.includes(focus);
+
+// A fresh item for pose `p` in a session of `minutes`, with the default hold.
+export function itemFor(p, minutes, phase = p.phase) {
+  if (isFlow(p)) return { poseId: p.id, phase, rounds: p.rounds };
+  if (p.hold === "time") { const [lo, hi] = savasanaRange(minutes); return { poseId: p.id, phase, seconds: Math.round((lo + hi) / 2) }; }
+  return { poseId: p.id, phase, breaths: clamp(Math.round(p.breaths * breathFactor(minutes)), MIN_BREATHS, maxBreathsFor(minutes)) };
+}
+
+export function generateSession({ minutes, level, seed, style = "steady", focus = "all" }, breath, durOf = estimateDuration) {
+  if (!FOCUS_OPTIONS.includes(focus)) focus = "all";
   const rng = mulberry32(seed);
   const target = minutes * 60;
   const maxLevel = level === "intermediate" ? 2 : 1;
   const maxB = maxBreathsFor(minutes);
-  const factor = breathFactor(minutes);
+  const share = PHASE_SHARE[focus] || PHASE_SHARE.all;
+  const match = (p) => focusMatch(p, focus);
   const flows = [];
   if (style === "flow") {
     flows.push({ poseId: minutes <= 15 ? "half-sun" : "sun-a", phase: "main", rounds: sunRounds(minutes) });
@@ -257,13 +284,11 @@ export function generateSession({ minutes, level, seed, style = "steady" }, brea
   }
   const replaced = new Set(flows.flatMap((f) => poseById(f.poseId).replaces));
   const pool = POSES.filter((p) => p.level <= maxLevel && !replaced.has(p.id));
-  const mkItem = (p) => p.hold === "time"
-    ? { poseId: p.id, phase: p.phase, seconds: 0 }
-    : { poseId: p.id, phase: p.phase, breaths: clamp(Math.round(p.breaths * factor), MIN_BREATHS, maxB) };
+  const mkItem = (p) => itemFor(p, minutes);
 
   const [savMin, savMax] = savasanaRange(minutes);
   const centerItem = mkItem(pool.find((p) => p.phase === "center"));
-  const savItem = { ...mkItem(pool.find((p) => p.phase === "final")), seconds: Math.round((savMin + savMax) / 2) };
+  const savItem = { ...mkItem(pool.find((p) => p.phase === "final")), seconds: Math.round(savMin + (savMax - savMin) * (SAVASANA_START[focus] ?? 0.5)) };
 
   // Cost of one item in isolation (assume a position change, the common case).
   const itemCost = (item) => {
@@ -278,11 +303,15 @@ export function generateSession({ minutes, level, seed, style = "steady" }, brea
   const chosen = { warmup: [], main: [], cooldown: [] };
   let carry = 0;
   for (const phase of ["warmup", "main", "cooldown"]) {
-    const budget = flexible * PHASE_SHARE[phase] + carry;
+    const budget = flexible * share[phase] + carry;
     const cands = pool.filter((p) => p.phase === phase);
-    const ordered = [
-      ...cands.filter((p) => p.priority).sort((a, b) => a.seq - b.seq),
-      ...shuffle(cands.filter((p) => !p.priority), rng),
+    const prio = cands.filter((p) => p.priority).sort((a, b) => a.seq - b.seq);
+    const rest = shuffle(cands.filter((p) => !p.priority), rng);
+    // With a focus: matching postures first (priority ones leading), then the
+    // usual anchors, then everything else.
+    const ordered = focus === "all" ? [...prio, ...rest] : [
+      ...prio.filter(match), ...rest.filter(match),
+      ...prio.filter((p) => !match(p)), ...rest.filter((p) => !match(p)),
     ];
     let spent = 0;
     if (phase === "main") for (const f of flows) { chosen.main.push(f); spent += itemCost(f); }
@@ -319,8 +348,11 @@ export function generateSession({ minutes, level, seed, style = "steady" }, brea
       return Math.abs(diff) - Math.abs(Math.abs(diff) - step) > 0;
     });
     if (!useful.length) break;
+    // With a focus, matching postures get the extra breaths and lose them last.
+    const preferred = focus === "all" ? useful : useful.filter((it) => match(poseById(it.poseId)) === up);
+    const from = preferred.length ? preferred : useful;
     // Random pick spreads the changes across the session.
-    const pick = useful[Math.floor(rng() * useful.length)];
+    const pick = from[Math.floor(rng() * from.length)];
     pick.breaths += up ? 1 : -1;
     total = estimateSeconds(session, breath, durOf);
   }
@@ -331,7 +363,7 @@ export function generateSession({ minutes, level, seed, style = "steady" }, brea
   return {
     id: `s_${seed.toString(36)}`,
     createdISO: new Date().toISOString(),
-    minutes, level, seed, style,
+    minutes, level, seed, style, focus,
     items,
     estSeconds: Math.round(total),
   };
@@ -347,4 +379,71 @@ export function phasesOf(session) {
     ...ph,
     items: session.items.map((it, i) => ({ ...it, index: i })).filter((it) => it.phase === ph.id),
   })).filter((g) => g.items.length);
+}
+
+// ───────── editing a proposed session ─────────
+// Pure helpers: each returns a NEW session marked `edited` (or the same one
+// when nothing changes). Arrive and Rest are the bookends: they can be
+// adjusted but not removed or swapped for something else.
+const BOOKENDS = new Set(["center", "final"]);
+const cloneSession = (s) => ({ ...s, items: s.items.map((it) => ({ ...it })), edited: true });
+const maxLevelOf = (s) => (s.level === "intermediate" ? 2 : 1);
+
+export const canRemove = (session, index) => !BOOKENDS.has(session.items[index]?.phase);
+
+export function removeItem(session, index) {
+  if (!canRemove(session, index)) return session;
+  const s = cloneSession(session);
+  s.items.splice(index, 1);
+  return s;
+}
+
+// Postures and flows that could take the place of item `index`: same phase,
+// within the level, not already in the session. Ordered as they'd appear in a
+// class. Unlike the generator, a flow's `replaces` isn't enforced here: a sun
+// salutation plus a separate Downward dog is a normal class, and it's the
+// person's call.
+export function swapOptions(session, index) {
+  const cur = session.items[index];
+  if (!cur || BOOKENDS.has(cur.phase)) return [];
+  const taken = new Set(session.items.map((it) => it.poseId));
+  return [...POSES, ...FLOWS]
+    .filter((p) => p.phase === cur.phase && p.level <= maxLevelOf(session) && !taken.has(p.id))
+    .sort((a, b) => a.seq - b.seq);
+}
+
+// Replace item `index` with `poseId` (default hold), then keep the phase in
+// class order so position changes stay few.
+export function swapItem(session, index, poseId) {
+  const p = poseById(poseId);
+  if (!p || !swapOptions(session, index).some((o) => o.id === poseId)) return session;
+  const s = cloneSession(session);
+  const phase = s.items[index].phase;
+  s.items[index] = itemFor(p, s.minutes, phase);
+  const seqOf = (it) => poseById(it.poseId).seq;
+  const idx = s.items.map((it, i) => (it.phase === phase ? i : -1)).filter((i) => i >= 0);
+  const sorted = idx.map((i) => s.items[i]).sort((a, b) => seqOf(a) - seqOf(b));
+  idx.forEach((i, k) => { s.items[i] = sorted[k]; });
+  return s;
+}
+
+// The editable amount of an item: breaths (per side), rounds, or seconds.
+export function holdOf(item) {
+  if (item.rounds != null) return { key: "rounds", value: item.rounds, min: EDIT_LIMITS.rounds[0], max: EDIT_LIMITS.rounds[1], step: 1 };
+  if (item.seconds != null) return { key: "seconds", value: item.seconds, min: EDIT_LIMITS.seconds[0], max: EDIT_LIMITS.seconds[1], step: EDIT_LIMITS.secondsStep };
+  return { key: "breaths", value: item.breaths, min: EDIT_LIMITS.breaths[0], max: EDIT_LIMITS.breaths[1], step: 1 };
+}
+
+export function adjustHold(session, index, dir) {
+  const it = session.items[index];
+  if (!it) return session;
+  const h = holdOf(it);
+  // Seconds snap to the step so odd fitted values line up after one press.
+  const next = h.key === "seconds"
+    ? clamp((dir > 0 ? Math.floor(h.value / h.step) + 1 : Math.ceil(h.value / h.step) - 1) * h.step, h.min, h.max)
+    : clamp(h.value + dir * h.step, h.min, h.max);
+  if (next === h.value) return session;
+  const s = cloneSession(session);
+  s.items[index][h.key] = next;
+  return s;
 }

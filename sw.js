@@ -1,7 +1,7 @@
 // Service worker. Bump CACHE on every release that changes app files.
 // The audio pack is NOT cached here: the app stores it in its own
 // "clearing-audio" cache (see js/audio.js), which this worker leaves alone.
-const CACHE = "clearing-v6";
+const CACHE = "clearing-v7";
 const SHELL = [
   "./",
   "./index.html",
@@ -9,7 +9,9 @@ const SHELL = [
   "./manifest.webmanifest",
   "./js/app.js",
   "./js/audio.js",
+  "./js/backup.js",
   "./js/content.js",
+  "./js/history.js",
   "./js/i18n.js",
   "./js/icons.js",
   "./js/lang/fr.js",

@@ -5,7 +5,9 @@ import { FR_POSES, FR_FLOWS, FR_POSITIONS, FR_PHASES, FR_FAMILIES, FR_LINES } fr
 import { POSITIONS, PHASES, FAMILIES } from "../js/library.js";
 import { catalog, getClip, LINES, estimateSpeechSeconds, id } from "../js/phrases.js";
 import { generateSession, estimateSeconds, clipsFor, LENGTH_OPTIONS } from "../js/session.js";
-import { allKeys, isTranslated } from "../js/i18n.js";
+import { allKeys, isTranslated, setLang, t } from "../js/i18n.js";
+
+const frText = (k) => { setLang("fr"); const v = t(k); setLang("en"); return v; };
 
 test("every posture has French names and guidance", () => {
   for (const p of POSES) {
@@ -44,6 +46,8 @@ test("labels, positions and spoken lines are all translated", () => {
   for (const f of Object.keys(FAMILIES)) assert.ok(FR_FAMILIES[f], f);
   for (const k of Object.keys(LINES)) assert.ok(FR_LINES[k], k);
   for (const k of allKeys()) assert.ok(isTranslated(k), `UI string ${k}`);
+  // Québec typography: a non-breaking space before ":" and "%", so they never start a line.
+  for (const k of allKeys()) assert.ok(!/ [:%]/.test(frText(k)), `UI string ${k}: use a non-breaking space before ":" or "%"`);
 });
 
 test("every voice clip exists in both languages", () => {

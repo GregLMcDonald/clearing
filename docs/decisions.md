@@ -63,12 +63,20 @@ Choices made while building v0, where the brief left room. Each one can be revis
 - **Switching** rebuilds the current session with the same seed, because French clips run longer than English ones and the session must still fit its length.
 - **Default:** the device language on first launch, then whatever was chosen.
 
+## Focus, editing and the log (added after French)
+
+- **Focus** is a sixth choice on the home screen: All-round, Hips, Back, Shoulders, Energizing, Calming. Every posture and flow carries focus tags, kept in one table (`FOCUS_TAGS` in `library.js`) so the balance is easy to review. A focus doesn't exclude anything: matching postures are picked first in each phase (priority anchors that match lead), the usual anchors come next, then the rest; and when breath counts are nudged to fit the length, matching postures get the extra breaths and lose them last. Energizing shifts time to Build (57%) and starts savasana low in its range; Calming shifts it to Cool down (40%) and starts savasana high. Sessions still fit their length for every focus (tested).
+- **Two shoulder postures were added** (Cow face arms, Supported fish), because the library had no beginner shoulder posture for Cool down. Their voice clips need `npm run audio`; until then the device voice reads them.
+- **Editing happens on the preview**, inside each opened posture: −/+ for the hold, Swap, and remove. Arrive and Rest are bookends: adjustable, not removable or swappable. Swap offers postures from the same phase and level that aren't already in the session, focus matches first, and re-sorts the phase by `seq` so position changes stay few. A flow's `replaces` isn't enforced when swapping by hand (a sun salutation plus a separate Downward dog is a normal class). Remove and swap can be undone from the toast. Hold limits: 2–12 breaths (one clip per count exists), 1–6 rounds, savasana 1–15 minutes in 30-second steps.
+- **An edited session keeps its edits.** Changing breath pace, read-aloud or language normally rebuilds the session from its seed to keep its length; an edited session is left as is and its length changes instead. The preview says "Edited". New mix starts over.
+- **Log:** the home screen's practice card opens it. Streaks count local calendar days with at least one logged session; the current streak survives until the end of the day after the last practice. The calendar shows 15 weeks, shaded by minutes practiced. Entries can be deleted. The log keeps up to 1,000 entries (it was 200).
+- **Export / import** use one JSON shape (`app: "clearing"`). Import merges log entries by id and takes the file's settings; Drive restore replaces log and settings and keeps the current proposed session.
+- **Drive backup** is limber's design (single file, `drive.file` scope, last write wins, token in memory, debounced auto-backup) with one change: Google's script isn't in `index.html`. It's loaded only once a client ID has been entered, so the "no runtime requests" rule holds for everyone who doesn't opt in.
+
 ## Not in v0 (ideas)
 
 - Vinyasas between sides (plank → lower → cobra → down dog between the two sides of standing postures) in Flow style.
 - Yin as a third style: a few floor postures, long timed holds, very little talking.
 - Tuning flow rounds (not just breath counts) when fitting a session to its length.
-- Editing a proposed session (swap or remove a posture, change a hold).
-- Focus options (hips, back, shoulders, energising or calming).
-- Log screen, streaks, export/import, Drive backup (limber has these patterns ready to borrow).
+- Adding a posture to a proposed session (editing covers swap, remove and hold).
 - Media Session controls (lock-screen play/pause).

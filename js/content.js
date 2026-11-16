@@ -2,8 +2,8 @@
 // the app for display AND by phrases.js to build each language's voice clips.
 // English is the base data; other languages overlay it by id.
 
-import { POSITIONS, PHASES, FAMILIES, LEVELS } from "./library.js";
-import { FR_POSES, FR_FLOWS, FR_POSITIONS, FR_PHASES, FR_FAMILIES, FR_LEVELS, FR_LINES, frHoldText, FR_MUSIC } from "./lang/fr.js";
+import { POSITIONS, PHASES, FAMILIES, LEVELS, FOCUSES } from "./library.js";
+import { FR_POSES, FR_FLOWS, FR_POSITIONS, FR_PHASES, FR_FAMILIES, FR_LEVELS, FR_FOCUSES, FR_LINES, frHoldText, FR_MUSIC } from "./lang/fr.js";
 
 export const LANGS = ["en", "fr"];
 export const LANG_NAMES = { en: "English", fr: "Français (Québec)" };
@@ -28,6 +28,7 @@ export function locPose(p, lang) {
 export const positionOf = (base, lang) => (lang === "fr" ? FR_POSITIONS : POSITIONS)[base];
 export const phaseLabel = (phaseId, lang) => lang === "fr" ? FR_PHASES[phaseId] : PHASES.find((p) => p.id === phaseId)?.label;
 export const familyLabel = (f, lang) => (lang === "fr" ? FR_FAMILIES : FAMILIES)[f];
+export const focusLabel = (f, lang) => (lang === "fr" ? FR_FOCUSES : FOCUSES)[f];
 export const levelLabel = (n, lang) => (lang === "fr" ? FR_LEVELS : LEVELS)[n];
 export const musicLabel = (trackId, englishLabel, lang) => lang === "fr" ? FR_MUSIC[trackId] || englishLabel : englishLabel;
 export const linesFor = (enLines, lang) => lang === "fr" ? FR_LINES : enLines;

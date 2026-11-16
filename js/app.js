@@ -5,12 +5,15 @@ import { POSES, FLOWS, FAMILIES, poseById, isFlow, flowMoves } from "./library.j
 import { MUSIC_TRACKS, INHALE_RANGE, EXHALE_RANGE, getClip, id as clipId } from "./phrases.js";
 import {
   LENGTH_OPTIONS, generateSession, newSeed, estimateSeconds, buildActions, actionSeconds, clipsFor, phasesOf,
+  FOCUS_OPTIONS, focusMatch, canRemove, removeItem, swapOptions, swapItem, adjustHold, holdOf,
 } from "./session.js";
+import { History, streaks, totals, weekGrid, dayKey } from "./history.js";
+import { BACKUP_APP, downloadJSON, parseBackup, getClientId, setClientId, isDriveConfigured, loadGis, DriveSync } from "./backup.js";
 import { AudioEngine } from "./audio.js";
 import { Player } from "./player.js";
 import { ICONS } from "./icons.js";
 import { t, plural, getLang, setLang, locale, applyStatic } from "./i18n.js";
-import { LANGS, LANG_NAMES, locPose, positionOf, phaseLabel, familyLabel, levelLabel, musicLabel } from "./content.js";
+import { LANGS, LANG_NAMES, locPose, positionOf, phaseLabel, familyLabel, levelLabel, musicLabel, focusLabel } from "./content.js";
 
 // A pose or flow in the current language.
 const L = (p) => locPose(p, getLang());
@@ -63,6 +66,7 @@ const screens = {
   player: $("playerScreen"),
   done: $("doneScreen"),
   library: $("libraryScreen"),
+  log: $("logScreen"),
 };
 function show(name) {
   for (const s of Object.values(screens)) s.classList.remove("active");
@@ -71,13 +75,18 @@ function show(name) {
   window.scrollTo(0, 0);
 }
 
+// action: optional { label, run } shown as a button (e.g. Undo).
 let toastTimer = null;
-function toast(msg) {
-  const t = $("toast");
-  t.textContent = msg;
-  t.hidden = false;
+function toast(msg, action) {
+  const box = $("toast");
+  box.replaceChildren(msg);
+  if (action) {
+    box.append(el("button", { class: "toast-btn", type: "button", text: action.label,
+      onclick: () => { box.hidden = true; clearTimeout(toastTimer); action.run(); } }));
+  }
+  box.hidden = false;
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => { t.hidden = true; }, 2400);
+  toastTimer = setTimeout(() => { box.hidden = true; }, action ? 5000 : 2400);
 }
 
 // ───────── formatting ─────────
@@ -86,6 +95,10 @@ const fmtClock = (sec) => {
   return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
 };
 const fmtMin = (sec) => `${Math.max(1, Math.round(sec / 60))} min`;
+function fmtTotal(sec) {
+  const m = Math.round(sec / 60);
+  return m < 60 ? `${m} min` : `${Math.floor(m / 60)} h${m % 60 ? ` ${m % 60} min` : ""}`;
+}
 const fmtMB = (bytes) => `${(bytes / 1048576).toLocaleString(locale(), { minimumFractionDigits: 1, maximumFractionDigits: 1 })}\u00a0${t("unit.mb")}`;
 function holdLabel(item, pose) {
   if (isFlow(pose)) return { main: plural(item.rounds, "round"), sub: pose.sided ? t("hold.eachSide") : "" };
@@ -104,6 +117,7 @@ const DEFAULT_SETTINGS = {
   showGuide: false,
   readGuide: true,
   style: "steady",
+  focus: "all",
   // First launch follows the device language.
   lang: (typeof navigator !== "undefined" && /^fr/i.test(navigator.language || "")) ? "fr" : "en",
 };
@@ -125,13 +139,14 @@ function validateState(raw) {
     showGuide: !!st.showGuide,
     readGuide: st.readGuide !== false,
     style: st.style === "flow" ? "flow" : "steady",
+    focus: FOCUS_OPTIONS.includes(st.focus) ? st.focus : "all",
     lang: LANGS.includes(st.lang) ? st.lang : DEFAULT_SETTINGS.lang,
   };
   let session = s.session;
   const okItem = (it) => it && poseById(it.poseId) && (Number.isFinite(it.breaths) || Number.isFinite(it.seconds) || Number.isFinite(it.rounds));
   if (!session || !Array.isArray(session.items) || !session.items.length || !session.items.every(okItem)) session = null;
-  const history = Array.isArray(s.history) ? s.history.filter((h) => h && h.dateISO).slice(-200) : [];
-  return { version: 1, settings, session, history };
+  if (session && !FOCUS_OPTIONS.includes(session.focus)) session = { ...session, focus: "all" };
+  return { version: 1, settings, session, history: History.normalize(s.history) };
 }
 function loadState() {
   try { return validateState(JSON.parse(localStorage.getItem(STORAGE_KEY))); }
@@ -139,20 +154,26 @@ function loadState() {
 }
 function saveState() {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (_) {}
+  drive?.schedule(); // debounced Drive backup; no-op unless connected
 }
 let state = loadState();
+// Optional Drive backup. Declared before anything can call saveState().
+const drive = new DriveSync({ payload: backupPayload, onChange: () => updateDriveUI() });
 setLang(state.settings.lang);
 // Everything that shapes a session's timing. Generating, estimating and
 // playing must all use the same cfg or lengths drift.
 const timingCfg = () => ({ inhale: state.settings.inhale, exhale: state.settings.exhale, readGuide: state.settings.readGuide });
 
 // Timing settings changed: rebuild the current session (same seed, so the same
-// mix where possible) so it still fits the length the user asked for.
+// mix where possible) so it still fits the length the user asked for. A
+// session edited by hand is kept as is: its length simply changes.
 function refitSession() {
   if (!state.session) return;
-  const { minutes, level, seed, style } = state.session;
-  state.session = generateSession({ minutes, level, seed, style }, timingCfg(), durOf);
-  saveState();
+  if (!state.session.edited) {
+    const { minutes, level, seed, style, focus } = state.session;
+    state.session = generateSession({ minutes, level, seed, style, focus }, timingCfg(), durOf);
+    saveState();
+  }
   if (document.body.dataset.screen === "preview") { renderPreview(); prepareAudio(); }
 }
 
@@ -260,24 +281,44 @@ function renderHome() {
   });
   $("styleHint").textContent = t(state.settings.style === "flow" ? "style.hint.flow" : "style.hint.steady");
 
+  $("focusChips").replaceChildren(...FOCUS_OPTIONS.map((f) => el("button", {
+    class: `chip${f === state.settings.focus ? " active" : ""}`,
+    type: "button", role: "radio", "aria-checked": String(f === state.settings.focus),
+    text: focusLabel(f, getLang()),
+    onclick: () => { state.settings.focus = f; saveState(); renderHome(); },
+  })));
+  $("focusHint").textContent = t(`focus.hint.${state.settings.focus}`);
+
   const s = state.session;
   $("lastSessionCard").hidden = !s;
-  if (s) $("lastSessionSub").textContent = sessionSummary(s, s.minutes * 60);
+  if (s) $("lastSessionSub").textContent = sessionSummary(s, estimateSeconds(s, timingCfg(), durOf));
 
   const last = state.history[state.history.length - 1];
-  $("lastPractice").hidden = !last;
+  $("logCard").hidden = !last;
   if (last) {
+    $("logCardTitle").textContent = streakLine();
     const d = new Date(last.dateISO).toLocaleDateString(locale(), { weekday: "short", month: "short", day: "numeric" });
-    $("lastPractice").textContent = t("home.lastPractice", { date: d, dur: fmtMin(last.practicedSec) }) + (last.completed ? "" : t("home.endedEarly"));
+    $("logCardSub").textContent = t("home.lastPractice", { date: d, dur: fmtMin(last.practicedSec) }) + (last.completed ? "" : t("home.endedEarly"));
   }
   renderAudioStatus();
+}
+
+function streakLine() {
+  const { current } = streaks(state.history);
+  const last = state.history[state.history.length - 1];
+  if (!last) return t("streak.log");
+  const today = dayKey(last.dateISO) === dayKey(new Date().toISOString());
+  if (today) return current > 1 ? t("streak.todayN", { n: current }) : t("streak.today");
+  if (current > 1) return t("streak.keep", { n: current });
+  if (current === 1) return t("streak.yesterday");
+  return t("streak.log");
 }
 
 function sessionSummary(s, seconds) {
   const flows = s.items.filter((it) => isFlow(poseById(it.poseId))).length;
   const poses = s.items.length - flows;
   return [t("summary.about", { dur: fmtMin(seconds) }), plural(poses, "posture"), flows ? plural(flows, "flow") : null,
-    levelName(s.level)].filter(Boolean).join(" · ");
+    levelName(s.level), s.focus && s.focus !== "all" ? focusLabel(s.focus, getLang()) : null].filter(Boolean).join(" · ");
 }
 
 // Ordered list of a flow's moves: breath, shape, and the teaching line.
@@ -296,8 +337,9 @@ function movesList(f, level) {
 }
 
 function buildSession() {
-  const { minutes, level, style } = state.settings;
-  state.session = generateSession({ minutes, level, style, seed: newSeed() }, timingCfg(), durOf);
+  const { minutes, level, style, focus } = state.settings;
+  state.session = generateSession({ minutes, level, style, focus, seed: newSeed() }, timingCfg(), durOf);
+  openSteps.clear();
   saveState();
 }
 
@@ -324,7 +366,8 @@ function renderPreview() {
   const stepSecs = stepSecondsOf(s);
   const total = stepSecs.reduce((a, b) => a + b, 0);
   $("previewTitle").textContent = t("preview.title", { n: s.minutes });
-  $("previewMeta").textContent = sessionSummary(s, total) + (s.style === "flow" ? ` · ${t("style.flow")}` : "");
+  $("previewMeta").textContent = sessionSummary(s, total) + (s.style === "flow" ? ` · ${t("style.flow")}` : "") +
+    (s.edited ? ` · ${t("preview.edited")}` : "");
   $("guidanceToggle").checked = state.settings.showGuide;
 
   const list = $("previewList");
@@ -339,16 +382,26 @@ function renderPreview() {
     ]));
   }
   renderPrepChip();
+  if (flashId) {
+    list.querySelector(".step-card.flash")?.scrollIntoView({ block: "center", behavior: "smooth" });
+    flashId = null;
+  }
 }
+
+// Cards the person opened, kept open across re-renders after an edit.
+const openSteps = new Set();
+let flashId = null;
 
 function stepCard(item, pose) {
   const hold = holdLabel(item, pose);
-  const card = el("li", { class: `step-card${state.settings.showGuide ? " open" : ""}` });
+  const isOpen = state.settings.showGuide || openSteps.has(item.poseId);
+  const card = el("li", { class: `step-card${isOpen ? " open" : ""}${item.poseId === flashId ? " flash" : ""}` });
   const row = el("button", {
-    class: "step-row", type: "button", "aria-expanded": String(state.settings.showGuide),
+    class: "step-row", type: "button", "aria-expanded": String(isOpen),
     onclick: () => {
       const open = card.classList.toggle("open");
       row.setAttribute("aria-expanded", String(open));
+      if (open) openSteps.add(item.poseId); else openSteps.delete(item.poseId);
     },
   }, [
     el("span", { class: "step-num", text: String(item.index + 1) }),
@@ -364,8 +417,70 @@ function stepCard(item, pose) {
     isFlow(pose) ? movesList(pose, state.session.level) : null,
     el("p", { class: "mods", text: pose.mods }),
   ]);
-  card.append(row, body);
+  card.append(row, editRow(item.index), body);
   return card;
+}
+
+// ───────── editing the proposed session ─────────
+function editRow(index) {
+  const s = state.session;
+  const h = holdOf(s.items[index]);
+  const val = h.key === "seconds" ? fmtClock(h.value) : plural(h.value, h.key === "rounds" ? "round" : "breath");
+  const stepBtn = (dir, sign, label) => el("button", {
+    class: "step-btn", type: "button", "aria-label": t(label), title: t(label), text: sign,
+    disabled: dir < 0 ? h.value <= h.min : h.value >= h.max,
+    onclick: () => applyEdit(adjustHold(state.session, index, dir)),
+  });
+  const name = L(poseById(s.items[index].poseId)).english;
+  return el("div", { class: "edit-row" }, [
+    el("div", { class: "stepper small" }, [stepBtn(-1, "−", "edit.less"), el("span", { class: "step-val", text: val }), stepBtn(1, "+", "edit.more")]),
+    el("span", { class: "grow" }),
+    swapOptions(s, index).length ? el("button", { class: "edit-btn", type: "button", onclick: () => openSwap(index) },
+      [icon("swap_horiz"), t("edit.swap")]) : null,
+    canRemove(s, index) ? el("button", {
+      class: "edit-btn icon-only", type: "button", "aria-label": t("edit.remove"), title: t("edit.remove"),
+      onclick: () => applyEdit(removeItem(state.session, index), t("edit.removed", { name })),
+    }, [icon("delete_outline")]) : null,
+  ]);
+}
+
+// Swap, remove and hold changes all come through here. With undoMsg, the
+// toast offers to put the previous version back.
+function applyEdit(next, undoMsg) {
+  if (next === state.session) return;
+  const prev = state.session;
+  state.session = next;
+  saveState();
+  renderPreview();
+  prepareAudio();
+  if (undoMsg) toast(undoMsg, { label: t("edit.undo"), run: () => { state.session = prev; saveState(); renderPreview(); prepareAudio(); } });
+}
+
+function openSwap(index) {
+  const s = state.session;
+  const cur = L(poseById(s.items[index].poseId));
+  const lang = getLang();
+  $("swapSubtitle").textContent = t("swap.instead", { name: cur.english });
+  const opts = swapOptions(s, index);
+  // Postures that match the session's focus first; otherwise class order.
+  const ranked = [...opts.filter((p) => focusMatch(p, s.focus)), ...opts.filter((p) => !focusMatch(p, s.focus))].map(L);
+  $("swapList").replaceChildren(...ranked.map((p) => el("li", {}, el("button", {
+    class: "pose-card", type: "button",
+    onclick: () => {
+      closeModal($("swapModal"));
+      openSteps.delete(cur.id);
+      openSteps.add(p.id);
+      flashId = p.id;
+      applyEdit(swapItem(state.session, index, p.id), t("edit.swapped", { name: p.english }));
+    },
+  }, [
+    el("span", { class: "step-en", text: p.english }),
+    p.sanskrit ? el("span", { class: "step-sa", text: p.sanskrit }) : null,
+    el("span", { class: "pose-meta", text: [...new Set([familyLabel(p.family, lang), positionOf(p.base, lang).label]),
+      p.sided ? t("library.eachSide") : null, focusMatch(p, s.focus) ? focusLabel(s.focus, lang) : null].filter(Boolean).join(" · ") }),
+  ]))));
+  openModal($("swapModal"));
+  $("swapList").scrollTop = 0;
 }
 
 function renderPrepChip() {
@@ -525,11 +640,18 @@ function finishSession(completed) {
   releaseWakeLock();
   $("pauseOverlay").hidden = true;
   if (practiced >= 60) {
-    state.history.push({ dateISO: new Date().toISOString(), minutes: state.session.minutes, practicedSec: Math.round(practiced), completed });
-    state.history = state.history.slice(-200);
+    const s = state.session;
+    state.history = History.normalize([...state.history, {
+      id: `h_${Date.now().toString(36)}`, dateISO: new Date().toISOString(),
+      minutes: s.minutes, practicedSec: Math.round(practiced), completed,
+      style: s.style, level: s.level, focus: s.focus || "all", poses: s.items.length,
+    }]);
     saveState();
   }
   $("doneText").textContent = t(completed ? "done.completed" : "done.early", { dur: fmtMin(practiced) });
+  const run = streaks(state.history).current;
+  $("doneStreak").hidden = run < 2;
+  $("doneStreak").textContent = t("done.streak", { n: run });
   show("done");
 }
 
@@ -591,12 +713,180 @@ function openPose(poseId) {
     [t("pose.starts", { pos: positionOf(p.base, lang).label })],
     p.sided ? [t("library.eachSide")] : null,
     [isFlow(p) ? plural(p.moves.length, "move") : p.hold === "time" ? t("pose.timedRest") : t("pose.defaultBreaths", { n: p.breaths })],
+    ...p.focus.map((f) => [focusLabel(f, lang), "focus"]),
   ].filter(Boolean);
   $("poseTags").replaceChildren(...tags.map(([t, c]) => el("span", { class: `tag ${c || ""}`.trim(), text: t })));
   $("poseGuide").textContent = p.guide;
   $("poseMoves").replaceChildren(...(isFlow(p) ? [movesList(p, state.settings.level)] : []));
   $("poseMods").textContent = p.mods;
   openModal($("poseModal"));
+}
+
+// ───────── log ─────────
+const CAL_WEEKS = 15;
+function renderLog() {
+  const h = state.history;
+  const lang = getLang();
+  const st = streaks(h);
+  const tot = totals(h);
+  const tile = (value, label) => el("div", { class: "stat" }, [el("b", { text: value }), el("span", { text: label })]);
+  $("logStats").replaceChildren(
+    tile(plural(st.current, "day"), t("log.current")),
+    tile(plural(st.longest, "day"), t("log.longest")),
+    tile(String(tot.sessions), t("log.sessions")),
+    tile(fmtTotal(tot.seconds), t("log.total")),
+  );
+
+  const cells = weekGrid(h, CAL_WEEKS);
+  const level = (m) => (m <= 0 ? 0 : m < 15 ? 1 : m < 30 ? 2 : 3);
+  const dateOf = (key) => new Date(key + "T12:00").toLocaleDateString(locale(), { weekday: "short", month: "short", day: "numeric" });
+  const grid = el("div", { class: "cal-grid", role: "img",
+    "aria-label": t("log.calAria", { n: CAL_WEEKS, d: plural(cells.filter((c) => c.minutes > 0).length, "day") }) },
+    cells.map((c) => el("i", { class: `l${level(c.minutes)}${c.future ? " future" : ""}`,
+      title: c.future ? null : t("log.cellTitle", { date: dateOf(c.key), dur: c.minutes ? `${c.minutes} min` : "–" }) })));
+  $("logCal").replaceChildren(el("div", { class: "cal-head", text: t("log.weeks", { n: CAL_WEEKS }) }), grid);
+  $("logCal").hidden = !h.length;
+  $("logStats").hidden = !h.length;
+
+  const list = $("logList");
+  list.replaceChildren();
+  let month = "";
+  let ul = null;
+  for (const e of [...h].reverse()) {
+    const d = new Date(e.dateISO);
+    const m = d.toLocaleDateString(locale(), { month: "long", year: "numeric" });
+    if (m !== month) {
+      month = m;
+      ul = el("ul", { class: "log-items" });
+      list.append(el("h2", { class: "phase-head", text: m }), ul);
+    }
+    const title = [e.minutes ? t("preview.title", { n: e.minutes }) : t("log.session"),
+      e.style === "flow" ? t("style.flow") : null,
+      e.focus && e.focus !== "all" ? focusLabel(e.focus, lang) : null].filter(Boolean).join(" · ");
+    ul.append(el("li", { class: "log-item" }, [
+      el("div", { class: "log-main" }, [
+        el("span", { class: "log-title", text: title }),
+        el("span", { class: "log-date", text: d.toLocaleString(locale(), { weekday: "short", day: "numeric", month: "short", hour: "numeric", minute: "2-digit" }) }),
+      ]),
+      el("div", { class: "log-side" }, [
+        el("b", { text: fmtMin(e.practicedSec) }),
+        e.completed ? null : el("small", { text: t("log.endedEarly") }),
+      ]),
+      el("button", { class: "icon-btn small", type: "button", "aria-label": t("log.delete"), title: t("log.delete"),
+        onclick: () => {
+          if (!confirm(t("log.deleteConfirm"))) return;
+          state.history = state.history.filter((x) => x.id !== e.id);
+          saveState();
+          renderLog();
+        } }, [icon("delete_outline")]),
+    ]));
+  }
+  $("logEmpty").hidden = h.length > 0;
+}
+
+// ───────── your data: export / import / Drive ─────────
+function backupPayload() {
+  return { app: BACKUP_APP, version: 1, lastModified: new Date().toISOString(), settings: state.settings, history: state.history };
+}
+
+// Settings were replaced wholesale (import or restore): bring everything in line.
+function afterSettingsReplaced() {
+  setLang(state.settings.lang);
+  engine.lang = getLang();
+  engine.setVolumes({ voice: state.settings.volVoice, sfx: state.settings.volSfx, music: state.settings.volMusic });
+  applyStatic();
+  applyTheme();
+  refitSession();
+  renderSettings();
+  const screen = document.body.dataset.screen;
+  if (screen === "home") renderHome();
+  else if (screen === "log") renderLog();
+  else if (screen === "library") renderLibrary();
+}
+
+async function importFile(file) {
+  try {
+    const data = parseBackup(await file.text());
+    const before = state.history.length;
+    state.history = History.merge(state.history, data.history);
+    if (data.settings) state.settings = validateState({ settings: data.settings }).settings;
+    saveState();
+    afterSettingsReplaced();
+    toast(t("data.imported", { what: plural(state.history.length - before, "entry") }));
+  } catch (_) {
+    toast(t("data.badFile"));
+  }
+}
+
+function restoreFrom(data) {
+  state = validateState({ settings: data.settings || state.settings, history: data.history, session: state.session });
+  saveState();
+  afterSettingsReplaced();
+}
+
+const fmtWhen = (iso) => new Date(iso).toLocaleString(locale(), { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+
+function updateDriveUI() {
+  const dot = $("driveDot");
+  const txt = $("driveStatusText");
+  const configured = isDriveConfigured();
+  dot.className = "drive-dot";
+  $("driveConnectBtn").disabled = !configured;
+  $("driveDisconnected").hidden = drive.connected;
+  $("driveConnected").hidden = !drive.connected;
+  $("driveDisconnectBtn").hidden = !drive.connected;
+  $("driveSyncedHint").hidden = !(drive.connected && drive.lastSynced);
+  if (drive.lastSynced) $("driveSyncedHint").textContent = t("drive.lastSynced", { when: fmtWhen(drive.lastSynced) });
+  if (!configured) { txt.textContent = t("drive.notSetUp"); return; }
+  if (drive.syncing) dot.classList.add("syncing");
+  else if (drive.connected) dot.classList.add("connected");
+  txt.textContent = drive.connected ? t(drive.syncing ? "drive.syncing" : "drive.connected")
+    : t(drive.syncing ? "drive.connecting" : "drive.notConnected");
+}
+
+async function connectDrive() {
+  if (!isDriveConfigured()) return;
+  // The consent popup must open inside the tap, so GIS has to be loaded
+  // already (it starts loading when Settings opens with a client ID).
+  if (!window.google?.accounts?.oauth2) {
+    loadGis().then(() => toast(t("drive.loading")), () => toast(t("drive.loadFailed")));
+    return;
+  }
+  try {
+    const remote = await drive.connect();
+    if (remote) {
+      if (confirm(t("drive.newerConfirm", { when: fmtWhen(remote.lastModified) }))) {
+        restoreFrom(remote);
+        drive.markRestored();
+        toast(t("drive.restored"));
+      } else {
+        toast(t(await drive.push() ? "drive.backedUp" : "drive.backupFailed"));
+      }
+    } else {
+      toast(t("drive.backedUp"));
+    }
+  } catch (_) {
+    toast(t("drive.connectFailed"));
+  }
+}
+
+async function restoreDrive() {
+  if (!navigator.onLine) { toast(t("drive.offline")); return; }
+  drive.set({ syncing: true });
+  try {
+    const remote = await drive.fetchRemote();
+    drive.set({ syncing: false });
+    if (!remote) { toast(t("drive.noBackup")); return; }
+    if (!confirm(t("drive.restoreConfirm"))) return;
+    restoreFrom(remote);
+    drive.markRestored();
+    toast(t("drive.restored"));
+  } catch (e) {
+    if (e?.message === "auth") drive.dropConnection();
+    toast(t("drive.restoreFailed"));
+  } finally {
+    drive.set({ syncing: false });
+  }
 }
 
 // ───────── settings ─────────
@@ -622,6 +912,8 @@ function renderSettings() {
   $("volSfx").value = s.volSfx;
   document.querySelectorAll("#themeSeg .seg-btn").forEach((b) => b.classList.toggle("active", b.dataset.themeOpt === s.theme));
   renderPackInfo();
+  $("driveClientId").value = getClientId();
+  updateDriveUI();
 }
 
 function stepBreath(which, delta) {
@@ -655,7 +947,9 @@ function setLanguage(l) {
   if (state.session) refitSession(); // re-renders the preview when it's showing
   if (screen === "home") renderHome();
   else if (screen === "library") renderLibrary();
+  else if (screen === "log") renderLog();
   renderPackInfo();
+  updateDriveUI();
 }
 
 function openModal(m) { m.hidden = false; }
@@ -666,7 +960,11 @@ function wire() {
   hydrateIcons();
 
   $("libraryBtn").addEventListener("click", () => { renderLibrary(); show("library"); });
-  $("settingsBtn").addEventListener("click", () => { renderSettings(); openModal($("settingsModal")); });
+  $("settingsBtn").addEventListener("click", () => {
+    renderSettings();
+    openModal($("settingsModal"));
+    if (isDriveConfigured()) loadGis().catch(() => {}); // ready before Connect is tapped
+  });
   $("langBtn").addEventListener("click", () => { renderLangSheet(); openModal($("langModal")); });
   document.querySelectorAll("[data-back]").forEach((b) => b.addEventListener("click", () => goHome()));
 
@@ -683,6 +981,7 @@ function wire() {
   }));
   $("buildBtn").addEventListener("click", () => { buildSession(); openPreview(); });
   $("lastSessionCard").addEventListener("click", () => openPreview());
+  $("logCard").addEventListener("click", () => { renderLog(); show("log"); });
 
   // Preview
   $("guidanceToggle").addEventListener("change", (e) => {
@@ -691,8 +990,9 @@ function wire() {
     renderPreview();
   });
   $("regenBtn").addEventListener("click", () => {
-    const { level, style } = state.session;
-    state.session = generateSession({ minutes: state.session.minutes, level, style, seed: newSeed() }, timingCfg(), durOf);
+    const { level, style, focus } = state.session;
+    state.session = generateSession({ minutes: state.session.minutes, level, style, focus, seed: newSeed() }, timingCfg(), durOf);
+    openSteps.clear();
     saveState();
     renderPreview();
     prepareAudio();
@@ -753,6 +1053,34 @@ function wire() {
     toast(t(!after ? "toast.packNone" : before === after ? "toast.upToDate" : "toast.updated"));
   });
 
+  // Your data
+  $("exportBtn").addEventListener("click", () => {
+    downloadJSON(backupPayload(), `clearing-${dayKey(new Date().toISOString())}.json`);
+    toast(t("data.exported"));
+  });
+  $("importBtn").addEventListener("click", () => $("importInput").click());
+  $("importInput").addEventListener("change", (e) => {
+    const file = e.target.files && e.target.files[0];
+    e.target.value = "";
+    if (file) importFile(file);
+  });
+  $("driveClientId").addEventListener("change", (e) => {
+    const id = e.target.value.trim();
+    if (id === getClientId()) return;
+    if (drive.connected) drive.disconnect();
+    setClientId(id);
+    updateDriveUI();
+    if (isDriveConfigured()) loadGis().catch(() => {});
+  });
+  $("driveConnectBtn").addEventListener("click", connectDrive);
+  $("driveBackupBtn").addEventListener("click", async () => {
+    if (!navigator.onLine) { toast(t("drive.offline")); return; }
+    toast(t(await drive.push() ? "drive.backedUp" : "drive.backupFailed"));
+  });
+  $("driveRestoreBtn").addEventListener("click", restoreDrive);
+  $("driveDisconnectBtn").addEventListener("click", () => { drive.disconnect(); toast(t("drive.disconnected")); });
+  window.addEventListener("online", () => drive.schedule());
+
   // Sheets: close buttons + backdrop
   document.querySelectorAll(".modal").forEach((m) => {
     m.addEventListener("click", (e) => { if (e.target === m) closeModal(m); });
@@ -785,6 +1113,7 @@ renderHome();
 show("home");
 registerSW();
 audioReady = initAudio();
+drive.autoReconnect(); // only if Drive was connected last time
 
 // Exposed for debugging in DevTools.
 window.clearing = { state: () => state, engine, getClip, clipId, estimateSeconds };
