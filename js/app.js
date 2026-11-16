@@ -1,7 +1,7 @@
 // Clearing — guided yoga sessions. Vanilla ES modules, no framework, no bundler.
 // Persistence: one localStorage key (STORAGE_KEY). Audio: see audio.js.
 
-import { POSES, PHASES, FAMILIES, LEVELS, POSITIONS, poseById } from "./library.js";
+import { POSES, FLOWS, PHASES, FAMILIES, LEVELS, POSITIONS, poseById, isFlow, flowMoves } from "./library.js";
 import { MUSIC_TRACKS, INHALE_RANGE, EXHALE_RANGE, getClip, id as clipId } from "./phrases.js";
 import {
   LENGTH_OPTIONS, generateSession, newSeed, estimateSeconds, buildActions, actionSeconds, clipsFor, phasesOf,
@@ -84,6 +84,7 @@ const fmtMin = (sec) => `${Math.max(1, Math.round(sec / 60))} min`;
 const fmtMB = (bytes) => `${(bytes / 1048576).toFixed(1)} MB`;
 const plural = (n, w) => `${n} ${w}${n === 1 ? "" : "s"}`;
 function holdLabel(item, pose) {
+  if (isFlow(pose)) return { main: plural(item.rounds, "round"), sub: pose.sided ? "each side" : "" };
   if (pose.hold === "time") return { main: fmtClock(item.seconds), sub: "rest" };
   return { main: plural(item.breaths, "breath"), sub: pose.sided ? "each side" : "" };
 }
@@ -97,6 +98,7 @@ const DEFAULT_SETTINGS = {
   theme: "auto",
   showGuide: false,
   readGuide: true,
+  style: "steady",
 };
 const clampNum = (v, lo, hi, d) => (Number.isFinite(+v) ? Math.max(lo, Math.min(hi, +v)) : d);
 
@@ -115,9 +117,10 @@ function validateState(raw) {
     theme: ["auto", "forest", "meadow"].includes(st.theme) ? st.theme : "auto",
     showGuide: !!st.showGuide,
     readGuide: st.readGuide !== false,
+    style: st.style === "flow" ? "flow" : "steady",
   };
   let session = s.session;
-  const okItem = (it) => it && poseById(it.poseId) && (Number.isFinite(it.breaths) || Number.isFinite(it.seconds));
+  const okItem = (it) => it && poseById(it.poseId) && (Number.isFinite(it.breaths) || Number.isFinite(it.seconds) || Number.isFinite(it.rounds));
   if (!session || !Array.isArray(session.items) || !session.items.length || !session.items.every(okItem)) session = null;
   const history = Array.isArray(s.history) ? s.history.filter((h) => h && h.dateISO).slice(-200) : [];
   return { version: 1, settings, session, history };
@@ -138,8 +141,8 @@ const timingCfg = () => ({ inhale: state.settings.inhale, exhale: state.settings
 // mix where possible) so it still fits the length the user asked for.
 function refitSession() {
   if (!state.session) return;
-  const { minutes, level, seed } = state.session;
-  state.session = generateSession({ minutes, level, seed }, timingCfg(), durOf);
+  const { minutes, level, seed, style } = state.session;
+  state.session = generateSession({ minutes, level, seed, style }, timingCfg(), durOf);
   saveState();
   if (document.body.dataset.screen === "preview") { renderPreview(); prepareAudio(); }
 }
@@ -241,12 +244,20 @@ function renderHome() {
     b.classList.toggle("active", on);
     b.setAttribute("aria-checked", String(on));
   });
+  document.querySelectorAll("#styleSeg .seg-btn").forEach((b) => {
+    const on = b.dataset.style === state.settings.style;
+    b.classList.toggle("active", on);
+    b.setAttribute("aria-checked", String(on));
+  });
+  $("styleHint").textContent = state.settings.style === "flow"
+    ? "Adds sun salutations and a warrior flow, moving with one movement for each chime."
+    : "Come into each posture and hold it still for a few breaths.";
 
   const s = state.session;
   $("lastSessionCard").hidden = !s;
   if (s) {
     const poses = s.items.length;
-    $("lastSessionSub").textContent = `${s.minutes} min · ${plural(poses, "posture")} · ${LEVELS[s.level === "intermediate" ? 2 : 1]}`;
+    $("lastSessionSub").textContent = sessionSummary(s, s.minutes * 60);
   }
 
   const last = state.history[state.history.length - 1];
@@ -258,9 +269,30 @@ function renderHome() {
   renderAudioStatus();
 }
 
+function sessionSummary(s, seconds) {
+  const flows = s.items.filter((it) => isFlow(poseById(it.poseId))).length;
+  const poses = s.items.length - flows;
+  return [`About ${fmtMin(seconds)}`, plural(poses, "posture"), flows ? plural(flows, "flow") : null,
+    LEVELS[s.level === "intermediate" ? 2 : 1]].filter(Boolean).join(" · ");
+}
+
+// Ordered list of a flow's moves: breath, shape, and the teaching line.
+function movesList(f, level) {
+  const lvl = level === "intermediate" ? 2 : level;
+  const breathLabel = (mv) => mv.breath === "in" ? "In" : mv.breath === "out" ? "Out" : plural(mv.n, "breath");
+  return el("ol", { class: "moves" }, [
+    f.setup ? el("li", {}, [el("span", { class: "move-breath", text: "Start" }), el("span", { class: "move-body" }, [
+      el("span", { class: "move-show", text: f.setup.cue.replace(/\.$/, "") }), el("span", { class: "move-teach", text: f.setup.teach })])]) : null,
+    ...flowMoves(f, lvl).map((mv) => el("li", {}, [
+      el("span", { class: `move-breath ${mv.breath}`, text: breathLabel(mv) }),
+      el("span", { class: "move-body" }, [el("span", { class: "move-show", text: mv.show }), el("span", { class: "move-teach", text: mv.teach })]),
+    ])),
+  ]);
+}
+
 function buildSession() {
-  const { minutes, level } = state.settings;
-  state.session = generateSession({ minutes, level, seed: newSeed() }, timingCfg(), durOf);
+  const { minutes, level, style } = state.settings;
+  state.session = generateSession({ minutes, level, style, seed: newSeed() }, timingCfg(), durOf);
   saveState();
 }
 
@@ -287,7 +319,7 @@ function renderPreview() {
   const stepSecs = stepSecondsOf(s);
   const total = stepSecs.reduce((a, b) => a + b, 0);
   $("previewTitle").textContent = `${s.minutes}-minute session`;
-  $("previewMeta").textContent = `About ${fmtMin(total)} · ${plural(s.items.length, "posture")} · ${LEVELS[s.level === "intermediate" ? 2 : 1]}`;
+  $("previewMeta").textContent = sessionSummary(s, total) + (s.style === "flow" ? " · Flow" : "");
   $("guidanceToggle").checked = state.settings.showGuide;
 
   const list = $("previewList");
@@ -324,6 +356,7 @@ function stepCard(item, pose) {
   ]);
   const body = el("div", { class: "step-body" }, [
     el("p", { class: "guide-quote", text: pose.guide }),
+    isFlow(pose) ? movesList(pose, state.session.level) : null,
     el("p", { class: "mods", text: pose.mods }),
   ]);
   card.append(row, body);
@@ -429,13 +462,19 @@ function renderPlayer() {
   $("poseEnglish").textContent = pose.english;
   $("poseSanskrit").textContent = pose.sanskrit || "";
 
-  const showSide = pose.sided && (p.stage === "hold" || p.stage === "switch");
+  const showSide = pose.sided && ["hold", "switch", "flow"].includes(p.stage);
   $("sidePill").hidden = !showSide;
   if (showSide) $("sidePill").textContent = p.side === 1 ? "First side" : "Other side";
 
   $("caption").textContent = p.caption;
-  $("guideText").textContent = pose.guide;
-  $("guideMods").textContent = pose.mods;
+  $("poseShape").hidden = !p.show;
+  $("poseShape").textContent = p.show;
+  if ($("guideText").dataset.for !== pose.id) {
+    $("guideText").dataset.for = pose.id;
+    $("guideText").textContent = pose.guide;
+    $("guideMoves").replaceChildren(...(isFlow(pose) ? [movesList(pose, p.session.level)] : []));
+    $("guideMods").textContent = pose.mods;
+  }
 
   const next = items[p.step + 1];
   $("nextUp").textContent = p.stage === "outro" ? "" : next ? `Next: ${poseById(next.poseId).english}` : "Next: closing";
@@ -458,7 +497,7 @@ function frame() {
     const t = (now - bs.t0) / bs.dur;
     discScale = bs.phase === "in" ? LOW + (HIGH - LOW) * ease(t) : HIGH - (HIGH - LOW) * ease(t);
     word = bs.phase === "in" ? "Breathe in" : "Breathe out";
-    count = `${bs.n} of ${bs.of}`;
+    count = bs.round ? `Round ${bs.round} of ${bs.rounds}` : `${bs.n} of ${bs.of}`;
   } else {
     const target = p.stage === "rest" ? 0.7 + 0.03 * Math.sin(now * 0.6) : LOW;
     discScale += (target - discScale) * 0.06;
@@ -528,7 +567,7 @@ function renderLibrary() {
     onclick: () => { libFamily = f; renderLibrary(); },
   })));
   const q = norm(libQuery.trim());
-  const poses = POSES
+  const poses = [...POSES, ...FLOWS]
     .filter((p) => libFamily === "all" || p.family === libFamily)
     .filter((p) => !q || norm(p.english).includes(q) || norm(p.sanskrit).includes(q))
     .sort((a, b) => a.english.localeCompare(b.english));
@@ -551,10 +590,11 @@ function openPose(poseId) {
     [LEVELS[p.level], p.level === 2 ? "level-2" : ""],
     [`Starts: ${POSITIONS[p.base].label}`],
     p.sided ? ["Each side"] : null,
-    [p.hold === "time" ? "Timed rest" : `${p.breaths} breaths by default`],
+    [isFlow(p) ? `${plural(p.moves.length, "move")}` : p.hold === "time" ? "Timed rest" : `${p.breaths} breaths by default`],
   ].filter(Boolean);
   $("poseTags").replaceChildren(...tags.map(([t, c]) => el("span", { class: `tag ${c || ""}`.trim(), text: t })));
   $("poseGuide").textContent = p.guide;
+  $("poseMoves").replaceChildren(...(isFlow(p) ? [movesList(p, state.settings.level)] : []));
   $("poseMods").textContent = p.mods;
   openModal($("poseModal"));
 }
@@ -609,6 +649,11 @@ function wire() {
     saveState();
     renderHome();
   }));
+  document.querySelectorAll("#styleSeg .seg-btn").forEach((b) => b.addEventListener("click", () => {
+    state.settings.style = b.dataset.style;
+    saveState();
+    renderHome();
+  }));
   $("buildBtn").addEventListener("click", () => { buildSession(); openPreview(); });
   $("lastSessionCard").addEventListener("click", () => openPreview());
 
@@ -619,8 +664,8 @@ function wire() {
     renderPreview();
   });
   $("regenBtn").addEventListener("click", () => {
-    const { level } = state.session;
-    state.session = generateSession({ minutes: state.session.minutes, level, seed: newSeed() }, timingCfg(), durOf);
+    const { level, style } = state.session;
+    state.session = generateSession({ minutes: state.session.minutes, level, style, seed: newSeed() }, timingCfg(), durOf);
     saveState();
     renderPreview();
     prepareAudio();

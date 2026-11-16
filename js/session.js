@@ -4,6 +4,7 @@
 // A *session* is the plan the user previews:
 //   { id, createdISO, minutes, level, seed, items: [item], estSeconds }
 //   item: { poseId, phase, breaths }          (breaths per side)
+//       | { poseId, phase, rounds }           (a flow; rounds per side)
 //       | { poseId, phase, seconds }          (hold: "time", i.e. savasana)
 //
 // buildActions() expands a session into the flat list of timed actions the
@@ -11,10 +12,11 @@
 // to true); the same cfg must be used for generating, estimating and playing. Session length estimates are computed from that same list, so
 // the preview's "≈ 21 min" and the real run can't drift apart structurally.
 
-import { POSES, PHASES, poseById } from "./library.js";
+import { POSES, FLOWS, PHASES, poseById, isFlow, flowMoves } from "./library.js";
 import { id, getClip, estimateSpeechSeconds, HOLD_RANGE } from "./phrases.js";
 
 export const LENGTH_OPTIONS = [10, 15, 20, 30, 45, 60];
+export const STYLES = { steady: "Steady", flow: "Flow" };
 export const MIN_BREATHS = 3;
 
 // Share of the flexible time (after arriving + savasana) per phase.
@@ -27,6 +29,8 @@ export const GAP = {
   afterName: 0.5,
   afterGuide: 1.5,  // settle into the pose before counting breaths
   noGuide: 6.0,     // guidance not read aloud: silent time to move into the pose
+  afterSetup: 2.0,  // flows: settle into the starting shape
+  afterFlowOn: 0.4,
   afterHold: 0.3,
   beforeSwitch: 0.4,
   afterSwitch: 3.0, // turning around for the other side takes a moment
@@ -88,7 +92,10 @@ export function estimateDuration(clipId) {
 //   { t: "breath", n, of, side, sides, inCue? }
 //                                        one inhale + exhale, a chime at each;
 //                                        optional voice line layered on the inhale
-// stage: intro | enter | hold | switch | release | rest | outro
+//   { t: "half", phase, cue }            flows: ONE inhale or exhale with its chime,
+//                                        the movement cue spoken over it
+// Flow actions also carry round, rounds and show (the current shape's name).
+// stage: intro | enter | hold | switch | flow | release | rest | outro
 export function buildActions(session, breath) {
   const A = [];
   const items = session.items;
@@ -112,11 +119,13 @@ export function buildActions(session, breath) {
     if (breath.readGuide !== false) {
       add(i, "enter", { t: "voice", clip: id.guide(p.id) });
       add(i, "enter", { t: "gap", s: GAP.afterGuide });
-    } else {
+    } else if (!isFlow(p)) {
       add(i, "enter", { t: "gap", s: GAP.noGuide });
     }
 
-    if (p.hold === "time") {
+    if (isFlow(p)) {
+      addFlow(add, i, p, it.rounds, session.level, breath.readGuide !== false);
+    } else if (p.hold === "time") {
       add(i, "rest", { t: "rest", s: it.seconds });
     } else {
       const n = it.breaths;
@@ -149,6 +158,50 @@ export function buildActions(session, breath) {
   return A;
 }
 
+// A flow: optional setup into the starting shape, then rounds of moves. With
+// guidance on, the first round on the first side is taught (teach line + one
+// full breath in each shape); every other round flows, one move per chime.
+function addFlow(add, i, f, rounds, level, teach) {
+  const lvl = level === "intermediate" ? 2 : 1;
+  const moves = flowMoves(f, lvl);
+  const sides = f.sided ? 2 : 1;
+  for (let side = 1; side <= sides; side++) {
+    if (side === 2) {
+      add(i, "switch", { t: "gap", s: GAP.beforeSwitch, side, sides });
+      add(i, "switch", { t: "voice", clip: id.line("switch"), side, sides });
+      add(i, "switch", { t: "gap", s: GAP.afterSwitch, side, sides });
+    }
+    if (f.setup) {
+      const show = f.setup.cue.replace(/\.$/, "");
+      const clip = teach && side === 1 ? id.setup(f.id) : id.cue(f.setup.cue);
+      add(i, "enter", { t: "voice", clip, side, sides, show });
+      add(i, "enter", { t: "gap", s: GAP.afterSetup, side, sides, show });
+    }
+    for (let r = 1; r <= rounds; r++) {
+      const teaching = teach && side === 1 && r === 1;
+      const ctx = { side, sides, round: r, rounds };
+      if (teach && side === 1 && r === 2) {
+        add(i, "flow", { t: "voice", clip: id.line("flowOn"), ...ctx });
+        add(i, "flow", { t: "gap", s: GAP.afterFlowOn, ...ctx });
+      }
+      moves.forEach((mv, k) => {
+        const c = { ...ctx, show: mv.show };
+        if (teaching) {
+          add(i, "enter", { t: "voice", clip: id.teach(f.id, k, lvl === 2 && !!f.moves[k].l2), ...c });
+          const n = mv.breath === "stay" ? mv.n : 1;
+          for (let b = 1; b <= n; b++) add(i, "enter", { t: "breath", n: b, of: n, ...c });
+        } else if (mv.breath === "stay") {
+          for (let b = 1; b <= mv.n; b++) add(i, "flow", { t: "breath", n: b, of: mv.n, ...c, ...(b === 1 ? { inCue: id.cue(mv.cue) } : {}) });
+        } else {
+          add(i, "flow", { t: "half", phase: mv.breath, cue: id.cue(mv.cue), ...c });
+        }
+      });
+    }
+  }
+  add(i, "release", { t: "voice", clip: id.line("release") });
+  add(i, "release", { t: "gap", s: GAP.afterRelease });
+}
+
 export function actionSeconds(a, breath, durOf = estimateDuration) {
   switch (a.t) {
     case "voice":  return durOf(a.clip);
@@ -156,6 +209,7 @@ export function actionSeconds(a, breath, durOf = estimateDuration) {
     case "gap":
     case "rest":   return a.s;
     case "breath": return breath.inhale + breath.exhale;
+    case "half":   return a.phase === "in" ? breath.inhale : breath.exhale;
     default:       return 0;
   }
 }
@@ -170,6 +224,7 @@ export function clipsFor(session, breath) {
   for (const a of buildActions(session, breath)) {
     if (a.clip) set.add(a.clip);
     if (a.inCue) set.add(a.inCue);
+    if (a.cue) set.add(a.cue);
   }
   return [...set];
 }
@@ -183,13 +238,25 @@ export function clipsFor(session, breath) {
 //    position changes are few.
 // 4. Nudge breath counts, then savasana length, until the estimate is close to
 //    the requested length.
-export function generateSession({ minutes, level, seed }, breath, durOf = estimateDuration) {
+// Style "flow" adds a sun salutation (half for short sessions) and, from 20
+// minutes, the warrior flow to the Build phase, and drops the standalone
+// postures those flows already contain (each flow's `replaces`).
+export function sunRounds(minutes) {
+  return minutes <= 10 ? 2 : minutes <= 15 ? 3 : minutes <= 20 ? 2 : minutes <= 30 ? 3 : minutes <= 45 ? 4 : 5;
+}
+export function generateSession({ minutes, level, seed, style = "steady" }, breath, durOf = estimateDuration) {
   const rng = mulberry32(seed);
   const target = minutes * 60;
   const maxLevel = level === "intermediate" ? 2 : 1;
   const maxB = maxBreathsFor(minutes);
   const factor = breathFactor(minutes);
-  const pool = POSES.filter((p) => p.level <= maxLevel);
+  const flows = [];
+  if (style === "flow") {
+    flows.push({ poseId: minutes <= 15 ? "half-sun" : "sun-a", phase: "main", rounds: sunRounds(minutes) });
+    if (minutes >= 20) flows.push({ poseId: "warrior-flow", phase: "main", rounds: minutes >= 45 ? 3 : 2 });
+  }
+  const replaced = new Set(flows.flatMap((f) => poseById(f.poseId).replaces));
+  const pool = POSES.filter((p) => p.level <= maxLevel && !replaced.has(p.id));
   const mkItem = (p) => p.hold === "time"
     ? { poseId: p.id, phase: p.phase, seconds: 0 }
     : { poseId: p.id, phase: p.phase, breaths: clamp(Math.round(p.breaths * factor), MIN_BREATHS, maxB) };
@@ -200,12 +267,12 @@ export function generateSession({ minutes, level, seed }, breath, durOf = estima
 
   // Cost of one item in isolation (assume a position change, the common case).
   const itemCost = (item) => {
-    const s = { items: [item, item] };
+    const s = { items: [item, item], level };
     const acts = buildActions(s, breath).filter((a) => a.step === 1 && a.stage !== "outro");
     return acts.reduce((sum, a) => sum + actionSeconds(a, breath, durOf), 0);
   };
 
-  const fixed = estimateSeconds({ items: [centerItem, savItem] }, breath, durOf);
+  const fixed = estimateSeconds({ items: [centerItem, savItem], level }, breath, durOf);
   const flexible = Math.max(0, target - fixed);
 
   const chosen = { warmup: [], main: [], cooldown: [] };
@@ -218,6 +285,7 @@ export function generateSession({ minutes, level, seed }, breath, durOf = estima
       ...shuffle(cands.filter((p) => !p.priority), rng),
     ];
     let spent = 0;
+    if (phase === "main") for (const f of flows) { chosen.main.push(f); spent += itemCost(f); }
     for (const p of ordered) {
       const item = mkItem(p);
       const c = itemCost(item);
@@ -235,7 +303,7 @@ export function generateSession({ minutes, level, seed }, breath, durOf = estima
     ...chosen.cooldown.sort(bySeq),
     savItem,
   ];
-  const session = { items };
+  const session = { items, level };
 
   // Fine-tune breath counts toward the target.
   const breathSec = breath.inhale + breath.exhale;
@@ -263,7 +331,7 @@ export function generateSession({ minutes, level, seed }, breath, durOf = estima
   return {
     id: `s_${seed.toString(36)}`,
     createdISO: new Date().toISOString(),
-    minutes, level, seed,
+    minutes, level, seed, style,
     items,
     estSeconds: Math.round(total),
   };

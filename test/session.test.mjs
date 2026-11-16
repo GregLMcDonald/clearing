@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { POSES, POSITIONS, FAMILIES, PHASES, poseById } from "../js/library.js";
+import { POSES, FLOWS, POSITIONS, FAMILIES, PHASES, poseById, isFlow } from "../js/library.js";
 import { catalog, getClip, HOLD_RANGE, INHALE_RANGE, EXHALE_RANGE } from "../js/phrases.js";
 import { generateSession, buildActions, estimateSeconds, clipsFor, LENGTH_OPTIONS, MIN_BREATHS } from "../js/session.js";
 
@@ -64,6 +64,46 @@ test("readGuide off: no guidance clips, sessions still fit", () => {
       assert.ok(Math.abs(estimateSeconds(s, cfg) - minutes * 60) <= 60, `${minutes} min seed ${seed}`);
       assert.ok(!clipsFor(s, cfg).some((c) => c.endsWith(".guide")), "guidance clip scheduled");
     }
+  }
+});
+
+test("flows are well formed", () => {
+  for (const f of FLOWS) {
+    assert.ok(f.moves.length >= 2, f.id);
+    for (const mv of f.moves) {
+      assert.ok(["in", "out", "stay"].includes(mv.breath), `${f.id} breath`);
+      assert.ok(mv.cue.split(/\s+/).length <= 5, `${f.id}: cue too long to fit one breath: ${mv.cue}`);
+      if (mv.breath === "stay") assert.ok(mv.n >= 1);
+    }
+    // In/out moves must alternate (stays are whole breaths), round to round too.
+    const halves = f.moves.filter((mv) => mv.breath !== "stay").map((mv) => mv.breath);
+    for (let k = 0; k < halves.length; k++) assert.notEqual(halves[k], halves[(k + 1) % halves.length], `${f.id} breath order at ${k}`);
+    for (const r of f.replaces) assert.ok(poseById(r), `${f.id} replaces unknown ${r}`);
+  }
+});
+
+for (const level of ["beginner", "intermediate"]) {
+  test(`${level} flow-style sessions fit and contain flows`, () => {
+    for (const cfg of [{ inhale: 4, exhale: 5 }, { inhale: 4, exhale: 5, readGuide: false }, BREATHS[2]]) {
+      for (const minutes of LENGTH_OPTIONS) {
+        for (let seed = 1; seed <= 10; seed++) {
+          const s = generateSession({ minutes, level, seed, style: "flow" }, cfg);
+          assert.ok(Math.abs(estimateSeconds(s, cfg) - minutes * 60) <= 60, `${minutes} min seed ${seed}`);
+          const flows = s.items.filter((it) => isFlow(poseById(it.poseId)));
+          assert.ok(flows.length >= 1, "has a sun salutation");
+          const replaced = new Set(flows.flatMap((it) => poseById(it.poseId).replaces));
+          for (const it of s.items) assert.ok(!replaced.has(it.poseId), `${it.poseId} duplicated by a flow`);
+          for (const cid of clipsFor(s, cfg)) assert.ok(getClip(cid), `missing clip ${cid}`);
+        }
+      }
+    }
+  });
+}
+
+test("steady style never includes flows", () => {
+  for (const minutes of LENGTH_OPTIONS) {
+    const s = generateSession({ minutes, level: "intermediate", seed: 5 }, BREATHS[0]);
+    assert.ok(!s.items.some((it) => isFlow(poseById(it.poseId))));
   }
 });
 

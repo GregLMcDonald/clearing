@@ -48,6 +48,7 @@ export const FAMILIES = {
   hip:      "Hip opener",
   supine:   "Lying down",
   rest:     "Rest",
+  flow:     "Flows",
 };
 
 export const LEVELS = { 1: "Beginner", 2: "Intermediate" };
@@ -305,5 +306,91 @@ export const POSES = [
   }),
 ];
 
-const BY_ID = new Map(POSES.map((p) => [p.id, p]));
+// ───────── Flows ─────────
+// A flow links movement to breath (vinyasa style). It shares a pose's fields
+// (english, sanskrit, phase, family, base, seq, level, sided, guide, mods) and
+// adds:
+//   kind     "flow"
+//   rounds   default number of rounds (per side for sided flows)
+//   setup    optional { cue, teach }: getting into the starting shape (said each side)
+//   replaces pose ids a session shouldn't also contain when this flow is in it
+//   moves    [{ breath, show, cue, teach, n?, l2? }]
+//              breath  "in" | "out": one inhale / exhale for this movement
+//                      "stay": hold the shape for n full breaths
+//              show    name of the shape, shown on screen
+//              cue     very short line spoken on the move while flowing (1–2 s)
+//              teach   fuller line spoken on the first, slow round
+//              l2      { cue, teach } replacing both at intermediate level
+//
+// Round one (when guidance is read aloud) is taught: each move's teach line,
+// then one full breath in the shape. Later rounds flow: one movement per
+// chime, with only the short cue.
+
+function flow(id, english, sanskrit, o) {
+  return { ...pose(id, english, sanskrit, { ...o, family: "flow" }), kind: "flow",
+    rounds: o.rounds || 2, setup: o.setup || null, replaces: o.replaces || [], moves: o.moves };
+}
+const m = (breath, show, cue, teach, extra = {}) => ({ breath, show, cue, teach, ...extra });
+
+export const FLOWS = [
+  flow("half-sun", "Half sun salutation", "Ardha Surya Namaskar", {
+    phase: "main", base: "stand", seq: 39,
+    guide: "A gentle standing flow. We'll move through it slowly once, holding each shape, then flow with one movement for each chime.",
+    mods: "Keep your knees soft in every fold, and bend them generously if your hamstrings are tight.",
+    replaces: ["mountain", "upward-salute"],
+    moves: [
+      m("in",  "Upward salute", "Reach up.", "From mountain, sweep your arms out to the sides and up overhead."),
+      m("out", "Standing forward fold", "Fold.", "Hinge at your hips and fold forward, with soft knees."),
+      m("in",  "Halfway lift", "Halfway lift.", "Bring your hands to your shins and lengthen your spine forward, like a tabletop."),
+      m("out", "Standing forward fold", "Fold.", "Fold forward again, and let your head hang."),
+      m("in",  "Upward salute", "Rise up.", "Bend your knees, reach your arms out, and rise all the way up."),
+      m("out", "Mountain pose", "Hands to heart.", "Bring your palms together at your heart."),
+    ],
+  }),
+  flow("sun-a", "Sun salutation A", "Surya Namaskar A", {
+    say: "Surya Namaskar A",
+    phase: "main", base: "stand", seq: 39,
+    guide: "The classic vinyasa sequence. We'll move through it slowly once, holding each shape, then flow with one movement for each chime.",
+    mods: "Lowering with your knees down is always an option, on any round. Walk your feet forward; hopping is optional.",
+    replaces: ["mountain", "upward-salute", "plank", "cobra", "downward-dog"],
+    moves: [
+      m("in",  "Upward salute", "Reach up.", "From mountain, sweep your arms out to the sides and up overhead."),
+      m("out", "Standing forward fold", "Fold.", "Hinge at your hips and fold forward, with soft knees."),
+      m("in",  "Halfway lift", "Halfway lift.", "Bring your hands to your shins and lengthen your spine forward, like a tabletop."),
+      m("out", "Plank pose", "Step back to plank.", "Plant your hands and step back, one foot at a time, into plank."),
+      m("in",  "Plank pose", "Lengthen.", "Shoulders over wrists, belly gently in. One long line from head to heels."),
+      m("out", "Lowering down", "Knees down. Lower slowly.", "Bring your knees to the mat, hug your elbows in, and lower your chest slowly to the floor.", {
+        l2: { cue: "Chaturanga.", teach: "Hug your elbows in and lower halfway down, keeping one long line from head to heels. Drop your knees any time." },
+      }),
+      m("in",  "Cobra pose", "Cobra.", "Untuck your toes, press lightly into your hands, and lift your chest with your back muscles."),
+      m("out", "Downward-facing dog", "Downward dog.", "Tuck your toes and lift your hips up and back."),
+      m("stay", "Downward-facing dog", "Pedal your heels.", "Stay here. Pedal your heels, bending one knee, then the other.", { n: 3 }),
+      m("in",  "Halfway lift", "Walk forward. Halfway lift.", "Walk your feet up to your hands, or hop if you like, and lift halfway with a long spine."),
+      m("out", "Standing forward fold", "Fold.", "Fold forward again, and let your head hang."),
+      m("in",  "Upward salute", "Rise up.", "Bend your knees, reach your arms out, and rise all the way up."),
+      m("out", "Mountain pose", "Hands to heart.", "Bring your palms together at your heart."),
+    ],
+  }),
+  flow("warrior-flow", "Warrior flow", null, {
+    phase: "main", base: "stand", seq: 46, sided: true,
+    guide: "Three warrior shapes linked together. We'll learn it slowly on the first side, then flow with one movement for each chime.",
+    mods: "Keep the front knee over the ankle the whole time. Shorten your stance if your hips or knees complain.",
+    replaces: ["warrior-2", "reverse-warrior", "side-angle"],
+    setup: { cue: "Warrior two.", teach: "Step your feet wide, turn your right foot out, and bend your right knee over your ankle. Reach your arms out wide. This is warrior two." },
+    moves: [
+      m("in",  "Reverse warrior", "Reverse warrior.", "Slide your left hand down your back leg, and reach your right arm up and back. Keep your front knee bent."),
+      m("out", "Extended side angle", "Side angle.", "Bring your right forearm to your right thigh, and reach your left arm up and over your ear."),
+      m("in",  "Reverse warrior", "Reverse warrior.", "Sweep back up into reverse warrior."),
+      m("out", "Warrior two", "Warrior two.", "Arms wide, back to warrior two."),
+    ],
+  }),
+];
+
+// Moves with the level variant applied.
+export function flowMoves(f, level) {
+  return f.moves.map((mv) => (level === 2 || level === "intermediate") && mv.l2 ? { ...mv, ...mv.l2 } : mv);
+}
+
+const BY_ID = new Map([...POSES, ...FLOWS].map((p) => [p.id, p]));
 export function poseById(id) { return BY_ID.get(id) || null; }
+export const isFlow = (p) => !!p && p.kind === "flow";

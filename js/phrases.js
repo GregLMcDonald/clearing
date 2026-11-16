@@ -9,7 +9,7 @@
 //   { id, kind: "sfx",   prompt, seconds }      ElevenLabs sound-generation
 //   { id, kind: "music", prompt, seconds, label } ElevenLabs music, looped with crossfade
 
-import { POSES, POSITIONS } from "./library.js";
+import { POSES, FLOWS, POSITIONS } from "./library.js";
 
 // Breath pace options (seconds per inhale / exhale). The breath chimes are
 // independent of pace, so these ranges can change freely.
@@ -29,6 +29,7 @@ export const LINES = {
   lastBreath: "One more breath.",
   wake:       "Begin to deepen your breath. Wiggle your fingers and toes. When you're ready, roll onto your right side, and slowly come up to sit.",
   close:      "Thank you for practicing. Namaste.",
+  flowOn:     "Now let's flow. One movement for each chime.",
 };
 
 export const MUSIC_TRACKS = [
@@ -44,15 +45,15 @@ export const MUSIC_TRACKS = [
 
 const SFX_PROMPTS = {
   "sfx.bell.start": { seconds: 6, prompt: "A single deep Tibetan singing bowl struck softly, long warm shimmering resonance slowly fading out, calm meditation, clean recording, no other sounds." },
-  "sfx.chime":      { seconds: 2.5, prompt: "One soft, gentle high wooden wind chime note, warm and short, quiet meditation transition sound, clean, no other sounds." },
+  "sfx.chime":      { seconds: 2.5, prompt: "One single soft strike of a small brass meditation bell, a clear pure tone with a gentle ring that fades out smoothly. Only one strike. Studio quality, completely clean, no background noise, no hiss, no other sounds." },
   "sfx.bell.end":   { seconds: 8, prompt: "Three soft singing bowl strikes, spaced slowly, warm resonance fading out gently, peaceful end of meditation, clean recording, no other sounds." },
 };
 // Breath cues: one tonal chime at the start of each inhale / exhale. Tones,
 // not breath sounds. Inhale is higher and brighter, exhale lower and warmer,
 // so they're told apart without looking.
 const BREATH_CUES = {
-  "sfx.in":  { seconds: 2.5, prompt: "A single soft, clear crystal singing bowl tone, gently struck, bright and high, a short shimmering ring that fades out smoothly. Calm meditation cue. Clean recording, no other sounds, no breathing, no voice." },
-  "sfx.out": { seconds: 2.5, prompt: "A single soft, warm crystal singing bowl tone, gently struck, mellow and noticeably lower in pitch, a short ring that fades out smoothly. Calm meditation cue. Clean recording, no other sounds, no breathing, no voice." },
+  "sfx.in":  { seconds: 2.5, prompt: "One single soft strike of a small crystal singing bowl: a clear, pure, high bell tone that rings and fades out smoothly. Only one strike. Studio quality, completely clean, no background noise, no hiss, no shimmer, no breathing, no other sounds." },
+  "sfx.out": { seconds: 2.5, prompt: "One single soft strike of a crystal singing bowl: a clear, pure, warm bell tone, noticeably lower and mellower, that rings and fades out smoothly. Only one strike. Studio quality, completely clean, no background noise, no hiss, no shimmer, no breathing, no other sounds." },
 };
 
 // ───────── ids ─────────
@@ -62,6 +63,10 @@ export const id = {
   pos:   (base) => `v.pos.${base}`,
   name:  (poseId) => `v.pose.${poseId}.name`,
   guide: (poseId) => `v.pose.${poseId}.guide`,
+  // Flow cues are keyed by their text, so "Fold." is one clip for every flow.
+  cue:   (text) => `v.cue.${text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}`,
+  teach: (flowId, k, l2 = false) => `v.flow.${flowId}.${k}.teach${l2 ? "2" : ""}`,
+  setup: (flowId) => `v.flow.${flowId}.setup`,
   inhale: "sfx.in",
   exhale: "sfx.out",
 };
@@ -79,12 +84,22 @@ function buildCatalog() {
   for (const [k, text] of Object.entries(LINES)) clips.push(voice(id.line(k), text));
   for (const n of range(HOLD_RANGE)) clips.push(voice(id.hold(n), holdText(n)));
   for (const [base, p] of Object.entries(POSITIONS)) clips.push(voice(id.pos(base), p.cue));
-  for (const p of POSES) {
+  for (const p of [...POSES, ...FLOWS]) {
     const spoken = p.sanskrit ? `${p.english}. ${p.say || p.sanskrit}.` : `${p.english}.`;
     const shown  = p.sanskrit ? `${p.english}. ${p.sanskrit}.` : `${p.english}.`;
     clips.push(voice(id.name(p.id), spoken, shown));
     clips.push(voice(id.guide(p.id), p.guide));
   }
+  const cues = new Map();
+  for (const f of FLOWS) {
+    if (f.setup) { clips.push(voice(id.setup(f.id), f.setup.teach)); cues.set(id.cue(f.setup.cue), f.setup.cue); }
+    f.moves.forEach((mv, k) => {
+      clips.push(voice(id.teach(f.id, k), mv.teach));
+      cues.set(id.cue(mv.cue), mv.cue);
+      if (mv.l2) { clips.push(voice(id.teach(f.id, k, true), mv.l2.teach)); cues.set(id.cue(mv.l2.cue), mv.l2.cue); }
+    });
+  }
+  for (const [clipId, text] of cues) clips.push(voice(clipId, text));
   for (const [clipId, s] of Object.entries(SFX_PROMPTS)) clips.push({ id: clipId, kind: "sfx", ...s });
   for (const [clipId, s] of Object.entries(BREATH_CUES)) clips.push({ id: clipId, kind: "sfx", ...s });
   for (const t of MUSIC_TRACKS) clips.push({ id: t.id, kind: "music", seconds: t.seconds, prompt: t.prompt, label: t.label });

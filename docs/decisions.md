@@ -43,10 +43,21 @@ Choices made while building v0, where the brief left room. Each one can be revis
 - **No reload mid-session.** When a new service worker takes over, limber reloads right away. Clearing waits until you leave the player.
 - **History:** completed or ended sessions longer than a minute are recorded in localStorage, but v0 only shows the last one on the home screen.
 
+## Flows (added after v0)
+
+- **Two styles.** *Steady* is the original: come into a posture and hold it still (closer to hatha). *Flow* adds vinyasa-style flows: one movement per inhale or exhale.
+- **What Flow adds:** a sun salutation at the start of Build (Half sun salutation for 10–15 minute sessions, Sun Salutation A from 20 minutes, 2 to 5 rounds) and, from 20 minutes, a warrior flow (Warrior two → Reverse warrior → Side angle → Reverse warrior → Warrior two, both sides). Standalone postures a flow already contains are left out (each flow's `replaces`).
+- **Teach, then flow.** With guidance read aloud, round one on the first side is taught: a teaching line for each move, then one full breath in the shape. "Now let's flow" starts the flowing rounds: one move per chime, each with a 1–2 word cue spoken on the chime ("Reach up." "Fold."). The voice names the movement only, never "inhale" or "exhale"; the chime says which. With guidance off, every round flows.
+- **Down dog in Sun A** is held for 3 breaths ("Pedal your heels.").
+- **Level:** Beginner lowers with knees down, all the way to the floor. Intermediate cues chaturanga, with dropping the knees always offered. Plank gets its own inhale before the lowering at both levels.
+- **Movement cues are shared by text** (`v.cue.<slug>`), so "Fold." is one clip across all flows. Tests check that each cue is short enough to fit inside one breath, and that inhales and exhales alternate within a round and from one round to the next.
+- **SFX cleanup.** The generated bells and chimes carried broadband hiss. Raised to voice level, it sounded noisy and crackly. The build now denoises and band-limits sound effects before normalizing them, and the transition and breath chimes have stricter prompts ("one single strike, completely clean").
+
 ## Not in v0 (ideas)
 
-- Flows between sides (for example Warrior two → Reverse warrior → Side angle on the right, then all three on the left).
-- Sun salutations as repeatable sequences, so long sessions don't run out of postures.
+- Vinyasas between sides (plank → lower → cobra → down dog between the two sides of standing postures) in Flow style.
+- Yin as a third style: a few floor postures, long timed holds, very little talking.
+- Tuning flow rounds (not just breath counts) when fitting a session to its length.
 - Editing a proposed session (swap or remove a posture, change a hold).
 - Focus options (hips, back, shoulders, energising or calming).
 - Log screen, streaks, export/import, Drive backup (limber has these patterns ready to borrow).

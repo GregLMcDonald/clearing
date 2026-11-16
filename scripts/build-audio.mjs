@@ -5,10 +5,15 @@
 //   audio/pack-<hash>.bin   all clips back to back (mp3)
 //   audio/manifest.json     { pack, render, clips: { id: { spec, key, offset, length, duration } } }
 //
-// Loudness: ElevenLabs returns each kind at very different levels (music came
-// back ~10 dB louder than the bells), so at pack time every clip gets a plain
-// gain to a per-kind loudness target (LOUDNESS below) using ffmpeg, capped so
-// it never clips. No ffmpeg → clips are packed as generated, with a warning.
+// Post-processing at pack time (ffmpeg; without it clips are packed as generated):
+//   1. CLEANUP per kind: generated sound effects carry broadband hiss and
+//      grain that turns crackly once they're brought up to voice level, so
+//      SFX are denoised and band-limited first.
+//   2. LOUDNESS per kind: ElevenLabs returns each kind at very different
+//      levels (music came back ~10 dB louder than the bells), so every clip
+//      gets a plain gain to a target, capped below clipping.
+// Processed clips are cached per (clip, processing) so changing a target or
+// filter re-processes only what it affects, and nothing is encoded twice.
 //
 // Idempotent and cheap to re-run:
 //   - each clip is cached in .audio-cache/<key>.mp3, key = sha256(spec + render settings);
@@ -48,6 +53,11 @@ const BYTES_PER_SECOND = 128000 / 8;
 // Integrated loudness targets (LUFS) per kind. Voice and bells sit together;
 // music is a quiet bed underneath. The app's volume sliders scale from here.
 const LOUDNESS = { voice: -18, sfx: -18, music: -26 };
+const CLEANUP = {
+  voice: "",
+  sfx: "afftdn=nr=20:nf=-45:tn=1,highpass=f=90,lowpass=f=7000:p=2",
+  music: "",
+};
 const PEAK_CEILING = -1;   // dBTP: never push a clip's true peak above this
 const GAIN_TOLERANCE = 1;   // dB: closer than this → leave the file untouched
 
@@ -157,24 +167,36 @@ function measure(file) {
   return { lufs, peak };
 }
 
-// Returns the path of the clip's normalized audio (cached), or the raw file.
-function normalized(rawFile, kind, key) {
-  if (!HAS_FFMPEG) return rawFile;
-  const target = LOUDNESS[kind];
-  const out = path.join(CACHE_DIR, "norm", `${key}.${target}.mp3`);
-  if (existsSync(out)) return out;
-  const { lufs, peak } = measure(rawFile);
-  if (!Number.isFinite(lufs) || lufs < -60) return rawFile; // silence or too short to measure
-  const gain = Math.min(target - lufs, PEAK_CEILING - (Number.isFinite(peak) ? peak : 0));
-  if (Math.abs(gain) < GAIN_TOLERANCE) {
-    spawnSync("cp", [rawFile, out]);
-    return out;
+// Tag identifying how a kind is processed; part of the processed file's name.
+const procTag = (kind) => sha256(`${CLEANUP[kind]}|${LOUDNESS[kind]}|${PEAK_CEILING}`).slice(0, 10);
+const procPath = (key, kind) => path.join(CACHE_DIR, "norm", `${key}.${procTag(kind)}.mp3`);
+
+// Returns { file, proc } for the clip's processed audio (cached), or the raw file.
+function processed(rawFile, kind, key) {
+  if (!HAS_FFMPEG) return { file: rawFile, proc: null };
+  const out = procPath(key, kind);
+  if (existsSync(out)) return { file: out, proc: procTag(kind) };
+  const ff = (args) => spawnSync("ffmpeg", ["-hide_banner", "-loglevel", "error", "-y", ...args]).status === 0;
+
+  // Clean into a lossless intermediate so the mp3 is encoded only once.
+  let src = rawFile;
+  const wav = path.join(CACHE_DIR, "norm", `${key}.tmp.wav`);
+  if (CLEANUP[kind]) {
+    if (!ff(["-i", rawFile, "-af", CLEANUP[kind], wav])) { console.warn(`  could not clean ${key}; packing as generated`); return { file: rawFile, proc: null }; }
+    src = wav;
   }
-  const r = spawnSync("ffmpeg", ["-hide_banner", "-loglevel", "error", "-y", "-i", rawFile,
-    "-af", `volume=${gain.toFixed(2)}dB`, "-ar", "44100", "-c:a", "libmp3lame", "-b:a", "128k", out]);
-  if (r.status !== 0) { console.warn(`  could not normalize ${key}; packing as generated`); return rawFile; }
-  console.log(`  normalized ${kind.padEnd(5)} ${lufs.toFixed(1)} LUFS → ${(lufs + gain).toFixed(1)} (${gain >= 0 ? "+" : ""}${gain.toFixed(1)} dB)`);
-  return out;
+  const { lufs, peak } = measure(src);
+  let gain = Number.isFinite(lufs) && lufs > -60 ? Math.min(LOUDNESS[kind] - lufs, PEAK_CEILING - (Number.isFinite(peak) ? peak : 0)) : 0;
+  if (!CLEANUP[kind] && Math.abs(gain) < GAIN_TOLERANCE) {
+    spawnSync("cp", [rawFile, out]); // already on target: keep the original bytes
+  } else if (!ff(["-i", src, "-af", `volume=${gain.toFixed(2)}dB`, "-ar", "44100", "-c:a", "libmp3lame", "-b:a", "128k", out])) {
+    console.warn(`  could not normalize ${key}; packing as generated`);
+    return { file: rawFile, proc: null };
+  } else {
+    console.log(`  processed  ${kind.padEnd(5)} ${CLEANUP[kind] ? "cleaned, " : ""}${lufs.toFixed(1)} LUFS → ${(lufs + gain).toFixed(1)} (${gain >= 0 ? "+" : ""}${gain.toFixed(1)} dB)`);
+  }
+  if (src === wav) spawnSync("rm", ["-f", wav]);
+  return { file: out, proc: procTag(kind) };
 }
 
 // ───────── cache seeding from the committed pack ─────────
@@ -188,7 +210,11 @@ async function seedCacheFromPack() {
   for (const entry of Object.values(manifest.clips)) {
     if (!entry.key || existsSync(cachePath(entry.key))) continue;
     pack = pack || await readFile(packFile);
-    await writeFile(cachePath(entry.key), pack.subarray(entry.offset, entry.offset + entry.length));
+    const bytes = pack.subarray(entry.offset, entry.offset + entry.length);
+    await writeFile(cachePath(entry.key), bytes);
+    // The pack holds PROCESSED audio: register it as such, so an unchanged
+    // clip isn't cleaned and re-encoded a second time on a fresh clone.
+    if (entry.proc) await writeFile(path.join(CACHE_DIR, "norm", `${entry.key}.${entry.proc}.mp3`), bytes);
     restored++;
   }
   return restored;
@@ -243,10 +269,7 @@ if (todo.length) {
   }
 }
 
-// Pack every clip that has audio, in catalog order, loudness-normalized.
-// (A fresh clone seeds its raw cache from this pack, i.e. from already
-// normalized audio; those measure within GAIN_TOLERANCE and pass through
-// untouched, so re-running never re-encodes the same clip twice.)
+// Pack every clip that has audio, in catalog order, cleaned and normalized.
 if (!HAS_FFMPEG) console.warn("ffmpeg not found: packing clips without loudness normalization (brew install ffmpeg).");
 const parts = [];
 const entries = {};
@@ -254,11 +277,13 @@ let offset = 0;
 for (const c of clips) {
   const raw = cachePath(keys.get(c.id));
   if (!existsSync(raw)) continue;
-  const buf = await readFile(normalized(raw, c.kind, keys.get(c.id)));
+  const { file, proc } = processed(raw, c.kind, keys.get(c.id));
+  const buf = await readFile(file);
   entries[c.id] = {
     kind: c.kind,
     spec: clipSpec(c),
     key: keys.get(c.id),
+    proc,
     offset,
     length: buf.length,
     duration: +(buf.length / BYTES_PER_SECOND).toFixed(2),
@@ -288,7 +313,7 @@ if (previous && previous.pack && previous.pack.file === packFile && existsSync(p
     version: 1,
     generatedAt: new Date().toISOString(),
     pack: { file: packFile, bytes: pack.length },
-    render: { format: OUTPUT_FORMAT, loudness: HAS_FFMPEG ? LOUDNESS : null, ...RENDER },
+    render: { format: OUTPUT_FORMAT, loudness: HAS_FFMPEG ? LOUDNESS : null, cleanup: HAS_FFMPEG ? CLEANUP : null, ...RENDER },
     clips: entries,
   };
   await writeFile(MANIFEST, JSON.stringify(manifest, null, 1) + "\n");

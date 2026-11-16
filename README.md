@@ -6,7 +6,9 @@ Same family as `../limber`: vanilla HTML/CSS/JS, no framework, no bundler, deplo
 
 ## Using it
 
-1. **Practice**: pick a length and a level, then tap **Build my session**.
+1. **Practice**: pick a length, a level and a style, then tap **Build my session**.
+   - **Steady**: come into each posture and hold it still for a few breaths (closer to hatha).
+   - **Flow**: adds vinyasa-style flows to the Build phase: a sun salutation (half for 10–15 minute sessions, Sun Salutation A from 20 minutes) and, from 20 minutes, a warrior flow. Round one is taught slowly; later rounds move one movement per chime, with a short spoken cue.
 2. **Preview**: the session is grouped as Arrive, Warm up, Build, Cool down and Rest. Each posture shows its names and hold. Tap a posture, or turn on **Show guidance text**, to read exactly what will be spoken, plus a tip. **New mix** reshuffles the session with the same settings.
 3. **Begin**: the player announces each posture, reads the guidance, then counts breaths. Each inhale and exhale has its own sound and the circle grows and shrinks with it. Two-sided postures are held on the first side, then on the other. Controls: previous / pause / next. On a keyboard: Space, ←, →.
 4. **Library** (book icon): every posture, with search and filters by family.
@@ -42,7 +44,7 @@ What gets generated (all declared in [js/phrases.js](js/phrases.js)):
 
 | Kind | Clips | Notes |
 |---|---|---|
-| Voice | 118 | Names and guidance for each posture, position changes ("Lie down on your back."), "Stay here for N breaths." for 2–12, side switch, welcome and closing. About 12k characters. |
+| Voice | 164 | Names and guidance for each posture and flow, flow teaching lines and short movement cues, position changes ("Lie down on your back."), "Stay here for N breaths." for 2–12, side switch, welcome and closing. About 15k characters. |
 | SFX | 5 | Opening bowl, transition chime, closing bowls, and the two breath cues: a higher chime as each inhale starts and a lower one as each exhale starts. |
 | Music | 2 | "Forest" and "Meadow", 3 minutes each. They loop with a 6-second crossfade. |
 
@@ -51,7 +53,8 @@ The build is **idempotent and incremental**:
 - Each clip is cached in `.audio-cache/` (git-ignored) under a hash of its text or prompt plus the render settings (voice, model, voice settings). Re-running only calls ElevenLabs for clips whose wording, prompt or voice changed.
 - On a fresh clone, the cache is rebuilt from the committed pack, so unchanged clips are never paid for twice.
 - If a clip fails (quota, plan limits, network), the others are still packed, the script exits non-zero and lists the failures. Re-run later to fill the gaps.
-- When packing, every clip is loudness-normalized with ffmpeg (`brew install ffmpeg`): voice and bells to −18 LUFS, music to −26 LUFS so it stays underneath. This is a plain volume change capped below clipping, so bell attacks are untouched. ElevenLabs returns very different levels per kind; without this, the music drowned out the bells. Targets are `LOUDNESS` in the script.
+- When packing, sound effects are first cleaned with ffmpeg (denoise, then band-limit to 90 Hz–7 kHz): generated SFX carry a hiss that turns crackly once raised to voice level. Filters are `CLEANUP` in the script.
+- Every clip is then loudness-normalized with ffmpeg (`brew install ffmpeg`): voice and bells to −18 LUFS, music to −26 LUFS so it stays underneath. This is a plain volume change capped below clipping, so bell attacks are untouched. ElevenLabs returns very different levels per kind; without this, the music drowned out the bells. Targets are `LOUDNESS` in the script.
 - `--only=voice,sfx` limits generation to some kinds, and `--concurrency=N` (default 2) sets how many requests run in parallel.
 
 ### Without a pack

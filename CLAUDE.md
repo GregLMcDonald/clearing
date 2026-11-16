@@ -16,13 +16,14 @@ Chrome on Android as an installed PWA (primary). Desktop Chrome for occasional s
 - Build DOM with `el()` and `textContent`. Only the generated icon markup goes through `innerHTML`.
 
 ## Architecture
-- [js/library.js](js/library.js): posture data (phase, base position, seq, level, sided, default breaths, spoken `guide`, displayed `mods`, optional `say` respelling).
+- [js/library.js](js/library.js): posture data (phase, base position, seq, level, sided, default breaths, spoken `guide`, displayed `mods`, optional `say` respelling), and `FLOWS`: vinyasa-style sequences of `moves` (each one inhale, one exhale or a multi-breath stay) with short `cue`s and fuller `teach` lines; `l2` overrides for intermediate.
 - [js/phrases.js](js/phrases.js): the audio clip catalog. **Every** spoken line, SFX and music prompt is declared here. The build script and the app both use `catalog()` / `clipSpec()`.
-- [js/session.js](js/session.js): `generateSession()` and `buildActions()` (the flat timeline the player runs). Duration estimates come from the same timeline. Pure code with tests in `test/`.
+- [js/session.js](js/session.js): `generateSession()` (styles `steady` / `flow`) and `buildActions()` (the flat timeline the player runs; flows add `half` actions: one inhale or exhale with its chime and cue). Duration estimates come from the same timeline. Pure code with tests in `test/`.
 - [js/audio.js](js/audio.js): `AudioEngine`. Downloads the single pack into Cache Storage (`clearing-audio`), decodes a session's clips before Start, plays everything through one AudioContext, and provides fallbacks (speech synthesis, synthesized bells, breath chimes and pad).
 - [js/player.js](js/player.js): runs the timeline. All waits read `ctx.currentTime`, and pause is `ctx.suspend()`. Skips use a token to cancel the running loop.
 - [js/app.js](js/app.js): screens (home / preview / player / done / library), two bottom sheets (settings, pose), and state in localStorage key `clearing.state.v1`: `{ version, settings, session, history }`.
-- [scripts/build-audio.mjs](scripts/build-audio.mjs): ElevenLabs TTS, SFX and music → `.audio-cache/<hash>.mp3` → loudness-normalized with ffmpeg (`LOUDNESS` targets) → `audio/pack-<hash>.bin` + `audio/manifest.json`. Idempotent, and seeds its cache from the committed pack.
+- [scripts/build-audio.mjs](scripts/build-audio.mjs): ElevenLabs TTS, SFX and music → `.audio-cache/<hash>.mp3` → cleaned (`CLEANUP`, SFX only) and loudness-normalized (`LOUDNESS`) with ffmpeg → `audio/pack-<hash>.bin` + `audio/manifest.json`. Idempotent, and seeds its cache from the committed pack.
+- Flow cues must stay 1–2 seconds (they are spoken inside one inhale or exhale) and name the movement only.
 - Breath cues are two chimes (inhale higher, exhale lower) plus the circle. Never breath or whoosh sounds, and the voice never says "breathe in" / "breathe out".
 
 ## Editing content

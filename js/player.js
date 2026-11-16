@@ -45,7 +45,9 @@ export class Player {
   get step() { return this.action ? this.action.step : 0; }
   get stage() { return this.action ? this.action.stage : "intro"; }
   get item() { return this.session.items[this.step]; }
-  get side() { const a = this.actions[this.i]; return a && a.t === "breath" ? a.side : this.stage === "switch" ? 2 : 1; }
+  get side() { const a = this.actions[this.i]; return a && a.side ? a.side : this.stage === "switch" ? 2 : 1; }
+  // Flows: the shape being moved into or held right now.
+  get show() { const a = this.actions[this.i]; return a && a.show ? a.show : ""; }
 
   elapsed() {
     const into = Math.max(0, this.engine.now() - this.actionT0);
@@ -68,7 +70,7 @@ export class Player {
       this.i = k;
       this.actionT0 = this.engine.now();
       const a = this.actions[k];
-      if (a.t !== "breath") this.breathState = null;
+      if (a.t !== "breath" && a.t !== "half") this.breathState = null;
       if (a.t === "voice") this.caption = getClip(a.clip).caption;
       this.onChange();
       await this.perform(a, tok);
@@ -95,17 +97,26 @@ export class Player {
         return e.wait(a.s, live);
       case "breath": {
         const { inhale, exhale } = this.breath;
-        this.breathState = { phase: "in", t0: e.now(), dur: inhale, n: a.n, of: a.of };
+        this.breathState = { phase: "in", t0: e.now(), dur: inhale, n: a.n, of: a.of, round: a.round, rounds: a.rounds };
         e.breath("in", inhale);
         if (a.inCue) this.overlay(a.inCue);
         this.onChange();
         await e.wait(inhale, live);
         if (!live()) return;
-        this.breathState = { phase: "out", t0: e.now(), dur: exhale, n: a.n, of: a.of };
+        this.breathState = { phase: "out", t0: e.now(), dur: exhale, n: a.n, of: a.of, round: a.round, rounds: a.rounds };
         e.breath("out", exhale);
         this.onChange();
         await e.wait(exhale, live);
         return;
+      }
+      case "half": {
+        // Flows: one movement on one inhale or exhale.
+        const dur = a.phase === "in" ? this.breath.inhale : this.breath.exhale;
+        this.breathState = { phase: a.phase, t0: e.now(), dur, round: a.round, rounds: a.rounds };
+        e.breath(a.phase, dur);
+        if (a.cue) this.overlay(a.cue);
+        this.onChange();
+        return e.wait(dur, live);
       }
     }
   }

@@ -42,6 +42,15 @@
           </div>
         </div>
 
+        <div class="field">
+          <span class="field-label">Style</span>
+          <div class="segmented" id="styleSeg" role="radiogroup" aria-label="Style">
+            <button class="seg-btn" type="button" data-style="steady">Steady</button>
+            <button class="seg-btn" type="button" data-style="flow">Flow</button>
+          </div>
+          <p class="hint" id="styleHint"></p>
+        </div>
+
         <button id="buildBtn" class="primary big" type="button"><span data-icon="auto_awesome"></span>Build my session</button>
 
         <button id="lastSessionCard" class="card-btn" type="button" hidden>
@@ -110,10 +119,12 @@
             <div id="sidePill" class="side-pill" hidden>First side</div>
             <h2 id="poseEnglish" class="pose-english">—</h2>
             <div id="poseSanskrit" class="pose-sanskrit"></div>
+            <div id="poseShape" class="pose-shape" hidden></div>
             <p id="caption" class="caption" aria-live="polite"></p>
             <details id="guideDetails" class="guide-details">
               <summary>Guidance</summary>
               <p id="guideText"></p>
+              <div id="guideMoves"></div>
               <p id="guideMods" class="mods"></p>
             </details>
             <div id="nextUp" class="next-up"></div>
@@ -245,6 +256,7 @@
       </div>
       <div id="poseTags" class="tags"></div>
       <p id="poseGuide" class="guide-quote"></p>
+      <div id="poseMoves"></div>
       <p id="poseMods" class="mods"></p>
     </div>
   </div>
